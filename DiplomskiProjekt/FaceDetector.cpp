@@ -12,7 +12,7 @@ FaceDetector::FaceDetector()
     this->meanVal = Scalar(104.0, 177.0, 123.0);
 }
 
-void FaceDetector::detectFaceOpenCVDNN(Net net1, Mat& cvImg, string framework, string imgName) {
+void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation) {
     // get face detector
     frontal_face_detector detector = get_frontal_face_detector();
 
@@ -34,17 +34,17 @@ void FaceDetector::detectFaceOpenCVDNN(Net net1, Mat& cvImg, string framework, s
         extract_image_chip(img1, get_face_chip_details(shape, 150, 0.25), face_chip);
         // save face for further use
         faces.push_back(move(face_chip));
-        Face f(move(face_chip));
+        Face f(move(face_chip), imageLocation);
         newFaces.push_back(f);
 
 
         // converting image format from dlib to opencv
         // and saving it to disk with opencv
-        Mat faceToSaveRGB(toMat(faces.at(faces.size() - 1)));
-        Mat faceToSaveBGR;
-        cvtColor(faceToSaveRGB, faceToSaveBGR, COLOR_RGB2BGR);
-        string whereToSave = "faces/" + imgName + "_" + to_string(i++) + ".jpg";
-        imwrite(whereToSave, faceToSaveBGR);
+        //Mat faceToSaveRGB(toMat(faces.at(faces.size() - 1)));
+        //Mat faceToSaveBGR;
+        //cvtColor(faceToSaveRGB, faceToSaveBGR, COLOR_RGB2BGR);
+        //string whereToSave = "faces/" + imgName + "_" + to_string(i++) + ".jpg";
+        //imwrite(whereToSave, faceToSaveBGR);
     }
 
 

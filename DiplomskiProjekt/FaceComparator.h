@@ -3,10 +3,14 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+
 #include <opencv2/opencv.hpp>
+
+#include <dlib/clustering.h>
 
 #include "FaceDetector.h"
 #include "Utils.h"
+#include "Face.h"
 
 using namespace cv;
 using namespace std;
@@ -23,6 +27,7 @@ private:
 	std::string resnetModelLocation = "E:/Programming/_Projects/DiplomskiProjekt/models/dlib/dlib_face_recognition_resnet_model_v1.dat";
 	std::vector<matrix<float, 0, 1>> face_descriptors;
 	std::vector<std::vector<matrix<float, 0, 1>>> face_groups;
+	std::vector<std::vector<Face>> new_face_groups;
 
 
 	template <template <int, template<typename>class, int, typename> class block, int N, template<typename>class BN, typename SUBNET>
@@ -53,5 +58,6 @@ private:
 		>>>>>>>>>>>>;
 
 	bool faceEmbeddingExists(int i);
+	void groupUpFace(Face face);
 };
 

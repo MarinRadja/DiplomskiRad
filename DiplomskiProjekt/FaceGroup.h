@@ -3,7 +3,9 @@
 
 class FaceGroup {
 private:
-public:
 	std::vector<Face> faces;
+public:
+	void addFace(Face face);
+	void removeFace(int i);
 };
 
