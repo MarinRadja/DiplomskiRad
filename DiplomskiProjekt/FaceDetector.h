@@ -4,10 +4,7 @@
 #include <vector>
 #include <stdlib.h>
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/dnn.hpp>
+#include <opencv2/opencv.hpp>
 
 #include <dlib/dnn.h>
 #include <dlib/gui_widgets.h>
@@ -15,12 +12,11 @@
 #include <dlib/string.h>
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
-#include <dlib/opencv.h>
 
 #include "Face.h"
+#include "FaceGroup.h"
 
 using namespace cv;
-using namespace cv::dnn;
 using namespace std;
 using namespace dlib;
 
