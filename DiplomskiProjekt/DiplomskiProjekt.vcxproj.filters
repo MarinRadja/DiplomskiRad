@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\_includes\dlib\dlib-19.22\source\dlib\all\source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -62,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="FaceGroup.cpp">
       <Filter>Source Files\FaceAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="RunAlgorithm.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="FaceGroup.h">
       <Filter>Header Files\FaceAnlysis</Filter>
+    </ClInclude>
+    <ClInclude Include="RunAlgorithm.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

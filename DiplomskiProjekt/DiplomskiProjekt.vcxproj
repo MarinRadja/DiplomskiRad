@@ -77,14 +77,14 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\Programming\_includes\dlib\dlib-19.22\source;E:\Programming\_includes\OpenCV\4.5.4\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Programming\_includes\dlib\dlib-19.22\build\dlib\Debug;E:\Programming\_includes\OpenCV\4.5.4\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Programming\_includes\dlib\dlib-19.22\source;$(OPEN_CV_481)\install\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Programming\_includes\dlib\dlib-19.22\build\dlib\Debug;$(OPEN_CV_481)\install\x64\vc16\lib;$(LibraryPath)</LibraryPath>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\Programming\_includes\dlib\dlib-19.22\source;E:\Programming\_includes\OpenCV\4.5.4\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Programming\_includes\dlib\dlib-19.22\build\dlib\Release;E:\Programming\_includes\OpenCV\4.5.4\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Programming\_includes\dlib\dlib-19.22\source;$(OPEN_CV_481)\install\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Programming\_includes\dlib\dlib-19.22\build\dlib\Release;$(OPEN_CV_481)\install\x64\vc16\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,16 +120,19 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;CV_IGNORE_DEBUG_BUILD_GUARD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(WXWIN)\include\msvc;$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_world454d.lib;dlib19.22.0_debug_64bit_msvc1926.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_lib;E:\Programming\_includes\OpenCV\4.5.4\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world481d.lib;opencv_img_hash481d.lib;dlib19.22.0_debug_64bit_msvc1926.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_lib;$(OPEN_CV_481)\install\x64\vc16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,15 +145,15 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(WXWIN)\include\msvc;$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_world454.lib;dlib19.22.0_release_64bit_msvc1926.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_lib;E:\Programming\_includes\OpenCV\4.5.4\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>opencv_world481.lib;dlib19.22.0_release_64bit_msvc1926.lib;opencv_img_hash481.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WXWIN)\lib\vc_x64_lib;$(OPEN_CV_481)\install\x64\vc16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -162,7 +165,7 @@
     <ClCompile Include="FaceDetector.cpp" />
     <ClCompile Include="FaceGroup.cpp" />
     <ClCompile Include="MainFrame.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="RunAlgorithm.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +177,7 @@
     <ClInclude Include="FaceGroup.h" />
     <ClInclude Include="IDs.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="RunAlgorithm.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
