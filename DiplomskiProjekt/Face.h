@@ -12,21 +12,30 @@
 #include <dlib/string.h>
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
-#include <dlib/opencv.h>
 
 using namespace cv;
-using namespace cv::dnn;
 using namespace std;
 using namespace dlib;
 
 class Face {
 private:
-public:
 	matrix<rgb_pixel> face;
 	matrix<float, 0, 1> face_descriptor;
-	std::string image_location;
+	string image_location;
+public:
 
 	Face();
 	Face(matrix<rgb_pixel> _face);
+	Face(matrix<rgb_pixel> _face, string _image_location);
+
+	string getImageLocation();
+	matrix<float, 0, 1> getFaceDescriptor();
+	matrix<rgb_pixel> getFace();
+
+	void setImageLocation(string _image_location);
+	void setFaceDescriptor(matrix<float, 0, 1> _face_descriptor);
+	void setFace(matrix<rgb_pixel> _face);
+
+	float distanceFromFace(Face otherFace);
 };
 

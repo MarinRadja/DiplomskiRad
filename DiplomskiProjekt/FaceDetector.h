@@ -12,6 +12,7 @@
 #include <dlib/string.h>
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/opencv.h>
 
 #include "Face.h"
 #include "FaceGroup.h"
@@ -27,7 +28,7 @@ public:
 	std::vector<Face> newFaces;
 
 	FaceDetector();
-	void detectFaceOpenCVDNN(Net net, Mat& cvImg, string framework, string imgName);
+	void detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation);
 private:
 	size_t inWidth;
 	size_t inHeight;

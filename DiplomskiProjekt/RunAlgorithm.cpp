@@ -1,18 +1,16 @@
 #include "RunAlgorithm.h"
 
-std::vector<fs::path> RunAlgorithm::getAll(fs::path dir, string ext) {
-    std::vector<fs::path> paths;
+std::vector<fs::path> RunAlgorithm::allImages;
 
+void RunAlgorithm::getAll(fs::path dir, string ext) {
     if (fs::exists(dir) && fs::is_directory(dir)) {
         for (auto& entry : fs::recursive_directory_iterator(dir)) {
             if (fs::is_regular_file(entry) && entry.path().extension() == ext) {
                 fs::path p = entry.path();
-                paths.emplace_back(p.make_preferred());
+                allImages.emplace_back(p.make_preferred());
             }
         }
     }
-
-    return paths;
 }
 
 Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
@@ -44,28 +42,25 @@ Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
 
 void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::string framework) {
 
-    Net net;
-
-    if (framework == "caffe")
-        net = cv::dnn::readNetFromCaffe(caffeConfigFile, caffeWeightFile);
-    else
-        net = cv::dnn::readNetFromTensorflow(tensorflowWeightFile, tensorflowConfigFile);
-
-#if (CV_MAJOR_VERSION >= 4)
-    if (device == "CPU") {
-        net.setPreferableBackend(DNN_TARGET_CPU);
-    } else {
-        net.setPreferableBackend(DNN_BACKEND_CUDA);
-        net.setPreferableTarget(DNN_TARGET_CUDA);
-    }
-#else
-    // force CPU backend for OpenCV 3.x as CUDA backend is not supported there
-    net.setPreferableBackend(DNN_BACKEND_DEFAULT);
-    device = "cpu";
-#endif
-
-
-
+//    Net net;
+//
+//    if (framework == "caffe")
+//        net = cv::dnn::readNetFromCaffe(caffeConfigFile, caffeWeightFile);
+//    else
+//        net = cv::dnn::readNetFromTensorflow(tensorflowWeightFile, tensorflowConfigFile);
+//
+//#if (CV_MAJOR_VERSION >= 4)
+//    if (device == "CPU") {
+//        net.setPreferableBackend(DNN_TARGET_CPU);
+//    } else {
+//        net.setPreferableBackend(DNN_BACKEND_CUDA);
+//        net.setPreferableTarget(DNN_TARGET_CUDA);
+//    }
+//#else
+//    // force CPU backend for OpenCV 3.x as CUDA backend is not supported there
+//    net.setPreferableBackend(DNN_BACKEND_DEFAULT);
+//    device = "cpu";
+//#endif
 
 
     FaceDetector fd;
@@ -79,15 +74,20 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
     extension.push_back(".jpg");
     extension.push_back(".jpeg");
 
-    for (const auto& ext : extension) {
-        for (const auto& entry : getAll(imageSetDirectory, ext)) {
+    for (string ext : extension) {
+        getAll(imageSetDirectory, ext);
+    }       
+    
+    for (fs::path entry : allImages) {
             cout << "Proccesing image: " << entry.string() << endl;
             Mat cvImg1 = imread(entry.string(), IMREAD_COLOR);
             Mat resized = resizeImage(cvImg1, 800);
 
-            fd.detectFaceOpenCVDNN(net, resized, framework, entry.stem().string());
+            string imageName = entry.stem().string();
+            string imageLocation = entry.string();
+            fd.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
         }
-    }
+
 
     FaceComparator fc(&fd);
     fc.clusterFaces();

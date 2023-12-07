@@ -26,7 +26,9 @@ private:
 	inline static string tensorflowConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector.pbtxt";
 	inline static string tensorflowWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector_uint8.pb";
 
-	static std::vector<fs::path> getAll(fs::path dir, string ext);
+	static std::vector<fs::path> allImages;
+
+	static void getAll(fs::path dir, string ext);
 	static Mat resizeImage(Mat& image, int width = 0, int height = 0, int inter = INTER_AREA);
 public:
 	static void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
