@@ -1,5 +1,12 @@
 #include "MainFrame.h"
 
+#pragma region "Event Table"
+wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+EVT_DIRPICKER_CHANGED(wxID_ANY, MainFrame::onDirSelect)
+EVT_BUTTON(MainFrameIDs::RUN_BUTTON, MainFrame::onRunButtonClick)
+wxEND_EVENT_TABLE()
+#pragma endregion "Event Table"
+
 #pragma region "GUI Setup"
 
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
@@ -108,7 +115,8 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	console->Center();
 	console->Show(true);
 
-	runAlgorithm(folderLocation->GetLabelText().ToStdString());
+
+	RunAlgorithm::runAlgorithm(folderLocation->GetLabelText().ToStdString());
 }
 #pragma endregion "Events"
 

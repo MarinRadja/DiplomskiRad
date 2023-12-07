@@ -3,8 +3,8 @@
 #include <wx/filepicker.h>
 
 #include "IDs.h"
-#include "Main.cpp"
 #include "ConsoleOutputWindow.h"
+#include "RunAlgorithm.h"
 
 class MainFrame : public wxFrame {
 public:
@@ -24,9 +24,3 @@ private:
 
 	wxDECLARE_EVENT_TABLE();
 };
-
-
-wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-EVT_DIRPICKER_CHANGED(wxID_ANY, MainFrame::onDirSelect)
-EVT_BUTTON(MainFrameIDs::RUN_BUTTON, MainFrame::onRunButtonClick)
-wxEND_EVENT_TABLE()
