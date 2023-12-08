@@ -30,7 +30,7 @@ public:
 
 	string getImageLocation();
 	matrix<float, 0, 1> getFaceDescriptor();
-	matrix<rgb_pixel> getFace();
+	matrix<rgb_pixel> getFacePtr();
 
 	void setImageLocation(string _image_location);
 	void setFaceDescriptor(matrix<float, 0, 1> _face_descriptor);

@@ -2,6 +2,10 @@
 
 FaceComparator::FaceComparator() {}
 
+FaceComparator::FaceComparator(FaceGraph* _face_graph) {
+    face_graph = _face_graph;
+}
+
 FaceComparator::FaceComparator(FaceDetector* faceDetector) {
 	this->fd = faceDetector;
     deserialize(resnetModelLocation) >> net;
@@ -27,17 +31,31 @@ void FaceComparator::clusterFaces() {
     //}
 
     for (int i = 0; i < face_descriptors.size(); i++) {
-        fd->newFaces.at(i).setFaceDescriptor(face_descriptors.at(i));
+        face_graph->getFacePtr(i)->setFaceDescriptor(face_descriptors.at(i));
+        // fd->newFaces.at(i).setFaceDescriptor(face_descriptors.at(i));
     }
 
-    while (face_descriptors.size() > 0) {
+    for (size_t i = 0; i < face_graph->getFacesPtr()->size(); ++i) {
+        for (size_t j = i; j < face_graph->getFacesPtr()->size(); ++j) {
+            // Faces are connected in the graph if they are close enough.  Here we check if
+            // the distance between two face descriptors is less than 0.6, which is the
+            // decision threshold the network was trained to use.  Although you can
+            // certainly use any other threshold you find useful.
+            if (length(face_graph->getFacePtr(i)->getFaceDescriptor()
+                - face_graph->getFacePtr(j)->getFaceDescriptor()) < 0.6)
+                face_graph->addEdge(i, j);
+        }
+    }
+    face_graph->setNumberOfClusters(chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr()));
+
+    /*while (face_descriptors.size() > 0) {
         if (!faceEmbeddingExists(face_descriptors.size() - 1)) {
             std::vector<matrix<float, 0, 1>> newFaceGroup;
             newFaceGroup.push_back(face_descriptors.at(face_descriptors.size() - 1));
             face_groups.push_back(newFaceGroup);
         }
         face_descriptors.pop_back();
-    }
+    }*/
 
     //for (std::vector<Face> groupFaces : new_face_groups) {
     //    for (Face face : groupFaces) {

@@ -20,6 +20,7 @@ class FaceComparator
 {
 public:
 	FaceComparator();
+	FaceComparator(FaceGraph *_face_graph);
 	FaceComparator(FaceDetector* faceDetector);
 
 	void setFaceDetector(FaceDetector* faceDetector);
@@ -28,6 +29,7 @@ public:
 	~FaceComparator();
 private:
 	FaceDetector* fd;
+	FaceGraph* face_graph;
 
 	std::string resnetModelLocation = "E:/Programming/_Projects/DiplomskiProjekt/models/dlib/dlib_face_recognition_resnet_model_v1.dat";
 	std::vector<matrix<float, 0, 1>> face_descriptors;

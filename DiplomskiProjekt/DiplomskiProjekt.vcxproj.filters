@@ -57,7 +57,7 @@
     <ClCompile Include="Face.cpp">
       <Filter>Source Files\FaceAnalysis</Filter>
     </ClCompile>
-    <ClCompile Include="FaceGroup.cpp">
+    <ClCompile Include="FaceGraph.cpp">
       <Filter>Source Files\FaceAnalysis</Filter>
     </ClCompile>
     <ClCompile Include="RunAlgorithm.cpp">
@@ -89,7 +89,7 @@
     <ClInclude Include="Face.h">
       <Filter>Header Files\FaceAnlysis</Filter>
     </ClInclude>
-    <ClInclude Include="FaceGroup.h">
+    <ClInclude Include="FaceGraph.h">
       <Filter>Header Files\FaceAnlysis</Filter>
     </ClInclude>
     <ClInclude Include="RunAlgorithm.h">

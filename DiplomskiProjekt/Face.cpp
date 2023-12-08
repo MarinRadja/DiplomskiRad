@@ -19,7 +19,7 @@ matrix<float, 0, 1> Face::getFaceDescriptor() {
 	return face_descriptor;
 }
 
-matrix<rgb_pixel> Face::getFace() {
+matrix<rgb_pixel> Face::getFacePtr() {
 	return face;
 }
 

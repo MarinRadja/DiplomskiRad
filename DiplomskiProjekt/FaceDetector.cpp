@@ -18,6 +18,10 @@ FaceDetector::FaceDetector()
     deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
 }
 
+FaceDetector::FaceDetector(FaceGraph* _face_graph) {
+    face_graph = _face_graph;
+}
+
 void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation) {
     // convert opencv img format to dlib img format
     Mat cvRGB;
@@ -34,6 +38,7 @@ void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgN
         // save face for further use
         faces.push_back(move(face_chip));
         Face f(move(face_chip), imageLocation);
+        face_graph->addFace(move(face_chip), imageLocation);
         newFaces.push_back(f);
 
 
