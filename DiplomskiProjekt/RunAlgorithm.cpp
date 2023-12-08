@@ -1,7 +1,5 @@
 #include "RunAlgorithm.h"
 
-std::vector<fs::path> RunAlgorithm::allImages;
-
 void RunAlgorithm::getAll(fs::path dir, string ext) {
     if (fs::exists(dir) && fs::is_directory(dir)) {
         for (auto& entry : fs::recursive_directory_iterator(dir)) {
@@ -40,6 +38,8 @@ Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
     return resizedImage;
 }
 
+RunAlgorithm::RunAlgorithm() : face_detector(), face_comparator() {}
+
 void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::string framework) {
 
 //    Net net;
@@ -63,7 +63,6 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
 //#endif
 
 
-    FaceDetector fd;
 
 
     //fd.detectFaceOpenCVDNN(net, s1, framework, "ja");
@@ -85,10 +84,9 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
 
             string imageName = entry.stem().string();
             string imageLocation = entry.string();
-            fd.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
+            face_detector.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
         }
 
-
-    FaceComparator fc(&fd);
-    fc.clusterFaces();
+    face_comparator.setFaceDetector(&face_detector);
+    face_comparator.clusterFaces();
 }

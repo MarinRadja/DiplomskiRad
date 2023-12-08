@@ -19,8 +19,13 @@ using namespace std;
 class FaceComparator
 {
 public:
+	FaceComparator();
 	FaceComparator(FaceDetector* faceDetector);
+
+	void setFaceDetector(FaceDetector* faceDetector);
 	void clusterFaces();
+
+	~FaceComparator();
 private:
 	FaceDetector* fd;
 
@@ -56,6 +61,8 @@ private:
 		max_pool<3, 3, 2, 2, relu<affine<con<32, 7, 7, 2, 2,
 		input_rgb_image_sized<150>
 		>>>>>>>>>>>>;
+
+	anet_type net;
 
 	bool faceEmbeddingExists(int i);
 	void groupUpFace(Face face);

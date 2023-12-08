@@ -35,5 +35,7 @@ private:
 	double inScaleFactor;
 	float confidenceThreshold;
 	Scalar meanVal;
+	frontal_face_detector detector;
+	shape_predictor sp;
 };
 
