@@ -1,13 +1,17 @@
 #include "FaceComparator.h"
 
+FaceComparator::FaceComparator() {}
+
 FaceComparator::FaceComparator(FaceDetector* faceDetector) {
 	this->fd = faceDetector;
+    deserialize(resnetModelLocation) >> net;
+}
+
+void FaceComparator::setFaceDetector(FaceDetector* faceDetector) {
+    fd = faceDetector;
 }
 
 void FaceComparator::clusterFaces() {
-    anet_type net;
-    deserialize(resnetModelLocation) >> net;
-
     cout << "total of " << fd->faces.size() << " faces" << endl;
 
     // get face embeddings
@@ -49,6 +53,10 @@ void FaceComparator::clusterFaces() {
     //        waitKey(0);
     //    }
     //}
+}
+
+FaceComparator::~FaceComparator() {
+    delete fd;
 }
 
 bool FaceComparator::faceEmbeddingExists(int x) {

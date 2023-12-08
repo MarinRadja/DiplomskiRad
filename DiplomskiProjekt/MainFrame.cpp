@@ -9,7 +9,7 @@ wxEND_EVENT_TABLE()
 
 #pragma region "GUI Setup"
 
-MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
+MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title), runAlg() {
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -21,6 +21,8 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 	SetSizerAndFit(clientAreaSizer);
 	SetMinSize(wxSize(400, 500));
 	Layout();
+
+	// call function to load nn
 }
 
 void MainFrame::createTitle(wxBoxSizer* parentSizer) {
@@ -116,7 +118,7 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	console->Show(true);
 
 
-	RunAlgorithm::runAlgorithm(folderLocation->GetLabelText().ToStdString());
+	runAlg.runAlgorithm(folderLocation->GetLabelText().ToStdString());
 }
 #pragma endregion "Events"
 

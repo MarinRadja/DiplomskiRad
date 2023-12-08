@@ -20,17 +20,22 @@ namespace fs = std::filesystem;
 
 class RunAlgorithm {
 private:
-	inline static string caffeConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/deploy.prototxt";
-	inline static string caffeWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/res10_300x300_ssd_iter_140000_fp16.caffemodel";
+	string caffeConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/deploy.prototxt";
+	string caffeWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/res10_300x300_ssd_iter_140000_fp16.caffemodel";
 
-	inline static string tensorflowConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector.pbtxt";
-	inline static string tensorflowWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector_uint8.pb";
+	string tensorflowConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector.pbtxt";
+	string tensorflowWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector_uint8.pb";
 
-	static std::vector<fs::path> allImages;
+	std::vector<fs::path> allImages;
 
-	static void getAll(fs::path dir, string ext);
-	static Mat resizeImage(Mat& image, int width = 0, int height = 0, int inter = INTER_AREA);
+	void getAll(fs::path dir, string ext);
+	Mat resizeImage(Mat& image, int width = 0, int height = 0, int inter = INTER_AREA);
+
+	FaceDetector face_detector;
+	FaceComparator face_comparator;
+
 public:
-	static void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
+	RunAlgorithm();
+	void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
 };
 

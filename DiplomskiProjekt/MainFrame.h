@@ -11,6 +11,8 @@ public:
 	MainFrame(const wxString& title);
 protected:
 private:
+	RunAlgorithm runAlg;
+
 	void createTitle(wxBoxSizer* parentSizer);
 	void createInfo(wxBoxSizer* parentSizer);
 	void createSelectedFolderLocationTextField(wxBoxSizer* parentSizer);

@@ -10,16 +10,15 @@ FaceDetector::FaceDetector()
     this->inScaleFactor = 1.0;
     this->confidenceThreshold = 0.7;
     this->meanVal = Scalar(104.0, 177.0, 123.0);
+
+    // get face detector
+    detector = get_frontal_face_detector();
+
+    // load face shape detector
+    deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
 }
 
 void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation) {
-    // get face detector
-    frontal_face_detector detector = get_frontal_face_detector();
-
-    // load face shape detector
-    shape_predictor sp;
-    deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
-
     // convert opencv img format to dlib img format
     Mat cvRGB;
     cvtColor(cvImg, cvRGB, COLOR_BGR2RGB);
