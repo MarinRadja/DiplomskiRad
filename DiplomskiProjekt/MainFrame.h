@@ -1,4 +1,7 @@
 #pragma once
+
+#include <thread>
+
 #include <wx/wx.h>
 #include <wx/filepicker.h>
 
@@ -11,6 +14,8 @@
 class MainFrame : public wxFrame {
 public:
 	MainFrame(const wxString& title);
+
+	RunAlgorithm* getAlgorithmPtr();
 protected:
 private:
 	RunAlgorithm runAlg;
@@ -25,6 +30,8 @@ private:
 
 	void onDirSelect(wxFileDirPickerEvent& event);
 	void onRunButtonClick(wxCommandEvent& event);
+
+	void startWorking(string folderLocation, ProgressWindow* progressWindow);
 
 	wxDECLARE_EVENT_TABLE();
 };

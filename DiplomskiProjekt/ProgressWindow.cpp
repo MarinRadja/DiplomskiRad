@@ -3,6 +3,18 @@
 ProgressWindow::ProgressWindow(const wxString& title) 
 	: wxFrame(nullptr, wxID_ANY, title), images_found(0), faces_found(0), faces_analyzed(0), images_analyzed(0) {
 
+#pragma region "Binding Events"
+	Bind(EVT_UPDATE_PROGRESS_WINDOW, 
+		&ProgressWindow::detectingImagesPlusOne,
+		this,
+		ProgressWindowEventsIDs::DETECTED_IMAGE);
+
+	Bind(EVT_UPDATE_PROGRESS_WINDOW, 
+		&ProgressWindow::finishedDetectingImages,
+		this,
+		ProgressWindowEventsIDs::DONE_DETECTING_IMAGES);
+#pragma endregion "Binding Events"
+
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
 	createImagesFoundText(clientAreaSizer);
@@ -92,37 +104,36 @@ std::string ProgressWindow::clusteringFacesDone() {
 
 void ProgressWindow::setImagesFound(int x) {
 	images_found = x;
-	FindWindowById(ProgressWindowIDs::DETECTING_IMAGE_TXT)->Refresh();
-	wxTheApp->Yield();
+	this->Update();
 }
 
 void ProgressWindow::setImagesAnalyzed(int x) {
 	images_analyzed = x;
 	wxGauge* detectingFacesGauge = static_cast<wxGauge*>(FindWindowById(ProgressWindowIDs::DETECTING_FACE_GAUGE));
 	detectingFacesGauge->SetValue(images_analyzed);
-	detectingFacesGauge->Refresh();
+	this->Update();
 }
 
 void ProgressWindow::setFacesFound(int x) {
 	faces_found = x;
-	FindWindowById(ProgressWindowIDs::DETECTING_FACE_TXT)->Refresh();
+	this->Update();
 }
 
 void ProgressWindow::setFacesAnalyzed(int x) {
 	faces_analyzed = x;
 	wxGauge* detectingFacesGauge = static_cast<wxGauge*>(FindWindowById(ProgressWindowIDs::CLUSTERING_FACE_GAUGE));
 	detectingFacesGauge->SetValue(faces_analyzed);
-	detectingFacesGauge->Refresh();
+	this->Update();
 }
 
-void ProgressWindow::detectingImagesPlusOne() {
+void ProgressWindow::detectingImagesPlusOne(wxCommandEvent& event) {
 	images_found++;
-	FindWindowById(ProgressWindowIDs::DETECTING_IMAGE_TXT)->Refresh();
+	this->Update();
 }
 
-void ProgressWindow::finishedDetectingImages() {
+void ProgressWindow::finishedDetectingImages(wxCommandEvent& event) {
 	wxStaticText* imagesFoundTxt = static_cast<wxStaticText*>(FindWindowById(ProgressWindowIDs::DETECTING_IMAGE_TXT));
 	imagesFoundTxt->SetLabelText(detectingImagesDone());
-	imagesFoundTxt->Refresh();
+	this->Update();
 }
 

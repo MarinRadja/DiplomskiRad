@@ -13,6 +13,8 @@
 #include "FaceDetector.h"
 #include "FaceComparator.h"
 #include "FaceGraph.h"
+#include "ProgressWindow.h"
+#include "Utils.h"
 
 using namespace cv;
 using namespace cv::dnn;
@@ -35,10 +37,10 @@ private:
 	FaceDetector face_detector;
 	FaceComparator face_comparator;
 	FaceGraph face_graph;
-
+	ProgressWindow* progress_window;
 public:
 	RunAlgorithm();
-	void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
+	void runAlgorithm(std::string path, ProgressWindow* _progress_window, std::string device = "cpu", std::string framework = "caffe");
 	FaceGraph* getFaceGraph();
 };
 

@@ -1,7 +1,15 @@
 #include "Utils.h"
 
-float Utils::faceSimilarityThreshold = 0.5f;
+// this is a definition so can't be in a header
+wxDEFINE_EVENT(EVT_SHOW_PROGRESS_WINDOW, wxCommandEvent);
+wxDEFINE_EVENT(EVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
+wxDEFINE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);
 
+#pragma region "Data"
+float Utils::faceSimilarityThreshold = 0.5f;
+#pragma endregion "Data"
+
+#pragma region "Functions"
 wxImage Utils::simple_wx_from_mat(std::string imageLocation) {
     cv::Mat img = imread(imageLocation, cv::IMREAD_COLOR);
     cv::Mat im2;
@@ -38,3 +46,4 @@ cv::Mat* Utils::simple_mat_from_wx(wxImage& wx) {
     cv::cvtColor(im2, im2, cv::COLOR_RGB2BGR);
     return &im2;
 }
+#pragma endregion "Functions"

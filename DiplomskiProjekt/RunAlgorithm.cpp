@@ -6,6 +6,9 @@ void RunAlgorithm::getAll(fs::path dir, string ext) {
             if (fs::is_regular_file(entry) && entry.path().extension() == ext) {
                 fs::path p = entry.path();
                 allImages.emplace_back(p.make_preferred());
+
+                wxCommandEvent* ddi = new wxCommandEvent(EVT_UPDATE_PROGRESS_WINDOW, ProgressWindowEventsIDs::DETECTED_IMAGE);
+                progress_window->GetEventHandler()->QueueEvent(ddi);
             }
         }
     }
@@ -40,33 +43,9 @@ Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
 
 RunAlgorithm::RunAlgorithm() : face_graph(), face_detector(&face_graph), face_comparator(&face_graph, &face_detector) {}
 
-void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::string framework) {
+void RunAlgorithm::runAlgorithm(std::string path, ProgressWindow* _progress_window, std::string device, std::string framework) {
+    progress_window = _progress_window;
 
-//    Net net;
-//
-//    if (framework == "caffe")
-//        net = cv::dnn::readNetFromCaffe(caffeConfigFile, caffeWeightFile);
-//    else
-//        net = cv::dnn::readNetFromTensorflow(tensorflowWeightFile, tensorflowConfigFile);
-//
-//#if (CV_MAJOR_VERSION >= 4)
-//    if (device == "CPU") {
-//        net.setPreferableBackend(DNN_TARGET_CPU);
-//    } else {
-//        net.setPreferableBackend(DNN_BACKEND_CUDA);
-//        net.setPreferableTarget(DNN_TARGET_CUDA);
-//    }
-//#else
-//    // force CPU backend for OpenCV 3.x as CUDA backend is not supported there
-//    net.setPreferableBackend(DNN_BACKEND_DEFAULT);
-//    device = "cpu";
-//#endif
-
-
-
-
-    //fd.detectFaceOpenCVDNN(net, s1, framework, "ja");
-    //fd.detectFaceOpenCVDNN(net, s2, framework, "ja_i_sestre");
 
     string imageSetDirectory = path;
     std::vector<string> extension;
@@ -85,11 +64,16 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
             string imageName = entry.stem().string();
             string imageLocation = entry.string();
             face_detector.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
-        }
+    }
+    wxCommandEvent* ddi = new wxCommandEvent(EVT_UPDATE_PROGRESS_WINDOW, ProgressWindowEventsIDs::DONE_DETECTING_IMAGES);
+    progress_window->GetEventHandler()->QueueEvent(ddi);
 
     face_comparator.clusterFaces();
+    wxCommandEvent* ddi = new wxCommandEvent(EVT_UPDATE_PROGRESS_WINDOW, ProgressWindowEventsIDs::DONE_CLUSTERING_FACES);
+    progress_window->GetEventHandler()->QueueEvent(ddi);
 }
 
 FaceGraph* RunAlgorithm::getFaceGraph() {
     return &face_graph;
 }
+// add next button

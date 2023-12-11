@@ -1,7 +1,9 @@
 #pragma once
 #include <wx/wx.h>
+#include <wx/event.h>
 
 #include "IDs.h"
+#include "Utils.h"
 
 class ProgressWindow : public wxFrame {
 public:
@@ -12,8 +14,6 @@ public:
 	void setFacesFound(int x);
 	void setFacesAnalyzed(int x);
 
-	void detectingImagesPlusOne();
-	void finishedDetectingImages();
 protected:
 private:
 	int images_found;
@@ -35,4 +35,10 @@ private:
 	std::string detectingFacesDone();
 	std::string clusteringFaces();
 	std::string clusteringFacesDone();
+
+	void detectingImagesPlusOne(wxCommandEvent& event);
+	void finishedDetectingImages(wxCommandEvent& event);
 };
+
+wxDECLARE_EVENT(EVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
+wxDECLARE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);

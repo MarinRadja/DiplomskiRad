@@ -15,6 +15,7 @@
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/opencv.h>
 
+#include <wx/event.h>
 #include <wx/image.h>
 #include <wx/file.h>
 #include <wx/bitmap.h>
@@ -29,3 +30,7 @@ public:
     static wxImage simple_wx_from_mat(cv::Mat& img);
     static cv::Mat* simple_mat_from_wx(wxImage& wx);
 };
+
+wxDECLARE_EVENT(EVT_SHOW_PROGRESS_WINDOW, wxCommandEvent);
+wxDECLARE_EVENT(EVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
+wxDECLARE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);

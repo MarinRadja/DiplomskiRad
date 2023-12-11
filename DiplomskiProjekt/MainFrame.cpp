@@ -26,6 +26,10 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title),
 	// call function to load nn
 }
 
+RunAlgorithm* MainFrame::getAlgorithmPtr() {
+	return &runAlg;
+}
+
 void MainFrame::createTitle(wxBoxSizer* parentSizer) {
 	wxBoxSizer* titleSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Face Recognizer", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTRE_HORIZONTAL);
@@ -121,23 +125,16 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	console->Show(true);*/
 
 
-	ProgressWindow* progressWindow = new ProgressWindow("Progress");
-	progressWindow->SetClientSize(400, 300);
-	progressWindow->Center();
-
 	this->Hide();
-	progressWindow->Show();
 
-	runAlg.runAlgorithm(folderLocation->GetLabelText().ToStdString(), progressWindow);
-	progressWindow->Destroy();
-
-	FaceClusterWindow* faceClusterWindow = new FaceClusterWindow("Recognized faces", runAlg.getFaceGraph());
-	faceClusterWindow->SetClientSize(800, 600);
-	faceClusterWindow->Center();
-
-	// this->Hide();
-	faceClusterWindow->Show();
+	// std::thread sw(&MainFrame::startWorking, this, folderLocation->GetLabelText().ToStdString(), progressWindow);
+	// sw.detach();
 }
 
 #pragma endregion "Events"
 
+#pragma region "Thread"
+void MainFrame::startWorking(string folderLocation, ProgressWindow* progressWindow) {
+	runAlg.runAlgorithm(folderLocation, progressWindow);
+}
+#pragma endregion "Thread"
