@@ -5,6 +5,7 @@
 #include "IDs.h"
 #include "ConsoleOutputWindow.h"
 #include "RunAlgorithm.h"
+#include "FaceClusterWindow.h"
 
 class MainFrame : public wxFrame {
 public:

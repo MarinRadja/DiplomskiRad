@@ -39,5 +39,6 @@ private:
 public:
 	RunAlgorithm();
 	void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
+	FaceGraph* getFaceGraph();
 };
 

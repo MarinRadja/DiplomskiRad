@@ -9,11 +9,19 @@ void FaceCluster::removeFace(int i) {
 	faces.erase(faces.begin() + i);
 }
 
+int FaceCluster::getNFaces() {
+	return faces.size();
+}
+
+Face* FaceCluster::getFacePtr(size_t i_face) {
+	return &faces.at(i_face);
+}
+
 void FaceGraph::addFace(Face face) {
 	faces.push_back(face);
 }
 
-void FaceGraph::addFace(matrix<rgb_pixel> _face, string _image_location) {
+void FaceGraph::addFace(matrix<rgb_pixel>& _face, string _image_location) {
 	Face face(_face, _image_location);
 	faces.push_back(face);
 }
@@ -27,7 +35,7 @@ std::vector<Face>* FaceGraph::getFacesPtr() {
 }
 
 void FaceGraph::addEdge(size_t i, size_t j) {
-	edges.push_back(simple_pair(i, j));
+	edges.push_back(sample_pair(i, j));
 }
 
 std::vector<sample_pair>* FaceGraph::getEdges() {
@@ -44,4 +52,20 @@ void FaceGraph::setNumberOfClusters(unsigned long n) {
 
 unsigned long FaceGraph::getNumberOfClusters() {
 	return numberOfClusters;
+}
+
+void FaceGraph::sortFacesIntoClusters() {
+	face_clusters.resize(numberOfClusters);
+
+	for (size_t cluster_id = 0; cluster_id < numberOfClusters; ++cluster_id) {
+		std::vector<Face> temp;
+		for (size_t j = 0; j < labels.size(); ++j) {
+			if (cluster_id == labels[j])
+				face_clusters[cluster_id].addFace(faces[j]);
+		}
+	}
+}
+
+FaceCluster* FaceGraph::getClusterPtr(size_t i_cluster) {
+	return &face_clusters.at(i_cluster);
 }

@@ -22,6 +22,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title),
 	SetMinSize(wxSize(400, 500));
 	Layout();
 
+	::wxInitAllImageHandlers();
 	// call function to load nn
 }
 
@@ -102,6 +103,7 @@ void MainFrame::createRunButton(wxBoxSizer* parentSizer) {
 #pragma endregion "GUI Setup"
 
 #pragma region "Events"
+
 void MainFrame::onDirSelect(wxFileDirPickerEvent& event) {
 	wxButton* runButton = static_cast<wxButton*>(FindWindowById(MainFrameIDs::RUN_BUTTON));
 	runButton->Enable();
@@ -109,16 +111,25 @@ void MainFrame::onDirSelect(wxFileDirPickerEvent& event) {
 	wxStaticText* folderLocation = static_cast<wxStaticText*>(FindWindowById(MainFrameIDs::FOLDER_LOCATION));
 	folderLocation->SetLabelText(event.GetPath());
 }
+
 void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	wxStaticText* folderLocation = static_cast<wxStaticText*>(FindWindowById(MainFrameIDs::FOLDER_LOCATION));
 	
-	ConsoleOutputWindow* console = new ConsoleOutputWindow("Console");
+	/*ConsoleOutputWindow* console = new ConsoleOutputWindow("Console");
 	console->SetClientSize(400, 300);
 	console->Center();
-	console->Show(true);
+	console->Show(true);*/
 
 
 	runAlg.runAlgorithm(folderLocation->GetLabelText().ToStdString());
+
+	FaceClusterWindow* faceClusterWindow = new FaceClusterWindow("Recognized faces", runAlg.getFaceGraph());
+	faceClusterWindow->SetClientSize(800, 600);
+	faceClusterWindow->Center();
+
+	// this->Hide();
+	faceClusterWindow->Show();
 }
+
 #pragma endregion "Events"
 

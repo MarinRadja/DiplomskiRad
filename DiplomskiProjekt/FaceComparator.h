@@ -9,8 +9,8 @@
 #include <dlib/clustering.h>
 
 #include "FaceDetector.h"
-#include "Utils.h"
 #include "Face.h"
+#include "Utils.h"
 
 using namespace cv;
 using namespace std;
@@ -19,11 +19,7 @@ using namespace std;
 class FaceComparator
 {
 public:
-	FaceComparator();
-	FaceComparator(FaceGraph *_face_graph);
-	FaceComparator(FaceDetector* faceDetector);
-
-	void setFaceDetector(FaceDetector* faceDetector);
+	FaceComparator(FaceGraph* _face_graph, FaceDetector* faceDetector);
 	void clusterFaces();
 
 	~FaceComparator();

@@ -14,6 +14,10 @@
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/opencv.h>
 
+#include <wx/image.h>
+#include <wx/file.h>
+#include <wx/bitmap.h>
+
 #include "Face.h"
 #include "FaceGraph.h"
 

@@ -6,7 +6,7 @@ Face::Face(matrix<rgb_pixel> _face) {
 	face = _face;
 }
 
-Face::Face(matrix<rgb_pixel> _face, string _image_location) {
+Face::Face(matrix<rgb_pixel>& _face, string _image_location) {
 	face = _face;
 	image_location = _image_location;
 }
@@ -19,8 +19,16 @@ matrix<float, 0, 1> Face::getFaceDescriptor() {
 	return face_descriptor;
 }
 
-matrix<rgb_pixel> Face::getFacePtr() {
+matrix<rgb_pixel> Face::getFace() {
 	return face;
+}
+
+matrix<rgb_pixel>* Face::getFacePtr() {
+	return &face;
+}
+
+Mat Face::getFaceOpenCV() {
+	return dlib::toMat(face);
 }
 
 void Face::setImageLocation(string _image_location) {
