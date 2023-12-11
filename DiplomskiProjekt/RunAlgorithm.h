@@ -12,6 +12,7 @@
 
 #include "FaceDetector.h"
 #include "FaceComparator.h"
+#include "FaceGraph.h"
 
 using namespace cv;
 using namespace cv::dnn;
@@ -33,9 +34,11 @@ private:
 
 	FaceDetector face_detector;
 	FaceComparator face_comparator;
+	FaceGraph face_graph;
 
 public:
 	RunAlgorithm();
 	void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
+	FaceGraph* getFaceGraph();
 };
 

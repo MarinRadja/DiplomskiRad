@@ -38,7 +38,7 @@ Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
     return resizedImage;
 }
 
-RunAlgorithm::RunAlgorithm() : face_detector(), face_comparator() {}
+RunAlgorithm::RunAlgorithm() : face_graph(), face_detector(&face_graph), face_comparator(&face_graph, &face_detector) {}
 
 void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::string framework) {
 
@@ -87,6 +87,9 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
             face_detector.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
         }
 
-    face_comparator.setFaceDetector(&face_detector);
     face_comparator.clusterFaces();
+}
+
+FaceGraph* RunAlgorithm::getFaceGraph() {
+    return &face_graph;
 }

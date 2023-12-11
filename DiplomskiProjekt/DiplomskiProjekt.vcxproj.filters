@@ -57,11 +57,17 @@
     <ClCompile Include="Face.cpp">
       <Filter>Source Files\FaceAnalysis</Filter>
     </ClCompile>
-    <ClCompile Include="FaceGroup.cpp">
+    <ClCompile Include="FaceGraph.cpp">
       <Filter>Source Files\FaceAnalysis</Filter>
     </ClCompile>
     <ClCompile Include="RunAlgorithm.cpp">
       <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceClusterWindow.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePanel.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,11 +95,17 @@
     <ClInclude Include="Face.h">
       <Filter>Header Files\FaceAnlysis</Filter>
     </ClInclude>
-    <ClInclude Include="FaceGroup.h">
+    <ClInclude Include="FaceGraph.h">
       <Filter>Header Files\FaceAnlysis</Filter>
     </ClInclude>
     <ClInclude Include="RunAlgorithm.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceClusterWindow.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImagePanel.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

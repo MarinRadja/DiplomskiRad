@@ -146,6 +146,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(WXWIN)\include\msvc;$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,9 +162,11 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConsoleOutputWindow.cpp" />
     <ClCompile Include="Face.cpp" />
+    <ClCompile Include="FaceClusterWindow.cpp" />
     <ClCompile Include="FaceComparator.cpp" />
     <ClCompile Include="FaceDetector.cpp" />
-    <ClCompile Include="FaceGroup.cpp" />
+    <ClCompile Include="FaceGraph.cpp" />
+    <ClCompile Include="ImagePanel.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="RunAlgorithm.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -172,10 +175,12 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="ConsoleOutputWindow.h" />
     <ClInclude Include="Face.h" />
+    <ClInclude Include="FaceClusterWindow.h" />
     <ClInclude Include="FaceComparator.h" />
     <ClInclude Include="FaceDetector.h" />
-    <ClInclude Include="FaceGroup.h" />
+    <ClInclude Include="FaceGraph.h" />
     <ClInclude Include="IDs.h" />
+    <ClInclude Include="ImagePanel.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="RunAlgorithm.h" />
     <ClInclude Include="Utils.h" />

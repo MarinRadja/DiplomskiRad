@@ -5,11 +5,13 @@
 #include <stdlib.h>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 
 #include <dlib/dnn.h>
 #include <dlib/gui_widgets.h>
 #include <dlib/clustering.h>
 #include <dlib/string.h>
+#include <dlib/opencv.h>
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
@@ -26,11 +28,13 @@ public:
 
 	Face();
 	Face(matrix<rgb_pixel> _face);
-	Face(matrix<rgb_pixel> _face, string _image_location);
+	Face(matrix<rgb_pixel>& _face, string _image_location);
 
 	string getImageLocation();
 	matrix<float, 0, 1> getFaceDescriptor();
 	matrix<rgb_pixel> getFace();
+	matrix<rgb_pixel> *getFacePtr();
+	Mat getFaceOpenCV();
 
 	void setImageLocation(string _image_location);
 	void setFaceDescriptor(matrix<float, 0, 1> _face_descriptor);

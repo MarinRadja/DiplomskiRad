@@ -18,11 +18,28 @@ FaceDetector::FaceDetector()
     deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
 }
 
+FaceDetector::FaceDetector(FaceGraph* _face_graph) {
+    this->inWidth = 300;
+    this->inHeight = 300;
+    this->inScaleFactor = 1.0;
+    this->confidenceThreshold = 0.7;
+    this->meanVal = Scalar(104.0, 177.0, 123.0);
+
+    // get face detector
+    detector = get_frontal_face_detector();
+
+    // load face shape detector
+    deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
+
+    face_graph = _face_graph;
+}
+
 void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation) {
     // convert opencv img format to dlib img format
     Mat cvRGB;
     cvtColor(cvImg, cvRGB, COLOR_BGR2RGB);
     cv_image<rgb_pixel> img1(cvRGB);
+    // wxImage test(cvRGB.cols, cvRGB.rows, cvRGB.data, true);
 
     cout << imgName << endl;
     int i = 1;
@@ -33,8 +50,7 @@ void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgN
         extract_image_chip(img1, get_face_chip_details(shape, 150, 0.25), face_chip);
         // save face for further use
         faces.push_back(move(face_chip));
-        Face f(move(face_chip), imageLocation);
-        newFaces.push_back(f);
+        face_graph->addFace(faces.back(), imageLocation);
 
 
         // converting image format from dlib to opencv

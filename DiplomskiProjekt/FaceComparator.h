@@ -9,8 +9,8 @@
 #include <dlib/clustering.h>
 
 #include "FaceDetector.h"
-#include "Utils.h"
 #include "Face.h"
+#include "Utils.h"
 
 using namespace cv;
 using namespace std;
@@ -19,15 +19,13 @@ using namespace std;
 class FaceComparator
 {
 public:
-	FaceComparator();
-	FaceComparator(FaceDetector* faceDetector);
-
-	void setFaceDetector(FaceDetector* faceDetector);
+	FaceComparator(FaceGraph* _face_graph, FaceDetector* faceDetector);
 	void clusterFaces();
 
 	~FaceComparator();
 private:
 	FaceDetector* fd;
+	FaceGraph* face_graph;
 
 	std::string resnetModelLocation = "E:/Programming/_Projects/DiplomskiProjekt/models/dlib/dlib_face_recognition_resnet_model_v1.dat";
 	std::vector<matrix<float, 0, 1>> face_descriptors;

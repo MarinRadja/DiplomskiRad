@@ -7,8 +7,10 @@ enum MainFrameIDs{
     FOLDER_LOCATION
 };
 
-enum Su {
-    DirPicker = wxID_LAST + 1,
-    PickerPage_Dir,
-    PickerPage_SetDir
+enum FaceClusterWindowIDs {
+    PREV_IMG = wxID_LAST + 1,
+    NEXT_IMG,
+    OPEN_IMG_LOC,
+    PREV_CLUSTER,
+    NEXT_CLUSTER
 };
