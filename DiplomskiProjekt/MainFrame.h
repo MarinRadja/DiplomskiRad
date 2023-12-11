@@ -6,6 +6,7 @@
 #include "ConsoleOutputWindow.h"
 #include "RunAlgorithm.h"
 #include "FaceClusterWindow.h"
+#include "ProgressWindow.h"
 
 class MainFrame : public wxFrame {
 public:

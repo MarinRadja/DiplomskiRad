@@ -14,3 +14,11 @@ enum FaceClusterWindowIDs {
     PREV_CLUSTER,
     NEXT_CLUSTER
 };
+
+enum ProgressWindowIDs {
+    DETECTING_IMAGE_TXT = wxID_LAST +1,
+    DETECTING_FACE_TXT,
+    DETECTING_FACE_GAUGE,
+    CLUSTERING_FACE_TXT,
+    CLUSTERING_FACE_GAUGE
+};

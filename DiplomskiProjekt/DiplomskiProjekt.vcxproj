@@ -168,6 +168,7 @@
     <ClCompile Include="FaceGraph.cpp" />
     <ClCompile Include="ImagePanel.cpp" />
     <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="ProgressWindow.cpp" />
     <ClCompile Include="RunAlgorithm.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
@@ -182,6 +183,7 @@
     <ClInclude Include="IDs.h" />
     <ClInclude Include="ImagePanel.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="ProgressWindow.h" />
     <ClInclude Include="RunAlgorithm.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

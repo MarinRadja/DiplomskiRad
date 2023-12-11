@@ -121,7 +121,15 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	console->Show(true);*/
 
 
-	runAlg.runAlgorithm(folderLocation->GetLabelText().ToStdString());
+	ProgressWindow* progressWindow = new ProgressWindow("Progress");
+	progressWindow->SetClientSize(400, 300);
+	progressWindow->Center();
+
+	this->Hide();
+	progressWindow->Show();
+
+	runAlg.runAlgorithm(folderLocation->GetLabelText().ToStdString(), progressWindow);
+	progressWindow->Destroy();
 
 	FaceClusterWindow* faceClusterWindow = new FaceClusterWindow("Recognized faces", runAlg.getFaceGraph());
 	faceClusterWindow->SetClientSize(800, 600);
