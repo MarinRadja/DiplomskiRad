@@ -1,4 +1,11 @@
 #pragma once
+#define _WINSOCKAPI_
+
+#include "FaceDetector.h"
+#include "FaceComparator.h"
+#include "FaceGraph.h"
+#include "ProgressWindow.h"
+#include "Utils.h"
 
 #include <iostream>
 #include <string>
@@ -9,12 +16,6 @@
 #include <opencv2/opencv.hpp>
 
 #include <wx/wx.h>
-
-#include "FaceDetector.h"
-#include "FaceComparator.h"
-#include "FaceGraph.h"
-#include "ProgressWindow.h"
-#include "Utils.h"
 
 using namespace cv;
 using namespace cv::dnn;
@@ -34,13 +35,14 @@ private:
 	void getAll(fs::path dir, string ext);
 	Mat resizeImage(Mat& image, int width = 0, int height = 0, int inter = INTER_AREA);
 
+	ProgressWindow* progress_window;
+
 	FaceDetector face_detector;
 	FaceComparator face_comparator;
 	FaceGraph face_graph;
-	ProgressWindow* progress_window;
 public:
 	RunAlgorithm();
-	void runAlgorithm(std::string path, ProgressWindow* _progress_window, std::string device = "cpu", std::string framework = "caffe");
+	void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
 	FaceGraph* getFaceGraph();
 };
 

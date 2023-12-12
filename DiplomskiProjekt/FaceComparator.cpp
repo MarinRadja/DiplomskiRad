@@ -33,10 +33,13 @@ void FaceComparator::clusterFaces() {
                 - face_graph->getFacePtr(j)->getFaceDescriptor());
             if (dist < 0.55)
                 face_graph->addEdge(i, j);
+            wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::COMPARED_FACE));
         }
     }
+    wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_COMPARING_FACES));
     face_graph->setNumberOfClusters(chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr()));
     face_graph->sortFacesIntoClusters();
+    wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_CLUSTERING_FACES));
 
     /*while (face_descriptors.size() > 0) {
         if (!faceEmbeddingExists(face_descriptors.size() - 1)) {

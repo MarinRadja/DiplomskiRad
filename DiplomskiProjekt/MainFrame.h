@@ -1,15 +1,15 @@
 #pragma once
-
-#include <thread>
-
-#include <wx/wx.h>
-#include <wx/filepicker.h>
-
+#define _WINSOCKAPI_
 #include "IDs.h"
 #include "ConsoleOutputWindow.h"
 #include "RunAlgorithm.h"
 #include "FaceClusterWindow.h"
 #include "ProgressWindow.h"
+
+#include <thread>
+
+#include <wx/wx.h>
+#include <wx/filepicker.h>
 
 class MainFrame : public wxFrame {
 public:
@@ -18,7 +18,7 @@ public:
 	RunAlgorithm* getAlgorithmPtr();
 protected:
 private:
-	RunAlgorithm runAlg;
+	RunAlgorithm* runAlg;
 
 	void createTitle(wxBoxSizer* parentSizer);
 	void createInfo(wxBoxSizer* parentSizer);
@@ -31,7 +31,7 @@ private:
 	void onDirSelect(wxFileDirPickerEvent& event);
 	void onRunButtonClick(wxCommandEvent& event);
 
-	void startWorking(string folderLocation, ProgressWindow* progressWindow);
+	void startWorking(string folderLocation);
 
 	wxDECLARE_EVENT_TABLE();
 };

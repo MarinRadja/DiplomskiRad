@@ -1,4 +1,5 @@
 #pragma once
+#define _WINSOCKAPI_
 #include <iostream>
 #include <string>
 #include <vector>

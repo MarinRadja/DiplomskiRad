@@ -51,6 +51,7 @@ void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgN
         // save face for further use
         faces.push_back(move(face_chip));
         face_graph->addFace(faces.back(), imageLocation);
+        wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DETECTED_FACE));
 
 
         // converting image format from dlib to opencv

@@ -9,7 +9,8 @@ wxEND_EVENT_TABLE()
 
 #pragma region "GUI Setup"
 
-MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title), runAlg() {
+MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
+	runAlg = new RunAlgorithm();
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -27,7 +28,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title),
 }
 
 RunAlgorithm* MainFrame::getAlgorithmPtr() {
-	return &runAlg;
+	return runAlg;
 }
 
 void MainFrame::createTitle(wxBoxSizer* parentSizer) {
@@ -127,14 +128,10 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 
 	this->Hide();
 
-	// std::thread sw(&MainFrame::startWorking, this, folderLocation->GetLabelText().ToStdString(), progressWindow);
-	// sw.detach();
+	wxCommandEvent* startWorking = new wxCommandEvent(myEVT_CREATE_PROGRESS_WINDOW, EventsIDs::CREATE_PROGRESS_WINDOW);
+	startWorking->SetString(folderLocation->GetLabelText());
+	wxTheApp->QueueEvent(startWorking);
 }
 
 #pragma endregion "Events"
 
-#pragma region "Thread"
-void MainFrame::startWorking(string folderLocation, ProgressWindow* progressWindow) {
-	runAlg.runAlgorithm(folderLocation, progressWindow);
-}
-#pragma endregion "Thread"

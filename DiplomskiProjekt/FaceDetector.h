@@ -1,4 +1,10 @@
 #pragma once
+#define _WINSOCKAPI_
+#include "Face.h"
+#include "FaceGraph.h"
+#include "IDs.h"
+#include "Utils.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,12 +20,10 @@
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/opencv.h>
 
+#include <wx/app.h>
 #include <wx/image.h>
 #include <wx/file.h>
 #include <wx/bitmap.h>
-
-#include "Face.h"
-#include "FaceGraph.h"
 
 using namespace cv;
 using namespace std;

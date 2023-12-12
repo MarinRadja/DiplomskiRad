@@ -1,25 +1,37 @@
 #pragma once
+#define _WINSOCKAPI_
+#include <chrono>
+#include <thread>
+
+#include <wx/wx.h>
+#include <wx/event.h>
+
 #include "MainFrame.h"
 #include "ProgressWindow.h"
 #include "FaceClusterWindow.h"
+#include "Utils.h"
+#include "IDs.h"
 
-#include <wx/wx.h>
 
-class App : public wxApp
-{
+class MyApp : public wxApp {
 private:
 	MainFrame* main_frame;
 	ProgressWindow* progress_window;
-	FaceClusterWindow* face_cluster_window;
-
+	FaceClusterWindow* face_cluster_window; 
+	
+	void startWorking(string folderLocation);
 public:
 	bool OnInit();
 
-	void createProgressWindow(wxCommandEvent& event);
-	void createFaceClusterWindow(wxCommandEvent& event);
+	void createProgressWindow(wxCommandEvent& evt);
+	void createFaceClusterWindow(wxCommandEvent& evt);
+	void updateProgressWindow_detectedImage(wxCommandEvent& evt);
+	void updateProgressWindow_doneDetectingImages(wxCommandEvent& evt);
+	void updateProgressWindow_detectedFace(wxCommandEvent& evt);
+	void updateProgressWindow_doneDetectingFacesOnImage(wxCommandEvent& evt);
+	void updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt);
+	void updateProgressWindow_comparedFace(wxCommandEvent& evt);
+	void updateProgressWindow_doneComparingFaces(wxCommandEvent& evt);
 };
 
-DECLARE_APP(App);
-wxDECLARE_EVENT(EVT_SHOW_PROGRESS_WINDOW, wxCommandEvent);
-wxDECLARE_EVENT(EVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
-wxDECLARE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);
+DECLARE_APP(MyApp);

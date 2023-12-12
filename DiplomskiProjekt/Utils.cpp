@@ -1,8 +1,8 @@
 #include "Utils.h"
 
 // this is a definition so can't be in a header
-wxDEFINE_EVENT(EVT_SHOW_PROGRESS_WINDOW, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
+wxDEFINE_EVENT(myEVT_CREATE_PROGRESS_WINDOW, wxCommandEvent);
+wxDEFINE_EVENT(myEVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
 wxDEFINE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);
 
 #pragma region "Data"

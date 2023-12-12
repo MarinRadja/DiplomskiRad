@@ -7,8 +7,7 @@ void RunAlgorithm::getAll(fs::path dir, string ext) {
                 fs::path p = entry.path();
                 allImages.emplace_back(p.make_preferred());
 
-                wxCommandEvent* ddi = new wxCommandEvent(EVT_UPDATE_PROGRESS_WINDOW, ProgressWindowEventsIDs::DETECTED_IMAGE);
-                progress_window->GetEventHandler()->QueueEvent(ddi);
+                 wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DETECTED_IMAGE));
             }
         }
     }
@@ -41,11 +40,12 @@ Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
     return resizedImage;
 }
 
-RunAlgorithm::RunAlgorithm() : face_graph(), face_detector(&face_graph), face_comparator(&face_graph, &face_detector) {}
+RunAlgorithm::RunAlgorithm() : face_graph(), face_detector(&face_graph), face_comparator(&face_graph, &face_detector) {
 
-void RunAlgorithm::runAlgorithm(std::string path, ProgressWindow* _progress_window, std::string device, std::string framework) {
-    progress_window = _progress_window;
+}
 
+void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::string framework) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     string imageSetDirectory = path;
     std::vector<string> extension;
@@ -55,7 +55,8 @@ void RunAlgorithm::runAlgorithm(std::string path, ProgressWindow* _progress_wind
     for (string ext : extension) {
         getAll(imageSetDirectory, ext);
     }       
-    
+    wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_IMAGES));
+
     for (fs::path entry : allImages) {
             cout << "Proccesing image: " << entry.string() << endl;
             Mat cvImg1 = imread(entry.string(), IMREAD_COLOR);
@@ -64,13 +65,13 @@ void RunAlgorithm::runAlgorithm(std::string path, ProgressWindow* _progress_wind
             string imageName = entry.stem().string();
             string imageLocation = entry.string();
             face_detector.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
+            wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE));
     }
-    wxCommandEvent* ddi = new wxCommandEvent(EVT_UPDATE_PROGRESS_WINDOW, ProgressWindowEventsIDs::DONE_DETECTING_IMAGES);
-    progress_window->GetEventHandler()->QueueEvent(ddi);
+    wxCommandEvent* doneDetectingFaces = new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES);
+    doneDetectingFaces->SetInt(face_detector.faces.size());
+    wxTheApp->QueueEvent(doneDetectingFaces);
 
     face_comparator.clusterFaces();
-    wxCommandEvent* ddi = new wxCommandEvent(EVT_UPDATE_PROGRESS_WINDOW, ProgressWindowEventsIDs::DONE_CLUSTERING_FACES);
-    progress_window->GetEventHandler()->QueueEvent(ddi);
 }
 
 FaceGraph* RunAlgorithm::getFaceGraph() {
