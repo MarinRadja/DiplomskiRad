@@ -35,15 +35,19 @@ private:
 	int faces_compared;
 	int total_comparisons;
 
-	wxStaticText* imagesFoundTxt; 
+	wxStaticText* imagesFoundTxt;
+	wxGauge* detectingImagesGauge;
 	wxStaticText* detectingFacesTxt; 
 	wxGauge* detectingFacesGauge; 
 	wxStaticText* comparingFacesTxt; 
 	wxGauge* comparingFacesGauge;
 
-	void createImagesFoundText(wxBoxSizer* parentSizer);
+	void createImagesFoundProgress(wxBoxSizer* parentSizer);
 	void createFindingFacesOnImagesProgress(wxBoxSizer* parentSizer);
 	void createClusteringFacesProgress(wxBoxSizer* parentSizer);
+
+	void createImagesFoundText(wxBoxSizer* parentSizer);
+	void createImagesFoundGauge(wxBoxSizer* parentSizer);
 	void createDetectingFacesText(wxBoxSizer* parentSizer);
 	void createDetectingFacesGauge(wxBoxSizer* parentSizer);
 	void createComparingFacesText(wxBoxSizer* parentSizer);
