@@ -1,10 +1,12 @@
 #pragma once
+#define _WINSOCKAPI_
 #include <wx/wx.h>
 #include <wx/statline.h>
 
 #include "ImagePanel.h"
 #include "FaceGraph.h"
 #include "IDs.h"
+
 
 class FaceClusterWindow : public wxFrame {
 public:

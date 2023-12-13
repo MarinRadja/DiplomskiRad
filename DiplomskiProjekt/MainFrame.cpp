@@ -9,7 +9,8 @@ wxEND_EVENT_TABLE()
 
 #pragma region "GUI Setup"
 
-MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title), runAlg() {
+MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
+	runAlg = new RunAlgorithm();
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -24,6 +25,10 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title),
 
 	::wxInitAllImageHandlers();
 	// call function to load nn
+}
+
+RunAlgorithm* MainFrame::getAlgorithmPtr() {
+	return runAlg;
 }
 
 void MainFrame::createTitle(wxBoxSizer* parentSizer) {
@@ -121,14 +126,11 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	console->Show(true);*/
 
 
-	runAlg.runAlgorithm(folderLocation->GetLabelText().ToStdString());
+	this->Hide();
 
-	FaceClusterWindow* faceClusterWindow = new FaceClusterWindow("Recognized faces", runAlg.getFaceGraph());
-	faceClusterWindow->SetClientSize(800, 600);
-	faceClusterWindow->Center();
-
-	// this->Hide();
-	faceClusterWindow->Show();
+	wxCommandEvent* startWorking = new wxCommandEvent(myEVT_CREATE_PROGRESS_WINDOW, EventsIDs::CREATE_PROGRESS_WINDOW);
+	startWorking->SetString(folderLocation->GetLabelText());
+	wxTheApp->QueueEvent(startWorking);
 }
 
 #pragma endregion "Events"

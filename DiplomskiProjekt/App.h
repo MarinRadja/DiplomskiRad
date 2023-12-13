@@ -1,11 +1,41 @@
 #pragma once
+#define _WINSOCKAPI_
+#include <chrono>
+#include <thread>
+
 #include <wx/wx.h>
+#include <wx/event.h>
 
 #include "MainFrame.h"
+#include "ProgressWindow.h"
+#include "FaceClusterWindow.h"
+#include "Utils.h"
+#include "IDs.h"
 
-class App : public wxApp
-{
+
+class MyApp : public wxApp {
+private:
+	MainFrame* main_frame;
+	ProgressWindow* progress_window;
+	FaceClusterWindow* face_cluster_window; 
+	
+	void startWorking(string folderLocation);
 public:
 	bool OnInit();
+
+	void createMainWindow();
+	void createProgressWindow(wxCommandEvent& evt);
+	void createFaceClusterWindow();
+
+	// events for updating progress window
+	void updateProgressWindow_detectedImage(wxCommandEvent& evt);
+	void updateProgressWindow_doneDetectingImages(wxCommandEvent& evt);
+	void updateProgressWindow_detectedFace(wxCommandEvent& evt);
+	void updateProgressWindow_doneDetectingFacesOnImage(wxCommandEvent& evt);
+	void updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt);
+	void updateProgressWindow_comparedFace(wxCommandEvent& evt);
+	void updateProgressWindow_doneComparingFaces(wxCommandEvent& evt);
+	void updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt);
 };
 
+DECLARE_APP(MyApp);

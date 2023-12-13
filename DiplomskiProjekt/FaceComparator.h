@@ -1,4 +1,5 @@
 #pragma once
+#define _WINSOCKAPI_
 #include <iostream>
 #include <string>
 #include <vector>
@@ -6,11 +7,14 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <dlib/clustering.h>
-
+#include <dlib/clustering.h>  
+ 
 #include "FaceDetector.h"
 #include "Face.h"
 #include "Utils.h"
+#include "IDs.h"
+
+
 
 using namespace cv;
 using namespace std;

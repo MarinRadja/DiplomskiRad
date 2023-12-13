@@ -1,7 +1,7 @@
 #pragma once
-#include <wx/wx.h>
+#include <wx/defs.h>
 
-enum MainFrameIDs{
+enum MainFrameIDs {
     DIR_PICKER = wxID_LAST + 1,
     RUN_BUTTON,
     FOLDER_LOCATION
@@ -13,4 +13,26 @@ enum FaceClusterWindowIDs {
     OPEN_IMG_LOC,
     PREV_CLUSTER,
     NEXT_CLUSTER
+};
+
+enum ProgressWindowIDs {
+    DETECTING_IMAGE_TXT = wxID_LAST + 1,
+    DETECTING_FACE_TXT,
+    DETECTING_FACE_GAUGE, 
+    COMPARING_FACE_TXT,
+    COMPARING_FACE_GAUGE,
+    CLUSTERING_FACE_TXT
+};
+
+enum EventsIDs {
+    CREATE_PROGRESS_WINDOW = wxID_LAST + 1,
+    CREATE_FACE_CLUSTER_WINDOW,
+    DETECTED_IMAGE, 
+    DONE_DETECTING_IMAGES,
+    DETECTED_FACE,
+    DONE_DETECTING_FACES_ON_IMAGE,
+    DONE_DETECTING_FACES,
+    COMPARED_FACE,
+    DONE_COMPARING_FACES,
+    DONE_CLUSTERING_FACES
 };
