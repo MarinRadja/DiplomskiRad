@@ -67,6 +67,7 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
             face_detector.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
             wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE));
     }
+
     wxCommandEvent* doneDetectingFaces = new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES);
     doneDetectingFaces->SetInt(face_detector.faces.size());
     wxTheApp->QueueEvent(doneDetectingFaces);

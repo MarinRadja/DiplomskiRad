@@ -6,6 +6,7 @@
 #include "FaceGraph.h"
 #include "ProgressWindow.h"
 #include "Utils.h"
+#include "IDs.h"
 
 #include <iostream>
 #include <string>

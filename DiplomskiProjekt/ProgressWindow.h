@@ -23,6 +23,8 @@ public:
 	void detectingFacesGaugePlusOne();
 	void finishedDetectingFaces();
 	void setComparingFacesRange(int r);
+	void comparingFacesGougePlusOne(); 
+	void finishedComparingFaces();
 
 protected:
 private:
@@ -30,6 +32,8 @@ private:
 	int faces_found;
 	int images_analyzed;
 	int faces_analyzed;
+	int faces_compared;
+	int total_comparisons;
 
 	wxStaticText* imagesFoundTxt; 
 	wxStaticText* detectingFacesTxt; 

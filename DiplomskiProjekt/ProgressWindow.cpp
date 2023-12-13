@@ -1,7 +1,7 @@
 #include "ProgressWindow.h"
 
 ProgressWindow::ProgressWindow(const wxString& title) 
-	: wxFrame(nullptr, wxID_ANY, title), images_found(0), faces_found(0), faces_analyzed(0), images_analyzed(0) {
+	: wxFrame(nullptr, wxID_ANY, title), images_found(0), faces_found(0), faces_analyzed(0), images_analyzed(0), faces_compared(0), total_comparisons(0) {
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -59,11 +59,11 @@ void ProgressWindow::createComparingFacesText(wxBoxSizer* parentSizer) {
 }
 
 void ProgressWindow::createComparingFacesGauge(wxBoxSizer* parentSizer) {
-	wxBoxSizer* clusteringFacesGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
-	comparingFacesGauge = new wxGauge(this, ProgressWindowIDs::COMPARING_FACE_GAUGE, faces_found);
+	wxBoxSizer* comparingFacesGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
+	comparingFacesGauge = new wxGauge(this, ProgressWindowIDs::COMPARING_FACE_GAUGE, total_comparisons);
 
-	clusteringFacesGaugeSizer->Add(comparingFacesGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(clusteringFacesGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	comparingFacesGaugeSizer->Add(comparingFacesGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(comparingFacesGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 std::string ProgressWindow::detectingImages() {
@@ -83,11 +83,11 @@ std::string ProgressWindow::detectingFacesDone() {
 }
 
 std::string ProgressWindow::comparingFaces() {
-	return "Clustering faces: " + std::to_string(faces_analyzed) + "/" + std::to_string(faces_found);
+	return "Comparing faces: " + std::to_string(faces_compared) + "/" + std::to_string(total_comparisons);
 }
 
 std::string ProgressWindow::comparingFacesDone() {
-	return "Done! Clustered faces into x clusters";
+	return "Done! Compared all faces.";
 }
 
 std::string ProgressWindow::clusteringFaces() {
@@ -132,8 +132,7 @@ void ProgressWindow::detectingFacesPlusOne() {
 }
 
 void ProgressWindow::detectingFacesGaugePlusOne() {
-	images_analyzed++;
-	detectingFacesGauge->SetValue(images_analyzed);
+	detectingFacesGauge->SetValue(++images_analyzed);
 }
 
 void ProgressWindow::finishedDetectingFaces() {
@@ -141,5 +140,17 @@ void ProgressWindow::finishedDetectingFaces() {
 }
 
 void ProgressWindow::setComparingFacesRange(int r) {
-	comparingFacesGauge->SetRange(r);
+	total_comparisons = Utils::sumUpToIncluding(r);
+	comparingFacesTxt->SetLabel(comparingFaces());
+	comparingFacesGauge->SetRange(total_comparisons);
+}
+
+void ProgressWindow::comparingFacesGougePlusOne() {
+	faces_compared++;
+	comparingFacesTxt->SetLabelText(comparingFaces());
+	comparingFacesGauge->SetValue(faces_compared);
+}
+
+void ProgressWindow::finishedComparingFaces() {
+	comparingFacesTxt->SetLabelText(comparingFacesDone());
 }

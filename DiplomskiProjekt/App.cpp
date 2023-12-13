@@ -50,39 +50,44 @@ bool MyApp::OnInit() {
 		this,
 		EventsIDs::DONE_COMPARING_FACES);
 
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
+		&MyApp::updateProgressWindow_doneClusteringFaces,
+		this,
+		EventsIDs::DONE_CLUSTERING_FACES);
+
 #pragma endregion "Bind Events"
 
-	main_frame = new MainFrame("Face recognition");
-
-	main_frame->SetClientSize(400, 300);
-	main_frame->Center();
-
-	main_frame->Show();
-
+	createMainWindow();
 	return true;
 }
 
 #pragma region "Events"
-#pragma region "Create windows events"
+#pragma region "Create windows"
+void MyApp::createMainWindow() {
+	if (main_frame != nullptr) main_frame->Destroy();
+
+	main_frame = new MainFrame("Face recognition");
+	main_frame->SetClientSize(400, 300);
+	main_frame->Center();
+	main_frame->Show();
+}
+
 void MyApp::createProgressWindow(wxCommandEvent& evt) {
 	if (progress_window != nullptr) progress_window->Destroy();
 
 	progress_window = new ProgressWindow("Progress");
-
 	progress_window->SetClientSize(400, 300);
 	progress_window->Center();
 	progress_window->Show();
-
 
 	std::thread sw(&MyApp::startWorking, this, evt.GetString().ToStdString());
 	sw.detach();
 }
 
-void MyApp::createFaceClusterWindow(wxCommandEvent& event) {
+void MyApp::createFaceClusterWindow() {
 	if (face_cluster_window != nullptr) face_cluster_window->Destroy();
 
 	face_cluster_window = new FaceClusterWindow("Recognized faces", main_frame->getAlgorithmPtr()->getFaceGraph());
-
 	face_cluster_window->SetClientSize(800, 600);
 	face_cluster_window->Center();
 	face_cluster_window->Show();
@@ -124,13 +129,20 @@ void MyApp::updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt) {
 // not done
 void MyApp::updateProgressWindow_comparedFace(wxCommandEvent& evt) {
 	while (progress_window == nullptr);
-
+	progress_window->comparingFacesGougePlusOne();
+	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_doneComparingFaces(wxCommandEvent& evt) {
 	while (progress_window == nullptr);
-	progress_window->finishedDetectingFaces();
+	progress_window->finishedComparingFaces();
 	progress_window->Layout();
+}
+
+void MyApp::updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt) {
+	while (progress_window == nullptr);
+	progress_window->Destroy();
+	createFaceClusterWindow();
 }
 #pragma endregion
 

@@ -31,12 +31,13 @@ void FaceComparator::clusterFaces() {
             // add option for user input treshold
             float dist = dlib::length(face_graph->getFacePtr(i)->getFaceDescriptor()
                 - face_graph->getFacePtr(j)->getFaceDescriptor());
-            if (dist < 0.55)
+            if (dist < Utils::faceSimilarityThreshold)
                 face_graph->addEdge(i, j);
             wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::COMPARED_FACE));
         }
     }
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_COMPARING_FACES));
+
     face_graph->setNumberOfClusters(chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr()));
     face_graph->sortFacesIntoClusters();
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_CLUSTERING_FACES));

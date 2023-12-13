@@ -6,10 +6,15 @@ wxDEFINE_EVENT(myEVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
 wxDEFINE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);
 
 #pragma region "Data"
-float Utils::faceSimilarityThreshold = 0.5f;
+float Utils::faceSimilarityThreshold = 0.55f;
 #pragma endregion "Data"
 
 #pragma region "Functions"
+
+int Utils::sumUpToIncluding(int n) {
+    return n * (n + 1) / 2;
+}
+
 wxImage Utils::simple_wx_from_mat(std::string imageLocation) {
     cv::Mat img = imread(imageLocation, cv::IMREAD_COLOR);
     cv::Mat im2;
@@ -46,4 +51,5 @@ cv::Mat* Utils::simple_mat_from_wx(wxImage& wx) {
     cv::cvtColor(im2, im2, cv::COLOR_RGB2BGR);
     return &im2;
 }
+
 #pragma endregion "Functions"
