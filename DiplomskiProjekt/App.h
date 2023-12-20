@@ -33,6 +33,7 @@ public:
 	void updateProgressWindow_detectedFace(wxCommandEvent& evt);
 	void updateProgressWindow_doneDetectingFacesOnImage(wxCommandEvent& evt);
 	void updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt);
+	void updateProgressWindow_NNDone(wxCommandEvent& evt);
 	void updateProgressWindow_comparedFace(wxCommandEvent& evt);
 	void updateProgressWindow_doneComparingFaces(wxCommandEvent& evt);
 	void updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt);

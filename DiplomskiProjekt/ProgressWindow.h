@@ -22,6 +22,7 @@ public:
 	void detectingFacesPlusOne();
 	void detectingFacesGaugePlusOne();
 	void finishedDetectingFaces();
+	void NNDone();
 	void setComparingFacesRange(int r);
 	void comparingFacesGougePlusOne(); 
 	void finishedComparingFaces();
@@ -36,20 +37,26 @@ private:
 	int total_comparisons;
 
 	wxStaticText* imagesFoundTxt;
-	wxGauge* detectingImagesGauge;
 	wxStaticText* detectingFacesTxt; 
-	wxGauge* detectingFacesGauge; 
-	wxStaticText* comparingFacesTxt; 
+	wxStaticText* NNTxt;
+	wxStaticText* comparingFacesTxt;
+
+	wxGauge* detectingImagesGauge;
+	wxGauge* detectingFacesGauge;
+	wxGauge* NNGauge;
 	wxGauge* comparingFacesGauge;
 
 	void createImagesFoundProgress(wxBoxSizer* parentSizer);
 	void createFindingFacesOnImagesProgress(wxBoxSizer* parentSizer);
+	void createNNProgress(wxBoxSizer* parentSizer);
 	void createClusteringFacesProgress(wxBoxSizer* parentSizer);
 
 	void createImagesFoundText(wxBoxSizer* parentSizer);
 	void createImagesFoundGauge(wxBoxSizer* parentSizer);
 	void createDetectingFacesText(wxBoxSizer* parentSizer);
 	void createDetectingFacesGauge(wxBoxSizer* parentSizer);
+	void createNNText(wxBoxSizer* parentSizer);
+	void createNNGauge(wxBoxSizer* parentSizer);
 	void createComparingFacesText(wxBoxSizer* parentSizer);
 	void createComparingFacesGauge(wxBoxSizer* parentSizer);
 	void createClusteringFacesText(wxBoxSizer* parentSizer);

@@ -7,10 +7,11 @@ ProgressWindow::ProgressWindow(const wxString& title)
 
 	createImagesFoundProgress(clientAreaSizer);
 	createFindingFacesOnImagesProgress(clientAreaSizer);
+	createNNProgress(clientAreaSizer);
 	createClusteringFacesProgress(clientAreaSizer);
 
 	SetSizerAndFit(clientAreaSizer);
-	SetMinSize(wxSize(400, 300));
+	SetMinSize(wxSize(500, 300));
 	Layout();
 
 	::wxInitAllImageHandlers();
@@ -24,6 +25,11 @@ void ProgressWindow::createImagesFoundProgress(wxBoxSizer* parentSizer) {
 void ProgressWindow::createFindingFacesOnImagesProgress(wxBoxSizer* parentSizer) {
 	createDetectingFacesText(parentSizer);
 	createDetectingFacesGauge(parentSizer);
+}
+
+void ProgressWindow::createNNProgress(wxBoxSizer* parentSizer) {
+	createNNText(parentSizer);
+	createNNGauge(parentSizer);
 }
 
 void ProgressWindow::createClusteringFacesProgress(wxBoxSizer* parentSizer) {
@@ -62,6 +68,22 @@ void ProgressWindow::createDetectingFacesGauge(wxBoxSizer* parentSizer) {
 
 	detectingFacesGaugeSizer->Add(detectingFacesGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
 	parentSizer->Add(detectingFacesGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void ProgressWindow::createNNText(wxBoxSizer* parentSizer) {
+	wxBoxSizer* NNTxtSizer = new wxBoxSizer(wxHORIZONTAL);
+	NNTxt = new wxStaticText(this, wxID_ANY, "Waiting for faces to be detected.", wxDefaultPosition, wxSize(150, 40), wxALIGN_CENTER);
+
+	NNTxtSizer->Add(NNTxt, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(NNTxtSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void ProgressWindow::createNNGauge(wxBoxSizer* parentSizer) {
+	wxBoxSizer* NNGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
+	NNGauge = new wxGauge(this, wxID_ANY, 1);
+
+	NNGaugeSizer->Add(NNGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(NNGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void ProgressWindow::createComparingFacesText(wxBoxSizer* parentSizer) {
@@ -133,7 +155,6 @@ void ProgressWindow::setFacesAnalyzed(int x) {
 void ProgressWindow::detectingImagesPlusOne() {
 	images_found++;
 	imagesFoundTxt->SetLabelText(detectingImages());
-	detectingImagesGauge->Pulse();
 }
 
 void ProgressWindow::finishedDetectingImages() {
@@ -153,6 +174,13 @@ void ProgressWindow::detectingFacesGaugePlusOne() {
 
 void ProgressWindow::finishedDetectingFaces() {
 	detectingFacesTxt->SetLabelText(detectingFacesDone());
+	NNTxt->SetLabelText("Neural network is embedding faces, this could take a while..");
+	NNGauge->Pulse();
+}
+
+void ProgressWindow::NNDone() {
+	NNTxt->SetLabelText("Neural network finished embedding faces.");
+	NNGauge->SetValue(1);
 }
 
 void ProgressWindow::setComparingFacesRange(int r) {
