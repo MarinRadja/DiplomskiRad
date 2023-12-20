@@ -41,6 +41,11 @@ bool MyApp::OnInit() {
 		EventsIDs::DONE_DETECTING_FACES);
 
 	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
+		&MyApp::updateProgressWindow_NNDone,
+		this,
+		EventsIDs::NN_DONE);
+
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
 		&MyApp::updateProgressWindow_comparedFace,
 		this,
 		EventsIDs::COMPARED_FACE);
@@ -123,6 +128,12 @@ void MyApp::updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt) {
 	while (progress_window == nullptr);
 	progress_window->setComparingFacesRange(evt.GetInt());
 	progress_window->finishedDetectingFaces();
+	progress_window->Layout();
+}
+
+void MyApp::updateProgressWindow_NNDone(wxCommandEvent& evt) {
+	while (progress_window == nullptr);
+	progress_window->NNDone();
 	progress_window->Layout();
 }
 

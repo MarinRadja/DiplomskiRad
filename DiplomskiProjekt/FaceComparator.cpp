@@ -11,6 +11,8 @@ void FaceComparator::clusterFaces() {
 
     // get face embeddings
     face_descriptors = net(fd->faces);
+
+    wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::NN_DONE));
     // iterate over all embeddings
     
     //// for each face, get it's embedding
