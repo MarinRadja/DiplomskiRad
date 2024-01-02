@@ -23,9 +23,6 @@ public:
 	int getNFaces();
 
 	Face* getFacePtr(size_t i_face);
-
-	std::vector<Face>* getFaces();
-	std::vector<Face>::iterator getIterator();    
 	
 	std::vector<Face>::iterator begin() { return faces.begin(); }
 	std::vector<Face>::const_iterator begin() const { return faces.begin(); }

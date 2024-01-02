@@ -31,8 +31,7 @@ string Face::getFaceLocation() {
 nlohmann::json Face::getJson() {
 	nlohmann::json faceJson = {
 		{"image_location", image_location},
-		{"face_location", face_location},
-		{"counter", face_counter.load()}
+		{"face_location", face_location}
 	};
 	return faceJson;
 }

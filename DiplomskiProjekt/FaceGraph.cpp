@@ -17,14 +17,6 @@ Face* FaceCluster::getFacePtr(size_t i_face) {
 	return &faces.at(i_face);
 }
 
-std::vector<Face>* FaceCluster::getFaces() {
-	return &faces;
-}
-
-std::vector<Face>::iterator FaceCluster::getIterator() {
-	return faces.begin();
-}
-
 void FaceGraph::addFace(Face face) {
 	faces.push_back(face);
 }

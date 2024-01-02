@@ -72,4 +72,3 @@ void Utils::saveToDisk(nlohmann::json& graph_json, std::string& json_name) {
 }
 
 #pragma endregion "Functions"
-
