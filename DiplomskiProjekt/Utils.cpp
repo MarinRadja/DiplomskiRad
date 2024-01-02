@@ -64,4 +64,12 @@ void Utils::createDirectory(std::string dirName) {
     }
 }
 
+void Utils::saveToDisk(nlohmann::json& graph_json, std::string& json_name) {
+    createDirectory("./output");
+    std::ofstream ofs("./output/" + json_name + ".json");
+    ofs << graph_json << std::endl;
+    ofs.close();
+}
+
 #pragma endregion "Functions"
+

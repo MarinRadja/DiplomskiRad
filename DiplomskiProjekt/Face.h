@@ -17,6 +17,8 @@
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
+#include "json.hpp"
+
 #include "Utils.h"
 
 using namespace cv;
@@ -38,6 +40,8 @@ public:
 
 	string getImageLocation();
 	string getFaceLocation();
+
+	nlohmann::json getJson();
 
 	void setImageLocation(string _image_location);
 };

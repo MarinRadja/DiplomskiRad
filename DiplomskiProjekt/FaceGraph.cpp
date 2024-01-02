@@ -17,6 +17,14 @@ Face* FaceCluster::getFacePtr(size_t i_face) {
 	return &faces.at(i_face);
 }
 
+std::vector<Face>* FaceCluster::getFaces() {
+	return &faces;
+}
+
+std::vector<Face>::iterator FaceCluster::getIterator() {
+	return faces.begin();
+}
+
 void FaceGraph::addFace(Face face) {
 	faces.push_back(face);
 }
@@ -68,4 +76,17 @@ void FaceGraph::sortFacesIntoClusters() {
 
 FaceCluster* FaceGraph::getClusterPtr(size_t i_cluster) {
 	return &face_clusters.at(i_cluster);
+}
+
+void FaceGraph::saveGraphToJson(string& json_name) {
+	nlohmann::json graph_json;
+	for (FaceCluster faCl : face_clusters) {
+		nlohmann::json cluster_json;
+		for (Face fa : faCl) {
+			cluster_json.push_back(fa.getJson());
+		}
+		graph_json.push_back(cluster_json);
+	}
+
+	Utils::saveToDisk(graph_json, json_name);
 }
