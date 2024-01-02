@@ -15,7 +15,7 @@ FaceDetector::FaceDetector()
     detector = get_frontal_face_detector();
 
     // load face shape detector
-    deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
+    deserialize(shape_predictor_location) >> sp;
 }
 
 FaceDetector::FaceDetector(FaceGraph* _face_graph) {
@@ -29,7 +29,7 @@ FaceDetector::FaceDetector(FaceGraph* _face_graph) {
     detector = get_frontal_face_detector();
 
     // load face shape detector
-    deserialize("E:/Programming/_Projects/DiplomskiProjekt/models/dlib/shape_predictor_5_face_landmarks.dat") >> sp;
+    deserialize(shape_predictor_location) >> sp;
 
     face_graph = _face_graph;
 }

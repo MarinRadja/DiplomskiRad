@@ -25,11 +25,6 @@ namespace fs = std::filesystem;
 
 class RunAlgorithm {
 private:
-	string caffeConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/deploy.prototxt";
-	string caffeWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/res10_300x300_ssd_iter_140000_fp16.caffemodel";
-
-	string tensorflowConfigFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector.pbtxt";
-	string tensorflowWeightFile = "E:/Programming/_Projects/DiplomskiProjekt/models/opencv_face_detector_uint8.pb";
 
 	std::vector<fs::path> allImages;
 

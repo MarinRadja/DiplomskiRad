@@ -31,7 +31,11 @@ private:
 	FaceDetector* fd;
 	FaceGraph* face_graph;
 
-	std::string resnetModelLocation = "E:/Programming/_Projects/DiplomskiProjekt/models/dlib/dlib_face_recognition_resnet_model_v1.dat";
+	// for development use this location
+	// std::string resnetModelLocation = "E:/Programming/_Projects/DiplomskiProjekt/x64/Release/models/dlib/dlib_face_recognition_resnet_model_v1.dat";
+	
+	// for release use this location
+	std::string resnetModelLocation = "./models/dlib/dlib_face_recognition_resnet_model_v1.dat";
 	std::vector<matrix<float, 0, 1>> face_descriptors;
 	std::vector<std::vector<matrix<float, 0, 1>>> face_groups;
 	std::vector<std::vector<Face>> new_face_groups;

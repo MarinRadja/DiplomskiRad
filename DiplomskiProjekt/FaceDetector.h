@@ -31,7 +31,12 @@ using namespace dlib;
 
 class FaceDetector
 {
-public:
+public:	
+	// for development use this location
+	// std::string shape_predictor_location = "E:/Programming/_Projects/DiplomskiProjekt/x64/Release/models/dlib/shape_predictor_5_face_landmarks.dat";
+	
+	// for release use this location	
+	std::string shape_predictor_location = "./models/dlib/shape_predictor_5_face_landmarks.dat";
 	std::vector<matrix<rgb_pixel>> faces;
 	std::vector<Face> newFaces;
 	FaceGraph* face_graph;
