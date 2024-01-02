@@ -21,8 +21,8 @@ void FaceGraph::addFace(Face face) {
 	faces.push_back(face);
 }
 
-void FaceGraph::addFace(matrix<rgb_pixel>& _face, string _image_location) {
-	Face face(_face, _image_location);
+void FaceGraph::addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name) {
+	Face face(_face, _image_location, _img_name);
 	faces.push_back(face);
 }
 

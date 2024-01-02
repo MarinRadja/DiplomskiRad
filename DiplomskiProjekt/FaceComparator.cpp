@@ -23,16 +23,16 @@ void FaceComparator::clusterFaces() {
     //    groupUpFace(face);
     //}
 
-    for (int i = 0; i < face_descriptors.size(); i++) {
-        face_graph->getFacePtr(i)->setFaceDescriptor(face_descriptors.at(i));
-        // fd->newFaces.at(i).setFaceDescriptor(face_descriptors.at(i));
-    }
+    //for (int i = 0; i < face_descriptors.size(); i++) {
+    //    // face_graph->getFacePtr(i)->setFaceDescriptor(face_descriptors.at(i));
+    //    // fd->newFaces.at(i).setFaceDescriptor(face_descriptors.at(i));
+    //}
 
-    for (size_t i = 0; i < face_graph->getFacesPtr()->size(); ++i) {
-        for (size_t j = i; j < face_graph->getFacesPtr()->size(); ++j) {
+    for (size_t i = 0; i < face_descriptors.size(); ++i) {
+        for (size_t j = i; j < face_descriptors.size(); ++j) {
             // add option for user input treshold
-            float dist = dlib::length(face_graph->getFacePtr(i)->getFaceDescriptor()
-                - face_graph->getFacePtr(j)->getFaceDescriptor());
+            float dist = dlib::length(face_descriptors.at(i)
+                - face_descriptors.at(j));
             if (dist < Utils::faceSimilarityThreshold)
                 face_graph->addEdge(i, j);
             wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::COMPARED_FACE));
@@ -71,54 +71,4 @@ void FaceComparator::clusterFaces() {
 
 FaceComparator::~FaceComparator() {
     delete fd;
-}
-
-bool FaceComparator::faceEmbeddingExists(int x) {
-    float minDist = std::numeric_limits<float>::max();
-    int pos = -1;
-    for (int i = 0; i < face_groups.size(); i++) {
-        float dist = 0.f;
-        for (matrix<float, 0, 1> face : face_groups.at(i)) {
-            dist += length(face - face_descriptors.at(x));
-        }
-        dist /= face_groups.at(i).size();
-
-        if (dist < minDist) {
-            minDist = dist;
-            pos = i;
-        }
-    }
-
-    if (minDist < Utils::faceSimilarityThreshold) {
-        face_groups.at(pos).push_back(face_descriptors.at(x));
-        return true;
-    }
-    return false;
-}
-
-void FaceComparator::groupUpFace(Face face) {
-    float minDist = std::numeric_limits<float>::max();
-    int pos = -1;
-
-    for (int i = 0; i < new_face_groups.size(); i++) {
-        float dist = 0.f;
-        for (Face groupedFace : new_face_groups.at(i)) {
-            dist += length(groupedFace.getFaceDescriptor() - face.getFaceDescriptor());
-        }
-        dist /= new_face_groups.at(i).size();
-
-        if (dist < minDist) {
-            minDist = dist;
-            pos = i;
-        }
-    }
-
-    if (minDist < Utils::faceSimilarityThreshold) {
-        new_face_groups.at(pos).push_back(face);
-        return;
-    }
-
-    std::vector<Face> newGroupFace;
-    newGroupFace.push_back(face);
-    new_face_groups.push_back(newGroupFace);
 }
