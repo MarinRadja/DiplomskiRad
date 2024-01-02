@@ -119,7 +119,7 @@ void FaceClusterWindow::displayCurrentImage() {
 	bigImage->displayFace(face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->getImageLocation());
 	bigImage->Refresh();
 
-	faceImage->displayFace(face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->getFaceOpenCV());
+	faceImage->displayFace(face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->getFaceLocation());
 	faceImage->Refresh();
 }
 

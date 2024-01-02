@@ -25,8 +25,6 @@ using namespace dlib;
 
 class Face {
 private:
-	matrix<rgb_pixel> face;
-	matrix<float, 0, 1> face_descriptor;
 	string image_location;
 	string face_location;
 
@@ -39,15 +37,8 @@ public:
 	Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
 
 	string getImageLocation();
-	matrix<float, 0, 1> getFaceDescriptor();
-	matrix<rgb_pixel> getFace();
-	matrix<rgb_pixel> *getFacePtr();
-	Mat getFaceOpenCV();
+	string getFaceLocation();
 
 	void setImageLocation(string _image_location);
-	void setFaceDescriptor(matrix<float, 0, 1> _face_descriptor);
-	void setFace(matrix<rgb_pixel> _face);
-
-	float distanceFromFace(Face otherFace);
 };
 

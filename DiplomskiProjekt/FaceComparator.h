@@ -69,8 +69,5 @@ private:
 		>>>>>>>>>>>>;
 
 	anet_type net;
-
-	bool faceEmbeddingExists(int i);
-	void groupUpFace(Face face);
 };
 
