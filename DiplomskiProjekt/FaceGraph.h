@@ -33,7 +33,7 @@ private:
 	std::vector<FaceCluster> face_clusters;
 public:
 	void addFace(Face face);
-	void addFace(matrix<rgb_pixel>& _face, string _image_location);
+	void addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
 	Face* getFacePtr(int i);
 	std::vector<Face>* getFacesPtr();
 		

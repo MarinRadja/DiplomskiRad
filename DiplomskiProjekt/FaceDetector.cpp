@@ -50,7 +50,7 @@ void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgN
         extract_image_chip(img1, get_face_chip_details(shape, 150, 0.25), face_chip);
         // save face for further use
         faces.push_back(move(face_chip));
-        face_graph->addFace(faces.back(), imageLocation);
+        face_graph->addFace(faces.back(), imageLocation, imgName);
         wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DETECTED_FACE));
 
 

@@ -52,4 +52,16 @@ cv::Mat* Utils::simple_mat_from_wx(wxImage& wx) {
     return &im2;
 }
 
+void Utils::convertMatRGBPixelToCVMat(dlib::matrix<dlib::rgb_pixel>& face, cv::Mat& cvImage) {
+    cv::Mat original = dlib::toMat(face);
+
+    cv::cvtColor(original, cvImage, cv::COLOR_RGB2BGR);
+}
+
+void Utils::createDirectory(std::string dirName) {
+    if (!fs::is_directory(dirName) || !fs::exists(dirName)) { // Check if src folder exists
+        fs::create_directory(dirName); // create src folder
+    }
+}
+
 #pragma endregion "Functions"

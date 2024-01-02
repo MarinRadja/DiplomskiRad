@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+#include <filesystem>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
@@ -16,6 +17,8 @@
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
+#include "Utils.h"
+
 using namespace cv;
 using namespace std;
 using namespace dlib;
@@ -25,11 +28,15 @@ private:
 	matrix<rgb_pixel> face;
 	matrix<float, 0, 1> face_descriptor;
 	string image_location;
+	string face_location;
+
+	static std::atomic<unsigned int> face_counter;
+
+	std::string saveFaceToDisk(matrix<rgb_pixel>& face, string& _img_name);
 public:
 
 	Face();
-	Face(matrix<rgb_pixel> _face);
-	Face(matrix<rgb_pixel>& _face, string _image_location);
+	Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
 
 	string getImageLocation();
 	matrix<float, 0, 1> getFaceDescriptor();

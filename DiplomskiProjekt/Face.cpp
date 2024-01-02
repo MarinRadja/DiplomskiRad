@@ -1,14 +1,25 @@
 #include "Face.h"
 
-Face::Face() {}
+std::atomic<unsigned int> Face::face_counter = std::atomic<unsigned int>(0);
 
-Face::Face(matrix<rgb_pixel> _face) {
-	face = _face;
+std::string Face::saveFaceToDisk(matrix<rgb_pixel>& face, string& _img_name) {
+	Mat f;
+	Utils::convertMatRGBPixelToCVMat(face, f);
+
+	Utils::createDirectory("faces");
+	std::string fLoc = "./faces/" + _img_name + "_" + std::to_string(face_counter) + ".jpeg";
+	imwrite(fLoc, f);
+	return fLoc;
 }
 
-Face::Face(matrix<rgb_pixel>& _face, string _image_location) {
+Face::Face() {}
+
+Face::Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name) {
 	face = _face;
+	
+	face_counter++;
 	image_location = _image_location;
+	face_location = saveFaceToDisk(face, _img_name);
 }
 
 string Face::getImageLocation() {
