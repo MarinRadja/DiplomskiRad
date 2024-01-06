@@ -28,6 +28,14 @@ string Face::getFaceLocation() {
 	return face_location;
 }
 
+nlohmann::json Face::getJson() {
+	nlohmann::json faceJson = {
+		{"image_location", image_location},
+		{"face_location", face_location}
+	};
+	return faceJson;
+}
+
 void Face::setImageLocation(string _image_location) {
 	image_location = _image_location;
 }

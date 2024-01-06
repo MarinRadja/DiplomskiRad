@@ -147,6 +147,7 @@
       <AdditionalIncludeDirectories>$(WXWIN)\include\msvc;$(WXWIN)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -182,6 +183,7 @@
     <ClInclude Include="FaceGraph.h" />
     <ClInclude Include="IDs.h" />
     <ClInclude Include="ImagePanel.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="ProgressWindow.h" />
     <ClInclude Include="RunAlgorithm.h" />

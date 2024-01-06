@@ -7,8 +7,11 @@
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
+
 #include "Face.h"
 #include "FaceGraph.h"
+
+#include "json.hpp"
 
 class FaceCluster {
 private:
@@ -20,6 +23,11 @@ public:
 	int getNFaces();
 
 	Face* getFacePtr(size_t i_face);
+	
+	std::vector<Face>::iterator begin() { return faces.begin(); }
+	std::vector<Face>::const_iterator begin() const { return faces.begin(); }
+	std::vector<Face>::iterator end() { return faces.end(); }
+	std::vector<Face>::const_iterator end() const { return faces.end(); }
 };
 
 class FaceGraph {
@@ -47,4 +55,6 @@ public:
 	void sortFacesIntoClusters();
 	
 	FaceCluster* getClusterPtr(size_t i_cluster);
+
+	void saveGraphToJson(string& json_name);
 };

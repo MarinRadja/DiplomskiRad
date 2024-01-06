@@ -6,6 +6,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <filesystem>
+#include <fstream>
 
 #include <opencv2/opencv.hpp>
 
@@ -16,6 +17,8 @@
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
+
+#include "json.hpp"
 
 namespace fs = std::filesystem;
 
@@ -29,6 +32,7 @@ public:
     static int sumUpToIncluding(int n);
     static void convertMatRGBPixelToCVMat(dlib::matrix<dlib::rgb_pixel>& face, cv::Mat& cvImage);
     static void createDirectory(std::string dirName);
+    static void saveToDisk(nlohmann::json& graph_json, std::string& json_name);
 };
 
 wxDECLARE_EVENT(myEVT_CREATE_PROGRESS_WINDOW, wxCommandEvent);
