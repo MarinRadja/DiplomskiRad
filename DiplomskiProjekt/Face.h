@@ -37,6 +37,7 @@ public:
 
 	Face();
 	Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
+	Face(string _image_location, string _face_location);
 
 	string getImageLocation();
 	string getFaceLocation();

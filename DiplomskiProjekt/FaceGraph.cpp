@@ -82,3 +82,18 @@ void FaceGraph::saveGraphToJson(string& json_name) {
 
 	Utils::saveToDisk(graph_json, json_name);
 }
+
+void FaceGraph::loadGraphFromJson(string& json_name) {
+	nlohmann::json graphJson;
+	Utils::loadFromDisk(graphJson, json_name);
+
+	for (auto clusterJson : graphJson.array()) {
+		FaceCluster faceCluster;
+		for (auto faceJson : clusterJson.array()) {
+			Face face(faceJson.at("image_location"), faceJson.at("face_location"));
+			faceCluster.addFace(face);
+		}
+		face_clusters.push_back(faceCluster);
+	}
+	numberOfClusters = face_clusters.size();
+}

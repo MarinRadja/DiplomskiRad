@@ -67,8 +67,17 @@ void Utils::createDirectory(std::string dirName) {
 void Utils::saveToDisk(nlohmann::json& graph_json, std::string& json_name) {
     createDirectory("./output");
     std::ofstream ofs("./output/" + json_name + ".json");
-    ofs << graph_json << std::endl;
+    ofs << graph_json;
     ofs.close();
+}
+
+void Utils::saveToDisk(nlohmann::json& graph_json, std::string& json_name) {
+    std::ifstream ifs(json_name);
+
+    if (ifs.is_open()) {
+        ifs >> graph_json;
+        ifs.close();
+    }
 }
 
 #pragma endregion "Functions"

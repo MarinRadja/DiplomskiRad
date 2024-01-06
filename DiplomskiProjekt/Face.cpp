@@ -20,6 +20,11 @@ Face::Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name)
 	face_location = saveFaceToDisk(_face, _img_name);
 }
 
+Face::Face(string _image_location, string _face_location) {
+	image_location = _image_location;
+	face_location = _face_location;
+}
+
 string Face::getImageLocation() {
 	return image_location;
 }
