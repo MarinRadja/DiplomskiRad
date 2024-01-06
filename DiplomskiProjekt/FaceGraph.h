@@ -56,6 +56,8 @@ public:
 	
 	FaceCluster* getClusterPtr(size_t i_cluster);
 
+	int getNFacesFromClusterAt(size_t i_cluster);
+
 	void saveGraphToJson(string& json_name);
 	void loadGraphFromJson(string& json_name);
 };

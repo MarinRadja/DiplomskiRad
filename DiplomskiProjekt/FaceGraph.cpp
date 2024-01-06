@@ -70,6 +70,10 @@ FaceCluster* FaceGraph::getClusterPtr(size_t i_cluster) {
 	return &face_clusters.at(i_cluster);
 }
 
+int FaceGraph::getNFacesFromClusterAt(size_t i_cluster) {
+	return face_clusters.at(i_cluster).getNFaces();
+}
+
 void FaceGraph::saveGraphToJson(string& json_name) {
 	nlohmann::json graph_json;
 	for (FaceCluster faCl : face_clusters) {
@@ -87,9 +91,9 @@ void FaceGraph::loadGraphFromJson(string& json_name) {
 	nlohmann::json graphJson;
 	Utils::loadFromDisk(graphJson, json_name);
 
-	for (auto clusterJson : graphJson.array()) {
+	for (auto& [clusterIndex, clusterJson] : graphJson.items()) {
 		FaceCluster faceCluster;
-		for (auto faceJson : clusterJson.array()) {
+		for (auto& [faceIndex, faceJson] : clusterJson.items()) {
 			Face face(faceJson.at("image_location"), faceJson.at("face_location"));
 			faceCluster.addFace(face);
 		}
