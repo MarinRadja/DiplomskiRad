@@ -1,23 +1,25 @@
 #include "MainFrame.h"
 
-#pragma region "Event Table"
-wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-EVT_DIRPICKER_CHANGED(wxID_ANY, MainFrame::onDirSelect)
-EVT_BUTTON(MainFrameIDs::RUN_BUTTON, MainFrame::onRunButtonClick)
-wxEND_EVENT_TABLE()
-#pragma endregion "Event Table"
-
 #pragma region "GUI Setup"
 
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
+
+#pragma region "Bind Events"
+	Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::onDirSelect, this, wxID_ANY);
+	Bind(wxEVT_BUTTON, &MainFrame::onRunButtonClick, this, MainFrameIDs::RUN_BUTTON);
+	Bind(wxEVT_FILEPICKER_CHANGED, &MainFrame::onGraphFileSelect, this, wxID_ANY);
+	Bind(wxEVT_BUTTON, &MainFrame::onLoadButtonClick, this, MainFrameIDs::LOAD_BUTTON);
+#pragma endregion
+
 	runAlg = new RunAlgorithm();
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
 	createTitle(clientAreaSizer);
 	createInfo(clientAreaSizer);
-	createSelectFolderAndRunOn(clientAreaSizer);
-	createRunButton(clientAreaSizer);
+
+	createRunAlgSection(clientAreaSizer);
+	createLoadGraphSection(clientAreaSizer);
 
 	SetSizerAndFit(clientAreaSizer);
 	SetMinSize(wxSize(400, 500));
@@ -53,6 +55,16 @@ void MainFrame::createInfo(wxBoxSizer* parentSizer) {
 	parentSizer->Add(infoSizer, 5, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
+void MainFrame::createRunAlgSection(wxBoxSizer* parentSizer) {
+	createSelectFolderAndRunOn(parentSizer);
+	createRunButton(parentSizer);
+}
+
+void MainFrame::createLoadGraphSection(wxBoxSizer* parentSizer) {
+	createLoadGraphLocationAndPicker(parentSizer);
+	createLoadGraphButton(parentSizer);
+}
+
 void MainFrame::createSelectFolderAndRunOn(wxBoxSizer* parentSizer) {
 	wxBoxSizer* selectFolderAndRunOnSizer = new wxBoxSizer(wxHORIZONTAL);
 	
@@ -65,7 +77,7 @@ void MainFrame::createSelectFolderAndRunOn(wxBoxSizer* parentSizer) {
 
 void MainFrame::createSelectedFolderLocationTextField(wxBoxSizer* parentSizer) {
 	wxBoxSizer* selectedFolderLoactionSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticText* selectedFolderLocation = new wxStaticText(this, FOLDER_LOCATION, "", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTER);
+	wxStaticText* selectedFolderLocation = new wxStaticText(this, MainFrameIDs::FOLDER_LOCATION, "", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTER);
 	wxColour colour = selectedFolderLocation->GetBackgroundColour();
 	colour.SetRGB(0x00e0e0e0);
 	selectedFolderLocation->SetBackgroundColour(colour);
@@ -105,19 +117,57 @@ void MainFrame::createRunButton(wxBoxSizer* parentSizer) {
 	parentSizer->Add(runButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
+void MainFrame::createLoadGraphLocationAndPicker(wxBoxSizer* parentSizer) {
+	wxBoxSizer* selectGraphAndPickerSizer = new wxBoxSizer(wxHORIZONTAL);
+
+	//createSelectedGraphLocationTextField(selectGraphAndPickerSizer);
+	createLoadGraphPicker(selectGraphAndPickerSizer);
+
+	parentSizer->Add(selectGraphAndPickerSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void MainFrame::createSelectedGraphLocationTextField(wxBoxSizer* parentSizer) {
+	wxBoxSizer* selectedGraphLocationSizer = new wxBoxSizer(wxHORIZONTAL);
+	load_graph_label = new wxStaticText(this, MainFrameIDs::GRAPH_LOCATION, "", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTER);
+	wxColour colour = load_graph_label->GetBackgroundColour();
+	colour.SetRGB(0x00e0e0e0);
+	load_graph_label->SetBackgroundColour(colour);
+
+	selectedGraphLocationSizer->Add(load_graph_label, 1, wxALIGN_CENTER, 3);
+	parentSizer->Add(selectedGraphLocationSizer, 5, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void MainFrame::createLoadGraphPicker(wxBoxSizer* parentSizer) {
+	wxBoxSizer* selectGraphSizer = new wxBoxSizer(wxHORIZONTAL);
+	load_graph_picker = new wxFilePickerCtrl(this, MainFrameIDs::GRAPH_PICKER,
+		"/", "Select graph", "*.json");
+
+	selectGraphSizer->Add(load_graph_picker, 1, wxALIGN_CENTER, 3);
+	parentSizer->Add(selectGraphSizer, 3, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void MainFrame::createLoadGraphButton(wxBoxSizer* parentSizer) {
+	wxBoxSizer* loadButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+	load_graph_button = new wxButton(this, MainFrameIDs::LOAD_BUTTON, "Load graph!", wxDefaultPosition, wxDefaultSize);
+	load_graph_button->Disable();
+
+	loadButtonSizer->Add(load_graph_button, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(loadButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
 #pragma endregion "GUI Setup"
 
 #pragma region "Events"
 
-void MainFrame::onDirSelect(wxFileDirPickerEvent& event) {
+void MainFrame::onDirSelect(wxFileDirPickerEvent& evt) {
 	wxButton* runButton = static_cast<wxButton*>(FindWindowById(MainFrameIDs::RUN_BUTTON));
 	runButton->Enable();
 	
 	wxStaticText* folderLocation = static_cast<wxStaticText*>(FindWindowById(MainFrameIDs::FOLDER_LOCATION));
-	folderLocation->SetLabelText(event.GetPath());
+	folderLocation->SetLabelText(evt.GetPath());
 }
 
-void MainFrame::onRunButtonClick(wxCommandEvent& event) {
+void MainFrame::onRunButtonClick(wxCommandEvent& evt) {
 	wxStaticText* folderLocation = static_cast<wxStaticText*>(FindWindowById(MainFrameIDs::FOLDER_LOCATION));
 	
 	/*ConsoleOutputWindow* console = new ConsoleOutputWindow("Console");
@@ -131,6 +181,18 @@ void MainFrame::onRunButtonClick(wxCommandEvent& event) {
 	wxCommandEvent* startWorking = new wxCommandEvent(myEVT_CREATE_PROGRESS_WINDOW, EventsIDs::CREATE_PROGRESS_WINDOW);
 	startWorking->SetString(folderLocation->GetLabelText());
 	wxTheApp->QueueEvent(startWorking);
+}
+
+void MainFrame::onGraphFileSelect(wxFileDirPickerEvent& evt) {
+	load_graph_picker->Refresh();
+	load_graph_button->Enable();
+	load_graph_label->SetLabelText(evt.GetPath());
+}
+
+void MainFrame::onLoadButtonClick(wxCommandEvent& evt) {
+	wxCommandEvent* startLoadingGraph = new wxCommandEvent(myEVT_LOAD_GRAPH_FROM_DISK);
+	startLoadingGraph->SetString(load_graph_label->GetLabelText());
+	wxTheApp->QueueEvent(startLoadingGraph);
 }
 
 #pragma endregion "Events"

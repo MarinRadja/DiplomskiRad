@@ -162,7 +162,7 @@ void MyApp::updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt) {
 }
 
 void MyApp::loadGraphFromDisk(wxCommandEvent& evt) {
-	std::string jsonLoc = "./output/graph.json";
+	std::string jsonLoc = evt.GetString().ToStdString();
 
 	face_graph.loadGraphFromJson(jsonLoc);
 

@@ -4,7 +4,10 @@
 enum MainFrameIDs {
     DIR_PICKER = wxID_LAST + 1,
     RUN_BUTTON,
-    FOLDER_LOCATION
+    FOLDER_LOCATION,
+    GRAPH_PICKER,
+    LOAD_BUTTON,
+    GRAPH_LOCATION
 };
 
 enum FaceClusterWindowIDs {
