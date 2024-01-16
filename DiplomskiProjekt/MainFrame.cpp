@@ -120,7 +120,7 @@ void MainFrame::createRunButton(wxBoxSizer* parentSizer) {
 void MainFrame::createLoadGraphLocationAndPicker(wxBoxSizer* parentSizer) {
 	wxBoxSizer* selectGraphAndPickerSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	//createSelectedGraphLocationTextField(selectGraphAndPickerSizer);
+	createSelectedGraphLocationTextField(selectGraphAndPickerSizer);
 	createLoadGraphPicker(selectGraphAndPickerSizer);
 
 	parentSizer->Add(selectGraphAndPickerSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
@@ -140,7 +140,7 @@ void MainFrame::createSelectedGraphLocationTextField(wxBoxSizer* parentSizer) {
 void MainFrame::createLoadGraphPicker(wxBoxSizer* parentSizer) {
 	wxBoxSizer* selectGraphSizer = new wxBoxSizer(wxHORIZONTAL);
 	load_graph_picker = new wxFilePickerCtrl(this, MainFrameIDs::GRAPH_PICKER,
-		"/", "Select graph", "*.json");
+		"/", "Select graph", "*.json", wxDefaultPosition, wxDefaultSize, wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
 
 	selectGraphSizer->Add(load_graph_picker, 1, wxALIGN_CENTER, 3);
 	parentSizer->Add(selectGraphSizer, 3, wxEXPAND | wxALIGN_CENTER, 3);
