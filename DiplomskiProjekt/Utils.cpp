@@ -3,7 +3,7 @@
 // this is a definition so can't be in a header
 wxDEFINE_EVENT(myEVT_CREATE_PROGRESS_WINDOW, wxCommandEvent);
 wxDEFINE_EVENT(myEVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
-wxDEFINE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);
+wxDEFINE_EVENT(myEVT_LOAD_GRAPH_FROM_DISK, wxCommandEvent);
 
 #pragma region "Data"
 float Utils::faceSimilarityThreshold = 0.55f;
@@ -67,8 +67,19 @@ void Utils::createDirectory(std::string dirName) {
 void Utils::saveToDisk(nlohmann::json& graph_json, std::string& json_name) {
     createDirectory("./output");
     std::ofstream ofs("./output/" + json_name + ".json");
-    ofs << graph_json << std::endl;
-    ofs.close();
+    if (ofs.is_open()) {
+        ofs << graph_json;
+        ofs.close();
+    }
+}
+
+void Utils::loadFromDisk(nlohmann::json& graph_json, std::string& json_name) {
+    std::ifstream ifs(json_name);
+
+    if (ifs.is_open()) {
+        ifs >> graph_json;
+        ifs.close();
+    }
 }
 
 #pragma endregion "Functions"

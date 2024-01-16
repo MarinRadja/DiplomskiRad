@@ -33,8 +33,9 @@ public:
     static void convertMatRGBPixelToCVMat(dlib::matrix<dlib::rgb_pixel>& face, cv::Mat& cvImage);
     static void createDirectory(std::string dirName);
     static void saveToDisk(nlohmann::json& graph_json, std::string& json_name);
+    static void loadFromDisk(nlohmann::json& graph_json, std::string& json_name);
 };
 
 wxDECLARE_EVENT(myEVT_CREATE_PROGRESS_WINDOW, wxCommandEvent);
 wxDECLARE_EVENT(myEVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
-wxDECLARE_EVENT(EVT_SHOW_CLUSTERED_FACES_WINDOW, wxCommandEvent);
+wxDECLARE_EVENT(myEVT_LOAD_GRAPH_FROM_DISK, wxCommandEvent);

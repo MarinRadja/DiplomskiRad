@@ -127,13 +127,13 @@ void FaceClusterWindow::displayCurrentImage() {
 #pragma region "Events"
 
 void FaceClusterWindow::showPrevFaceImage(wxCommandEvent& event) {
-	i_face = (i_face - 1) % face_graph->getClusterPtr(i_cluster)->getNFaces();
+	i_face = (i_face - 1) % face_graph->getNFacesFromClusterAt(i_cluster);
 
 	displayCurrentImage();
 }
 
 void FaceClusterWindow::showNextFaceImage(wxCommandEvent& event) {
-	i_face = (i_face + 1) % face_graph->getClusterPtr(i_cluster)->getNFaces();
+	i_face = (i_face + 1) % face_graph->getNFacesFromClusterAt(i_cluster);
 
 	displayCurrentImage();
 }

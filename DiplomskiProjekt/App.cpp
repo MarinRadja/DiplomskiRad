@@ -60,6 +60,11 @@ bool MyApp::OnInit() {
 		this,
 		EventsIDs::DONE_CLUSTERING_FACES);
 
+	Bind(myEVT_LOAD_GRAPH_FROM_DISK,
+		&MyApp::loadGraphFromDisk,
+		this,
+		wxID_ANY);
+
 #pragma endregion "Bind Events"
 
 	createMainWindow();
@@ -89,10 +94,10 @@ void MyApp::createProgressWindow(wxCommandEvent& evt) {
 	sw.detach();
 }
 
-void MyApp::createFaceClusterWindow() {
+void MyApp::createFaceClusterWindow(FaceGraph* faceGraph) {
 	if (face_cluster_window != nullptr) face_cluster_window->Destroy();
 
-	face_cluster_window = new FaceClusterWindow("Recognized faces", main_frame->getAlgorithmPtr()->getFaceGraph());
+	face_cluster_window = new FaceClusterWindow("Recognized faces", faceGraph);
 	face_cluster_window->SetClientSize(800, 600);
 	face_cluster_window->Center();
 	face_cluster_window->Show();
@@ -153,7 +158,16 @@ void MyApp::updateProgressWindow_doneComparingFaces(wxCommandEvent& evt) {
 void MyApp::updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt) {
 	while (progress_window == nullptr);
 	progress_window->Destroy();
-	createFaceClusterWindow();
+	createFaceClusterWindow(main_frame->getAlgorithmPtr()->getFaceGraph());
+}
+
+void MyApp::loadGraphFromDisk(wxCommandEvent& evt) {
+	std::string jsonLoc = evt.GetString().ToStdString();
+
+	face_graph.loadGraphFromJson(jsonLoc);
+
+	main_frame->Destroy();
+	createFaceClusterWindow(&face_graph);
 }
 #pragma endregion
 
