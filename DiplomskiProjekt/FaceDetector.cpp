@@ -3,8 +3,7 @@
 
 
 
-FaceDetector::FaceDetector()
-{
+FaceDetector::FaceDetector() {
     this->inWidth = 300;
     this->inHeight = 300;
     this->inScaleFactor = 1.0;
@@ -13,6 +12,9 @@ FaceDetector::FaceDetector()
 
     // get face detector
     detector = get_frontal_face_detector();
+
+    // load cnn face detector
+    deserialize(face_detector_location) >> face_detector_net;
 
     // load face shape detector
     deserialize(shape_predictor_location) >> sp;
@@ -28,6 +30,9 @@ FaceDetector::FaceDetector(FaceGraph* _face_graph) {
     // get face detector
     detector = get_frontal_face_detector();
 
+    // load cnn face detector
+    deserialize(face_detector_location) >> face_detector_net;
+
     // load face shape detector
     deserialize(shape_predictor_location) >> sp;
 
@@ -39,12 +44,15 @@ void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgN
     Mat cvRGB;
     cvtColor(cvImg, cvRGB, COLOR_BGR2RGB);
     cv_image<rgb_pixel> img1(cvRGB);
+    matrix<rgb_pixel> ma;
+    assign_image(ma, img1);
+
     // wxImage test(cvRGB.cols, cvRGB.rows, cvRGB.data, true);
 
     cout << imgName << endl;
     int i = 1;
-    for (auto face : detector(img1)) {      // for each face found in img1
-        auto shape = sp(img1, face);        // find shape of the face
+    for (auto&& face : face_detector_net(ma)) {      // for each face found in img1
+        auto shape = sp(img1, face.rect);        // find shape of the face
         matrix<rgb_pixel> face_chip;        
         // extract image from that shape, and scale it to 150x150px 
         extract_image_chip(img1, get_face_chip_details(shape, 150, 0.25), face_chip);

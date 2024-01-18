@@ -32,10 +32,15 @@ using namespace dlib;
 class FaceDetector
 {
 public:	
-	// for development use this location
-	// std::string shape_predictor_location = "E:/Programming/_Projects/DiplomskiProjekt/x64/Release/models/dlib/shape_predictor_5_face_landmarks.dat";
-	
-	// for release use this location	
+	template <long num_filters, typename SUBNET> using con5d = con<num_filters, 5, 5, 2, 2, SUBNET>;
+	template <long num_filters, typename SUBNET> using con5 = con<num_filters, 5, 5, 1, 1, SUBNET>;
+
+	template <typename SUBNET> using downsampler = relu<affine<con5d<32, relu<affine<con5d<32, relu<affine<con5d<16, SUBNET>>>>>>>>>;
+	template <typename SUBNET> using rcon5 = relu<affine<con5<45, SUBNET>>>;
+
+	using net_type = loss_mmod<con<1, 9, 9, 1, 1, rcon5<rcon5<rcon5<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+
+	std::string face_detector_location = "./models/dlib/mmod_human_face_detector.dat";
 	std::string shape_predictor_location = "./models/dlib/shape_predictor_5_face_landmarks.dat";
 	std::vector<matrix<rgb_pixel>> faces;
 	std::vector<Face> newFaces;
@@ -51,6 +56,9 @@ private:
 	float confidenceThreshold;
 	Scalar meanVal;
 	frontal_face_detector detector;
+	net_type face_detector_net;
 	shape_predictor sp;
+
+	int ncuda;
 };
 
