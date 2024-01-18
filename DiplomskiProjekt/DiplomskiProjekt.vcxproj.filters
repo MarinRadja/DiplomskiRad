@@ -69,8 +69,8 @@
     <ClCompile Include="ProgressWindow.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\_includes\dlib\dlib-19.22\source\dlib\all\source.cpp">
-      <Filter>Source Files\Utils</Filter>
+    <ClCompile Include="..\..\..\_includes\dlib\dlib-19.24 - Copy\source\dlib\all\source.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
