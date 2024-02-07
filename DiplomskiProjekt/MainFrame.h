@@ -10,6 +10,7 @@
 
 #include <wx/wx.h>
 #include <wx/filepicker.h>
+#include <wx/spinctrl.h>
 
 class MainFrame : public wxFrame {
 public:
@@ -20,9 +21,10 @@ protected:
 private:
 	RunAlgorithm* runAlg;
 
-	wxStaticText* run_alg_label;
+	wxSpinCtrl* similarity_threshold;
+	wxTextCtrl* selected_folder_location;
 	wxButton* run_alg_button;
-	wxStaticText* load_graph_label;
+	wxTextCtrl* load_graph_label;
 	wxFilePickerCtrl* load_graph_picker;
 	wxButton* load_graph_button;
 
@@ -32,8 +34,9 @@ private:
 	void createLoadGraphSection(wxBoxSizer* parentSizer);
 
 	// run alg section
+	void createThreshold(wxBoxSizer* parentSizer);
 	void createSelectedFolderLocationTextField(wxBoxSizer* parentSizer);
-	void createSelectFolderAndRunOn(wxBoxSizer* parentSizer);
+	void createSelectFolderLblPkr(wxBoxSizer* parentSizer);
 	void createSelectFolder(wxBoxSizer* parentSizer);
 	void createRunOn(wxBoxSizer* parentSizer);
 	void createRunButton(wxBoxSizer* parentSizer);
@@ -43,6 +46,8 @@ private:
 	void createSelectedGraphLocationTextField(wxBoxSizer* parentSizer);
 	void createLoadGraphPicker(wxBoxSizer* parentSizer);
 	void createLoadGraphButton(wxBoxSizer* parentSizer);
+
+	void emptyTextLine(wxBoxSizer* parentSizer, int proportion);
 
 	// events
 	void onDirSelect(wxFileDirPickerEvent& evt);

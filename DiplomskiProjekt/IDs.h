@@ -7,7 +7,8 @@ enum MainFrameIDs {
     FOLDER_LOCATION,
     GRAPH_PICKER,
     LOAD_BUTTON,
-    GRAPH_LOCATION
+    GRAPH_LOCATION,
+    SIMILARITY_THRESHOLD
 };
 
 enum FaceClusterWindowIDs {

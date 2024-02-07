@@ -25,7 +25,7 @@ namespace fs = std::filesystem;
 class Utils {
 private:
 public:
-    static float faceSimilarityThreshold;
+    static double faceSimilarityThreshold;
     static wxImage simple_wx_from_mat(std::string imageLocation);
     static wxImage simple_wx_from_mat(cv::Mat& img);
     static cv::Mat* simple_mat_from_wx(wxImage& wx);
