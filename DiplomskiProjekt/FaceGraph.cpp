@@ -94,7 +94,9 @@ void FaceGraph::loadGraphFromJson(string& json_name) {
 	for (auto& [clusterIndex, clusterJson] : graphJson.items()) {
 		FaceCluster faceCluster;
 		for (auto& [faceIndex, faceJson] : clusterJson.items()) {
-			Face face(faceJson.at("image_location"), faceJson.at("face_location"));
+			Face face(faceJson.at("image_location"), 
+				faceJson.at("face_location"),
+				faceJson.at("face_name"));
 			faceCluster.addFace(face);
 		}
 		face_clusters.push_back(faceCluster);
