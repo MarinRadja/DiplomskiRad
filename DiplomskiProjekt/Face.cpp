@@ -29,6 +29,11 @@ Face::Face(string _image_location, string _face_location, string _face_name) : F
 	face_name = _face_name;
 }
 
+Face::Face(string _image_location, string _face_location, string _face_name, string _face_id) 
+	: Face(_image_location, _face_location, _face_name)  {
+	std::stringstream(_face_name) >> face_id;
+}
+
 string Face::getImageLocation() {
 	return image_location;
 }
@@ -41,7 +46,8 @@ nlohmann::json Face::getJson() {
 	nlohmann::json faceJson = {
 		{"image_location", image_location},
 		{"face_location", face_location},
-		{"face_name", face_name}
+		{"face_name", face_name},
+		{"face_id", face_id}
 	};
 	return faceJson;
 }

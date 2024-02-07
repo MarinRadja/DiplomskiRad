@@ -17,6 +17,10 @@ class FaceCluster {
 private:
 	std::vector<Face> faces;
 public:
+	FaceCluster();
+	FaceCluster(int _cluster_id, std::string _cluster_name);
+
+	size_t cluster_id;
 	std::string cluster_name;
 	void addFace(Face face);
 	void removeFace(int i);
@@ -29,6 +33,8 @@ public:
 	std::vector<Face>::const_iterator begin() const { return faces.begin(); }
 	std::vector<Face>::iterator end() { return faces.end(); }
 	std::vector<Face>::const_iterator end() const { return faces.end(); }
+
+	nlohmann::json getJson();
 };
 
 class FaceGraph {

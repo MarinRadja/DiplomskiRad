@@ -16,7 +16,8 @@ enum FaceClusterWindowIDs {
     NEXT_IMG,
     OPEN_IMG_LOC,
     PREV_CLUSTER,
-    NEXT_CLUSTER
+    NEXT_CLUSTER,
+    SAVE_GRAPH
 };
 
 enum ProgressWindowIDs {

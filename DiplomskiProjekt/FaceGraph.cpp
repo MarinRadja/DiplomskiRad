@@ -1,5 +1,12 @@
 #include "FaceGraph.h"
 
+FaceCluster::FaceCluster() {}
+
+FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name) {
+	cluster_id = _cluster_id;
+	cluster_name = _cluster_name;
+}
+
 void FaceCluster::addFace(Face face) {
 	faces.push_back(face);
 }
@@ -15,6 +22,20 @@ int FaceCluster::getNFaces() {
 
 Face* FaceCluster::getFacePtr(size_t i_face) {
 	return &faces.at(i_face);
+}
+
+nlohmann::json FaceCluster::getJson() {
+	nlohmann::json faces_json;
+	for (Face fa : faces) {
+		faces_json.push_back(fa.getJson());
+	}
+
+	nlohmann::json clusterJson = {
+		{"cluster_id", cluster_id},
+		{"cluster_name", cluster_name},
+		{"faces", faces_json}
+	};
+	return clusterJson;
 }
 
 void FaceGraph::addFace(Face face) {
@@ -77,11 +98,7 @@ int FaceGraph::getNFacesFromClusterAt(size_t i_cluster) {
 void FaceGraph::saveGraphToJson(string& json_name) {
 	nlohmann::json graph_json;
 	for (FaceCluster faCl : face_clusters) {
-		nlohmann::json cluster_json;
-		for (Face fa : faCl) {
-			cluster_json.push_back(fa.getJson());
-		}
-		graph_json.push_back(cluster_json);
+		graph_json.push_back(faCl.getJson());
 	}
 
 	Utils::saveToDisk(graph_json, json_name);
@@ -92,8 +109,9 @@ void FaceGraph::loadGraphFromJson(string& json_name) {
 	Utils::loadFromDisk(graphJson, json_name);
 
 	for (auto& [clusterIndex, clusterJson] : graphJson.items()) {
-		FaceCluster faceCluster;
-		for (auto& [faceIndex, faceJson] : clusterJson.items()) {
+		FaceCluster faceCluster(clusterJson.at("cluster_id"),
+			clusterJson.at("cluster_name"));
+		for (auto& [faceIndex, faceJson] : clusterJson.at("faces").items()) {
 			Face face(faceJson.at("image_location"), 
 				faceJson.at("face_location"),
 				faceJson.at("face_name"));

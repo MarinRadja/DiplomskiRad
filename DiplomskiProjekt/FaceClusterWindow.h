@@ -2,6 +2,7 @@
 #define _WINSOCKAPI_
 #include <wx/wx.h>
 #include <wx/statline.h>
+#include <wx/filepicker.h>
 
 #include "ImagePanel.h"
 #include "FaceGraph.h"
@@ -22,7 +23,8 @@ private:
 	wxTextCtrl* face_name_box;
 	wxTextCtrl* cluster_name_box;
 	wxStaticText* face_index_box;
-	wxStaticText* cluster_index_box;
+	wxStaticText* cluster_index_box; 
+	wxFilePickerCtrl* save_graph;
 
 
 	FaceGraph* face_graph;
@@ -58,8 +60,8 @@ private:
 	void showPrevCluster(wxCommandEvent& event);
 	void showNextCluster(wxCommandEvent& event);
 
-	void saveName();
+	void saveGraphToDisk(wxFileDirPickerEvent& evt);
 
-	wxDECLARE_EVENT_TABLE();
+	void saveName();
 };
 
