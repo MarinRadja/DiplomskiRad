@@ -7,6 +7,10 @@
 #include "FaceGraph.h"
 #include "IDs.h"
 
+template<typename V>
+V mod(const V& a, const V& b) {
+	return (a % b + b) % b;
+}
 
 class FaceClusterWindow : public wxFrame {
 public:
@@ -17,26 +21,35 @@ private:
 	ImagePanel* faceImage;
 	wxTextCtrl* face_name_box;
 	wxTextCtrl* cluster_name_box;
-	wxTextCtrl* face_index_box;
-	wxTextCtrl* cluster_index_box;
+	wxStaticText* face_index_box;
+	wxStaticText* cluster_index_box;
 
 
 	FaceGraph* face_graph;
 
-	size_t i_face = 0;
-	size_t i_cluster = 0;
+	int i_face = 0;
+	int i_cluster = 0;
 
+	int display_clusters = 3;
 
 	void createImagePanel(wxBoxSizer* parentSizer);
 	void createSidebar(wxBoxSizer* parentSizer);
-	void createFaceClusterTitle(wxBoxSizer* parentSizer);
+	void createFaceSection(wxBoxSizer* parentSizer);
+	void createClusterSection(wxBoxSizer* parentSizer);
+
+	void createFaceTitle(wxBoxSizer* parentSizer);
 	void createMiniFace(wxBoxSizer* parentSizer);
-	void createControlForCurrentCluster(wxBoxSizer* parentSizer);
-	void createHorizontalLine(wxBoxSizer* parentSizer);
+	void createFaceControlButtons(wxBoxSizer* parentSizer);
+
+	void createClusterTitle(wxBoxSizer* parentSizer);
+	void createMiniClusters(wxBoxSizer* parentSizer);
+	void createClusterButtons(wxBoxSizer* parentSizer);
+
 	void createOpenImgLocationButton(wxBoxSizer* parentSizer);
-	void createPrevFaceClusterButton(wxBoxSizer* parentSizer);
-	void createNextFaceClusterButton(wxBoxSizer* parentSizer);
 	void createSaveGraphButton(wxBoxSizer* parentSizer);
+
+	void createHorizontalLine(wxBoxSizer* parentSizer, int y_size);
+
 	void displayCurrentImage();
 
 
