@@ -2,6 +2,7 @@
 #define _WINSOCKAPI_
 #include <wx/wx.h>
 #include <wx/statline.h>
+#include <wx/filepicker.h>
 
 #include "ImagePanel.h"
 #include "FaceGraph.h"
@@ -9,6 +10,7 @@
 
 template<typename V>
 V mod(const V& a, const V& b) {
+	if (b == 0) return 0;
 	return (a % b + b) % b;
 }
 
@@ -19,11 +21,17 @@ protected:
 private:
 	ImagePanel* bigImage;
 	ImagePanel* faceImage;
-	wxTextCtrl* face_name_box;
-	wxTextCtrl* cluster_name_box;
-	wxStaticText* face_index_box;
-	wxStaticText* cluster_index_box;
 
+	wxTextCtrl* face_name_box;
+	wxStaticText* face_index_box;
+
+	wxTextCtrl* cluster_name_box;
+	wxStaticText* cluster_index_box; 
+
+	wxFilePickerCtrl* save_graph;
+
+	wxCheckBox* face_selected_box;
+	wxCheckBox* cluster_selected_box;
 
 	FaceGraph* face_graph;
 
@@ -36,30 +44,44 @@ private:
 	void createSidebar(wxBoxSizer* parentSizer);
 	void createFaceSection(wxBoxSizer* parentSizer);
 	void createClusterSection(wxBoxSizer* parentSizer);
+	void createDropSection(wxBoxSizer* parentSizer);
+	void createSaveGraphSection(wxBoxSizer* parentSizer);
 
 	void createFaceTitle(wxBoxSizer* parentSizer);
 	void createMiniFace(wxBoxSizer* parentSizer);
+	void createSelectedFaceBox(wxBoxSizer* parentSizer);
 	void createFaceControlButtons(wxBoxSizer* parentSizer);
 
 	void createClusterTitle(wxBoxSizer* parentSizer);
 	void createMiniClusters(wxBoxSizer* parentSizer);
+	void createSelectedClusterBox(wxBoxSizer* parentSizer);
 	void createClusterButtons(wxBoxSizer* parentSizer);
 
 	void createOpenImgLocationButton(wxBoxSizer* parentSizer);
+
+	void createSaveGraphSectionToggles(wxBoxSizer* parentSizer);
 	void createSaveGraphButton(wxBoxSizer* parentSizer);
 
 	void createHorizontalLine(wxBoxSizer* parentSizer, int y_size);
 
 	void displayCurrentImage();
+	void removeIfMatches(bool isSelected);
 
+	void showPrevFaceImage(wxCommandEvent& evt);
+	void showNextFaceImage(wxCommandEvent& evt);
+	void showPrevCluster(wxCommandEvent& evt);
+	void showNextCluster(wxCommandEvent& evt);
 
-	void showPrevFaceImage(wxCommandEvent& event);
-	void showNextFaceImage(wxCommandEvent& event);
-	void showPrevCluster(wxCommandEvent& event);
-	void showNextCluster(wxCommandEvent& event);
+	void selectedFace(wxCommandEvent& evt);
+	void selectedCluster(wxCommandEvent& evt);
 
-	void saveName();
+	void removeCurrentImage(wxCommandEvent& evt);
+	void removeCurrentPerson(wxCommandEvent& evt);
+	void removeSelected(wxCommandEvent& evt);
+	void removeNonSelected(wxCommandEvent& evt);
 
-	wxDECLARE_EVENT_TABLE();
+	void saveGraphToDisk(wxFileDirPickerEvent& evt);
+
+	void saveCurrent();
 };
 

@@ -40,7 +40,7 @@ void FaceComparator::clusterFaces() {
     }
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_COMPARING_FACES));
 
-    face_graph->setNumberOfClusters(chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr()));
+    chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr());
     face_graph->sortFacesIntoClusters();
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_CLUSTERING_FACES));
 

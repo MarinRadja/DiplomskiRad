@@ -34,12 +34,17 @@ private:
 
 	std::string saveFaceToDisk(matrix<rgb_pixel>& face, string& _img_name);
 public:
+	size_t face_id;
 	std::string face_name;
+	bool selected;
 
 	Face();
 	Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
 	Face(string _image_location, string _face_location);
 	Face(string _image_location, string _face_location, string _face_name);
+	Face(string _image_location, string _face_location, string _face_name, size_t _face_id);
+	Face(string _image_location, string _face_location, string _face_name, size_t _face_id, bool _selected);
+	~Face() {};
 
 	string getImageLocation();
 	string getFaceLocation();

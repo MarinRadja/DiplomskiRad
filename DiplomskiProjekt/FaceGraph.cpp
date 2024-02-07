@@ -1,12 +1,23 @@
 #include "FaceGraph.h"
 
+FaceCluster::FaceCluster() {}
+
+FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name) : FaceCluster(_cluster_id, _cluster_name, false) {
+}
+
+FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name, bool _selected) {
+	cluster_id = _cluster_id;
+	cluster_name = _cluster_name;
+	selected = _selected;
+}
+
 void FaceCluster::addFace(Face face) {
 	faces.push_back(face);
 }
 
-void FaceCluster::removeFace(int i) {
-	if (i >= faces.size()) return;
+bool FaceCluster::removeFace(int i) {
 	faces.erase(faces.begin() + i);
+	return faces.size() > 0 ? false : true;
 }
 
 int FaceCluster::getNFaces() {
@@ -17,12 +28,51 @@ Face* FaceCluster::getFacePtr(size_t i_face) {
 	return &faces.at(i_face);
 }
 
+nlohmann::json FaceCluster::getJson() {
+	nlohmann::json faces_json;
+	for (Face fa : faces) {
+		faces_json.push_back(fa.getJson());
+	}
+
+	nlohmann::json clusterJson = {
+		{"cluster_id", cluster_id},
+		{"cluster_name", cluster_name},
+		{"selected", selected},
+		{"faces", faces_json}
+	};
+	return clusterJson;
+}
+
+bool FaceCluster::removeIfSelectedMatches(bool isSelected) {
+	for (size_t j = 0; j < faces.size(); j++) {
+		if (faces[j].selected == isSelected) {
+			removeFace(j);
+			j--;
+		}
+	}
+	return faces.size() > 0 ? false : true;
+}
+
+void FaceCluster::selectAllFaces(bool _select) {
+	for (Face& f : faces)
+		f.selected = _select;	
+}
+
+bool FaceCluster::allSelected() {
+	for (int i = 0; i < faces.size(); i++) {
+		if (faces[i].selected == false) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void FaceGraph::addFace(Face face) {
 	faces.push_back(face);
 }
 
 void FaceGraph::addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name) {
-	Face face(_face, _image_location, _img_name);
+	Face face(_image_location, _img_name);
 	faces.push_back(face);
 }
 
@@ -51,7 +101,7 @@ void FaceGraph::setNumberOfClusters(unsigned long n) {
 }
 
 unsigned long FaceGraph::getNumberOfClusters() {
-	return numberOfClusters;
+	return face_clusters.size();
 }
 
 void FaceGraph::sortFacesIntoClusters() {
@@ -77,11 +127,7 @@ int FaceGraph::getNFacesFromClusterAt(size_t i_cluster) {
 void FaceGraph::saveGraphToJson(string& json_name) {
 	nlohmann::json graph_json;
 	for (FaceCluster faCl : face_clusters) {
-		nlohmann::json cluster_json;
-		for (Face fa : faCl) {
-			cluster_json.push_back(fa.getJson());
-		}
-		graph_json.push_back(cluster_json);
+		graph_json.push_back(faCl.getJson());
 	}
 
 	Utils::saveToDisk(graph_json, json_name);
@@ -92,14 +138,40 @@ void FaceGraph::loadGraphFromJson(string& json_name) {
 	Utils::loadFromDisk(graphJson, json_name);
 
 	for (auto& [clusterIndex, clusterJson] : graphJson.items()) {
-		FaceCluster faceCluster;
-		for (auto& [faceIndex, faceJson] : clusterJson.items()) {
+		FaceCluster faceCluster(clusterJson.at("cluster_id"),
+			clusterJson.at("cluster_name"), 
+			clusterJson.at("selected"));
+		for (auto& [faceIndex, faceJson] : clusterJson.at("faces").items()) {
+			bool sel = faceJson.at("selected");
 			Face face(faceJson.at("image_location"), 
 				faceJson.at("face_location"),
-				faceJson.at("face_name"));
+				faceJson.at("face_name"),
+				faceJson.at("face_id"),
+				sel);
 			faceCluster.addFace(face);
 		}
 		face_clusters.push_back(faceCluster);
 	}
 	numberOfClusters = face_clusters.size();
+}
+
+void FaceGraph::removeIfSelectedMatches(bool isSelected) {
+	std::vector<FaceCluster>::iterator it = face_clusters.begin();
+	while (it != face_clusters.end()) {
+		if (it->removeIfSelectedMatches(isSelected)) {
+			it = face_clusters.erase(it);
+		} else ++it;
+	}
+}
+
+bool FaceGraph::removeFace(int iF, int iC) {
+	if (face_clusters[iC].removeFace(iF))
+		return removeCluster(iC);
+
+	return false;
+}
+
+bool FaceGraph::removeCluster(int iC) {
+	face_clusters.erase(face_clusters.begin() + iC);
+	return true;
 }
