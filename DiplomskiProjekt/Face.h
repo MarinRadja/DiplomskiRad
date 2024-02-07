@@ -44,6 +44,7 @@ public:
 	Face(string _image_location, string _face_location, string _face_name);
 	Face(string _image_location, string _face_location, string _face_name, size_t _face_id);
 	Face(string _image_location, string _face_location, string _face_name, size_t _face_id, bool _selected);
+	~Face() {};
 
 	string getImageLocation();
 	string getFaceLocation();

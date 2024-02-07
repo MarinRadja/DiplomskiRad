@@ -10,6 +10,15 @@ FaceClusterWindow::FaceClusterWindow(const wxString& title, FaceGraph* _face_gra
 		Bind(wxEVT_BUTTON, &FaceClusterWindow::showNextFaceImage, this, FaceClusterWindowIDs::NEXT_IMG);
 		Bind(wxEVT_BUTTON, &FaceClusterWindow::showPrevCluster, this, FaceClusterWindowIDs::PREV_CLUSTER);
 		Bind(wxEVT_BUTTON, &FaceClusterWindow::showNextCluster, this, FaceClusterWindowIDs::NEXT_CLUSTER);
+
+		Bind(wxEVT_CHECKBOX, &FaceClusterWindow::selectedFace, this, FaceClusterWindowIDs::FACE_CHECKBOX);
+		Bind(wxEVT_CHECKBOX, &FaceClusterWindow::selectedCluster, this, FaceClusterWindowIDs::CLUSTER_CHECKBOX);
+
+		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeCurrentImage, this, FaceClusterWindowIDs::REMOVE_CURRENT_IMAGE);
+		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeCurrentPerson, this, FaceClusterWindowIDs::REMOVE_CURRENT_PERSON);
+		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeSelected, this, FaceClusterWindowIDs::REMOVE_SELECTED);
+		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeNonSelected, this, FaceClusterWindowIDs::REMOVE_NON_SELECTED);
+
 		Bind(wxEVT_FILEPICKER_CHANGED, &FaceClusterWindow::saveGraphToDisk, this, FaceClusterWindowIDs::SAVE_GRAPH);
 
 		face_graph = _face_graph;
@@ -43,8 +52,10 @@ void FaceClusterWindow::createSidebar(wxBoxSizer* parentSizer) {
 	createFaceSection(sidebarSizer);
 	createHorizontalLine(sidebarSizer, -1);
 	createClusterSection(sidebarSizer);
-
-	createSaveGraphButton(sidebarSizer);
+	createHorizontalLine(sidebarSizer, -1);
+	createDropSection(sidebarSizer);
+	createHorizontalLine(sidebarSizer, -1);
+	createSaveGraphSection(sidebarSizer);
 
 	parentSizer->Add(sidebarSizer, 0, wxALIGN_CENTER, 3);
 }
@@ -69,6 +80,32 @@ void FaceClusterWindow::createClusterSection(wxBoxSizer* parentSizer) {
 	createClusterButtons(parentSizer);
 }
 
+void FaceClusterWindow::createDropSection(wxBoxSizer* parentSizer) {
+	parentSizer->Add(new wxStaticText(this, wxID_ANY, "Izbaci:", wxDefaultPosition, wxDefaultSize, wxTE_CENTER),
+		0, wxEXPAND);
+
+	wxBoxSizer* dropCurrentButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+	dropCurrentButtonsSizer->Add(new wxButton(this, FaceClusterWindowIDs::REMOVE_CURRENT_IMAGE, "Trenutnu sliku", wxDefaultPosition, wxSize(100, -1)),
+		1, wxEXPAND);
+	dropCurrentButtonsSizer->Add(new wxButton(this, FaceClusterWindowIDs::REMOVE_CURRENT_PERSON, "Trenutnu osobu", wxDefaultPosition, wxSize(100, -1)), 
+		1, wxEXPAND);
+		
+	wxBoxSizer* dropSelectedButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+	dropSelectedButtonsSizer->Add(new wxButton(this, FaceClusterWindowIDs::REMOVE_SELECTED, "Odabrano", wxDefaultPosition, wxSize(100, -1)),
+		1, wxEXPAND);
+	dropSelectedButtonsSizer->Add(new wxButton(this, FaceClusterWindowIDs::REMOVE_NON_SELECTED, "Ne odabrano", wxDefaultPosition, wxSize(100, -1)),
+		1, wxEXPAND);
+	
+	parentSizer->Add(dropCurrentButtonsSizer, 0, wxALIGN_CENTER);
+	parentSizer->AddSpacer(2);
+	parentSizer->Add(dropSelectedButtonsSizer, 0, wxALIGN_CENTER);
+}
+
+void FaceClusterWindow::createSaveGraphSection(wxBoxSizer* parentSizer) {
+	createSaveGraphSectionToggles(parentSizer);
+	createSaveGraphButton(parentSizer);
+}
+
 void FaceClusterWindow::createFaceTitle(wxBoxSizer* parentSizer) {
 	wxBoxSizer* faceNameBoxSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxStaticText* face_name_lbl = new wxStaticText(this, wxID_ANY, "Slika: ", wxDefaultPosition, wxSize(100, -1), wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);
@@ -90,7 +127,7 @@ void FaceClusterWindow::createMiniFace(wxBoxSizer* parentSizer) {
 }
 
 void FaceClusterWindow::createSelectedFaceBox(wxBoxSizer* parentSizer) {
-	face_selected_box = new wxCheckBox(this, wxID_ANY, "Slika odabrana: ", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE | wxALIGN_RIGHT);
+	face_selected_box = new wxCheckBox(this, FaceClusterWindowIDs::FACE_CHECKBOX, "Slika odabrana: ", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE | wxALIGN_RIGHT);
 	parentSizer->Add(face_selected_box, 0, wxALIGN_CENTER);
 }
 
@@ -123,7 +160,7 @@ void FaceClusterWindow::createClusterTitle(wxBoxSizer* parentSizer) {
 void FaceClusterWindow::createMiniClusters(wxBoxSizer* parentSizer) {}
 
 void FaceClusterWindow::createSelectedClusterBox(wxBoxSizer* parentSizer) {
-	cluster_selected_box = new wxCheckBox(this, wxID_ANY, "Osoba odabrana: ", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE | wxALIGN_RIGHT);
+	cluster_selected_box = new wxCheckBox(this, FaceClusterWindowIDs::CLUSTER_CHECKBOX, "Osoba odabrana: ", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE | wxALIGN_RIGHT);
 	parentSizer->Add(cluster_selected_box, 0, wxALIGN_CENTER);
 }
 
@@ -149,6 +186,10 @@ void FaceClusterWindow::createOpenImgLocationButton(wxBoxSizer* parentSizer) {
 
 	openImgLocationButtonSizer->Add(openImgLocationButton, 1, wxEXPAND | wxALIGN_CENTER, 3);
 	parentSizer->Add(openImgLocationButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void FaceClusterWindow::createSaveGraphSectionToggles(wxBoxSizer* parentSizer) {
+	wxBoxSizer* saveToggleSizer = new wxBoxSizer(wxHORIZONTAL);
 }
 
 void FaceClusterWindow::createSaveGraphButton(wxBoxSizer* parentSizer) {
@@ -182,14 +223,23 @@ void FaceClusterWindow::createHorizontalLine(wxBoxSizer* parentSizer, int y_size
 
 
 void FaceClusterWindow::displayCurrentImage() {
+	face_name_box->Clear();
+	cluster_name_box->Clear();
+
+	if (face_graph->getNumberOfClusters() == 0) {
+		bigImage->Destroy();
+		faceImage->Destroy();
+		face_index_box->SetLabelText("0/0");
+		cluster_index_box->SetLabelText("0/0");
+		return;
+	}
+
 	FaceCluster* current_cluster = face_graph->getClusterPtr(i_cluster);
 	Face* current_face = current_cluster->getFacePtr(i_face);
 
-	face_name_box->Clear();
 	if (current_face->face_name.length() > 0)
 		face_name_box->AppendText(current_face->face_name);
 
-	cluster_name_box->Clear();
 	if (current_cluster->cluster_name.length() > 0)
 		cluster_name_box->AppendText(current_cluster->cluster_name);
 
@@ -206,6 +256,17 @@ void FaceClusterWindow::displayCurrentImage() {
 	faceImage->Refresh();
 }
 
+void FaceClusterWindow::removeIfMatches(bool isSelected) {
+	saveCurrent();
+
+	i_face = 0;
+	i_cluster = 0;
+
+	face_graph->removeIfSelectedMatches(isSelected);
+
+	displayCurrentImage();
+}
+
 void FaceClusterWindow::saveCurrent() {
 	FaceCluster* currentCluster = face_graph->getClusterPtr(i_cluster);
 	Face* currentFace = currentCluster->getFacePtr(i_face);
@@ -219,6 +280,7 @@ void FaceClusterWindow::saveCurrent() {
 #pragma region "Events"
 
 void FaceClusterWindow::showPrevFaceImage(wxCommandEvent& event) {
+	if (face_graph->getNumberOfClusters() == 0) return;
 	saveCurrent();
 
 	i_face = mod<int>(i_face - 1, face_graph->getNFacesFromClusterAt(i_cluster));
@@ -227,6 +289,7 @@ void FaceClusterWindow::showPrevFaceImage(wxCommandEvent& event) {
 }
 
 void FaceClusterWindow::showNextFaceImage(wxCommandEvent& event) {
+	if (face_graph->getNumberOfClusters() == 0) return;
 	saveCurrent();
 
 	i_face = (i_face + 1) % face_graph->getNFacesFromClusterAt(i_cluster);
@@ -234,7 +297,8 @@ void FaceClusterWindow::showNextFaceImage(wxCommandEvent& event) {
 	displayCurrentImage();
 }
 
-void FaceClusterWindow::showPrevCluster(wxCommandEvent& event) {
+void FaceClusterWindow::showPrevCluster(wxCommandEvent& evt) {
+	if (face_graph->getNumberOfClusters() == 0) return;
 	saveCurrent();
 
 	i_face = 0;
@@ -244,13 +308,47 @@ void FaceClusterWindow::showPrevCluster(wxCommandEvent& event) {
 	displayCurrentImage();
 }
 
-void FaceClusterWindow::showNextCluster(wxCommandEvent& event) {
+void FaceClusterWindow::showNextCluster(wxCommandEvent& evt) {
+	if (face_graph->getNumberOfClusters() == 0) return;
 	saveCurrent();
 
 	i_face = 0;
 	i_cluster = (i_cluster + 1) % face_graph->getNumberOfClusters();
 
 	displayCurrentImage();
+}
+
+void FaceClusterWindow::selectedFace(wxCommandEvent& evt) {
+	saveCurrent();
+	cluster_selected_box->SetValue(face_graph->getClusterPtr(i_cluster)->allSelected());
+}
+
+void FaceClusterWindow::selectedCluster(wxCommandEvent& evt) {
+	face_graph->getClusterPtr(i_cluster)->selectAllFaces(cluster_selected_box->GetValue());
+	face_selected_box->SetValue(cluster_selected_box->GetValue());
+}
+
+void FaceClusterWindow::removeCurrentImage(wxCommandEvent& evt) {
+	if (face_graph->removeFace(i_face, i_cluster)) {
+		i_cluster = mod<int>(i_cluster - 1, face_graph->getNumberOfClusters());
+	}
+	i_face = mod<int>(i_face - 1, face_graph->getNFacesFromClusterAt(i_cluster));
+	displayCurrentImage();
+}
+
+void FaceClusterWindow::removeCurrentPerson(wxCommandEvent& evt) {
+	face_graph->removeCluster(i_cluster);
+	i_cluster = mod<int>(i_cluster - 1, face_graph->getNumberOfClusters());
+	i_face = 0;
+	displayCurrentImage();
+}
+
+void FaceClusterWindow::removeSelected(wxCommandEvent& evt) {
+	removeIfMatches(true);
+}
+
+void FaceClusterWindow::removeNonSelected(wxCommandEvent& evt) {
+	removeIfMatches(false);
 }
 
 void FaceClusterWindow::saveGraphToDisk(wxFileDirPickerEvent& evt) {

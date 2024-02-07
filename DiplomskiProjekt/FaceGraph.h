@@ -15,18 +15,19 @@
 
 class FaceCluster {
 private:
-	std::vector<Face> faces;
 public:
 	bool selected;
+	std::vector<Face> faces;
 
 	FaceCluster();
 	FaceCluster(int _cluster_id, std::string _cluster_name);
 	FaceCluster(int _cluster_id, std::string _cluster_name, bool _selected);
+	~FaceCluster() {};
 
 	size_t cluster_id;
 	std::string cluster_name;
 	void addFace(Face face);
-	void removeFace(int i);
+	bool removeFace(int i);
 
 	int getNFaces();
 
@@ -38,6 +39,9 @@ public:
 	std::vector<Face>::const_iterator end() const { return faces.end(); }
 
 	nlohmann::json getJson();
+	bool removeIfSelectedMatches(bool isSelected);
+	void selectAllFaces(bool _select);
+	bool allSelected();
 };
 
 class FaceGraph {
@@ -50,6 +54,8 @@ private:
 	std::vector<Face> faces;
 	std::vector<FaceCluster> face_clusters;
 public:
+	~FaceGraph() {};
+
 	void addFace(Face face);
 	void addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
 	Face* getFacePtr(int i);
@@ -70,4 +76,8 @@ public:
 
 	void saveGraphToJson(string& json_name);
 	void loadGraphFromJson(string& json_name);
+
+	void removeIfSelectedMatches(bool isSelected);
+	bool removeFace(int iF, int iC);
+	bool removeCluster(int iC);
 };

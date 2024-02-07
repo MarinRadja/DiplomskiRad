@@ -64,3 +64,4 @@ nlohmann::json Face::getJson() {
 void Face::setImageLocation(string _image_location) {
 	image_location = _image_location;
 }
+

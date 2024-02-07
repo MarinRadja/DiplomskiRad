@@ -15,9 +15,9 @@ void FaceCluster::addFace(Face face) {
 	faces.push_back(face);
 }
 
-void FaceCluster::removeFace(int i) {
-	if (i >= faces.size()) return;
+bool FaceCluster::removeFace(int i) {
 	faces.erase(faces.begin() + i);
+	return faces.size() > 0 ? false : true;
 }
 
 int FaceCluster::getNFaces() {
@@ -41,6 +41,30 @@ nlohmann::json FaceCluster::getJson() {
 		{"faces", faces_json}
 	};
 	return clusterJson;
+}
+
+bool FaceCluster::removeIfSelectedMatches(bool isSelected) {
+	for (size_t j = 0; j < faces.size(); j++) {
+		if (faces[j].selected == isSelected) {
+			removeFace(j);
+			j--;
+		}
+	}
+	return faces.size() > 0 ? false : true;
+}
+
+void FaceCluster::selectAllFaces(bool _select) {
+	for (Face& f : faces)
+		f.selected = _select;	
+}
+
+bool FaceCluster::allSelected() {
+	for (int i = 0; i < faces.size(); i++) {
+		if (faces[i].selected == false) {
+			return false;
+		}
+	}
+	return true;
 }
 
 void FaceGraph::addFace(Face face) {
@@ -77,7 +101,7 @@ void FaceGraph::setNumberOfClusters(unsigned long n) {
 }
 
 unsigned long FaceGraph::getNumberOfClusters() {
-	return numberOfClusters;
+	return face_clusters.size();
 }
 
 void FaceGraph::sortFacesIntoClusters() {
@@ -129,4 +153,25 @@ void FaceGraph::loadGraphFromJson(string& json_name) {
 		face_clusters.push_back(faceCluster);
 	}
 	numberOfClusters = face_clusters.size();
+}
+
+void FaceGraph::removeIfSelectedMatches(bool isSelected) {
+	std::vector<FaceCluster>::iterator it = face_clusters.begin();
+	while (it != face_clusters.end()) {
+		if (it->removeIfSelectedMatches(isSelected)) {
+			it = face_clusters.erase(it);
+		} else ++it;
+	}
+}
+
+bool FaceGraph::removeFace(int iF, int iC) {
+	if (face_clusters[iC].removeFace(iF))
+		return removeCluster(iC);
+
+	return false;
+}
+
+bool FaceGraph::removeCluster(int iC) {
+	face_clusters.erase(face_clusters.begin() + iC);
+	return true;
 }

@@ -10,6 +10,7 @@
 
 template<typename V>
 V mod(const V& a, const V& b) {
+	if (b == 0) return 0;
 	return (a % b + b) % b;
 }
 
@@ -43,6 +44,8 @@ private:
 	void createSidebar(wxBoxSizer* parentSizer);
 	void createFaceSection(wxBoxSizer* parentSizer);
 	void createClusterSection(wxBoxSizer* parentSizer);
+	void createDropSection(wxBoxSizer* parentSizer);
+	void createSaveGraphSection(wxBoxSizer* parentSizer);
 
 	void createFaceTitle(wxBoxSizer* parentSizer);
 	void createMiniFace(wxBoxSizer* parentSizer);
@@ -55,17 +58,27 @@ private:
 	void createClusterButtons(wxBoxSizer* parentSizer);
 
 	void createOpenImgLocationButton(wxBoxSizer* parentSizer);
+
+	void createSaveGraphSectionToggles(wxBoxSizer* parentSizer);
 	void createSaveGraphButton(wxBoxSizer* parentSizer);
 
 	void createHorizontalLine(wxBoxSizer* parentSizer, int y_size);
 
 	void displayCurrentImage();
+	void removeIfMatches(bool isSelected);
 
+	void showPrevFaceImage(wxCommandEvent& evt);
+	void showNextFaceImage(wxCommandEvent& evt);
+	void showPrevCluster(wxCommandEvent& evt);
+	void showNextCluster(wxCommandEvent& evt);
 
-	void showPrevFaceImage(wxCommandEvent& event);
-	void showNextFaceImage(wxCommandEvent& event);
-	void showPrevCluster(wxCommandEvent& event);
-	void showNextCluster(wxCommandEvent& event);
+	void selectedFace(wxCommandEvent& evt);
+	void selectedCluster(wxCommandEvent& evt);
+
+	void removeCurrentImage(wxCommandEvent& evt);
+	void removeCurrentPerson(wxCommandEvent& evt);
+	void removeSelected(wxCommandEvent& evt);
+	void removeNonSelected(wxCommandEvent& evt);
 
 	void saveGraphToDisk(wxFileDirPickerEvent& evt);
 
