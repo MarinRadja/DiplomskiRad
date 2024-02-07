@@ -16,9 +16,14 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
 	createTitle(clientAreaSizer);
+	emptyTextLine(clientAreaSizer, 1);
+
 	createInfo(clientAreaSizer);
+	emptyTextLine(clientAreaSizer, 1);
 
 	createRunAlgSection(clientAreaSizer);
+	emptyTextLine(clientAreaSizer, 1);
+
 	createLoadGraphSection(clientAreaSizer);
 
 	SetSizerAndFit(clientAreaSizer);
@@ -35,7 +40,7 @@ RunAlgorithm* MainFrame::getAlgorithmPtr() {
 
 void MainFrame::createTitle(wxBoxSizer* parentSizer) {
 	wxBoxSizer* titleSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Face Recognizer", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTRE_HORIZONTAL);
+	wxStaticText* title = new wxStaticText(this, wxID_ANY, "Raspoznavanje lica", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTRE);
 
 	wxFont font = title->GetFont();
 	font.SetPointSize(28);
@@ -43,20 +48,42 @@ void MainFrame::createTitle(wxBoxSizer* parentSizer) {
 	title->SetFont(font);
 
 	titleSizer->Add(title, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(titleSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(titleSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 // add description and how to use
 void MainFrame::createInfo(wxBoxSizer* parentSizer) {
 	wxBoxSizer* infoSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticText* info = new wxStaticText(this, wxID_ANY, "This is an application for facial recognition and w/e.", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTER);
+	wxTextCtrl* info = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxSize(260, 200), wxTE_MULTILINE| wxTE_READONLY| wxTE_LEFT| wxTE_BESTWRAP | wxBORDER_NONE | wxTE_NO_VSCROLL);
+	info->SetBackgroundColour(wxColor(*wxLIGHT_GREY));
+	info->SetMargins(8);
 
-	infoSizer->Add(info, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(infoSizer, 5, wxEXPAND | wxALIGN_CENTER, 3);
+	info->AppendText("Ovo je aplikacija za organiziranje slika osoba.\n");
+	info->AppendText("Proèitajte readme.txt za detalnje upute!\n");
+	info->AppendText("\n");
+	info->AppendText("Prag sliènosti\n");
+	info->AppendText("   - valjane vrijednosti: 1 - 1000\n");
+	info->AppendText("   - zadano: 55, preporuèeno: 30 - 90\n");
+	info->AppendText("\n");
+	info->AppendText("Organiziraj slike:\n");
+	info->AppendText("   - odaberite direktorij sa slikama\n");
+	info->AppendText("   - pritisnite \"Pokreni analizu\"\n");
+	info->AppendText("Uèitaj organizirane slike:\n");
+	info->AppendText("   - odaberite spremljeni graf\n");
+	info->AppendText("   - pritisnite \"Uèitaj graf\"");
+
+	wxBoxSizer* emptyCol = new wxBoxSizer(wxVERTICAL);
+
+	emptyCol->Add(new wxStaticText());
+	infoSizer->Add(emptyCol, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	infoSizer->Add(info, 0, wxALIGN_CENTER, 3);
+	infoSizer->Add(emptyCol, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(infoSizer, 3, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void MainFrame::createRunAlgSection(wxBoxSizer* parentSizer) {
-	createSelectFolderAndRunOn(parentSizer);
+	createThreshold(parentSizer);
+	createSelectFolderLblPkr(parentSizer);
 	createRunButton(parentSizer);
 }
 
@@ -65,94 +92,75 @@ void MainFrame::createLoadGraphSection(wxBoxSizer* parentSizer) {
 	createLoadGraphButton(parentSizer);
 }
 
-void MainFrame::createSelectFolderAndRunOn(wxBoxSizer* parentSizer) {
-	wxBoxSizer* selectFolderAndRunOnSizer = new wxBoxSizer(wxHORIZONTAL);
-	
-	createSelectedFolderLocationTextField(selectFolderAndRunOnSizer);
-	createSelectFolder(selectFolderAndRunOnSizer);
-	createRunOn(selectFolderAndRunOnSizer);
+void MainFrame::createThreshold(wxBoxSizer* parentSizer) {
+	wxBoxSizer* createThresholdSIzer = new wxBoxSizer(wxHORIZONTAL);
 
-	parentSizer->Add(selectFolderAndRunOnSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
+	// label
+	wxStaticText* thresholdText = new wxStaticText(this, wxID_ANY, "Prag sliènosti:\t", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
+
+	// input
+	similarity_threshold = new wxSpinCtrl(this, MainFrameIDs::SIMILARITY_THRESHOLD, wxEmptyString, wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS|wxALIGN_RIGHT, 1, 1000, 55);
+
+	createThresholdSIzer->Add(thresholdText, 1, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 3);
+	createThresholdSIzer->Add(similarity_threshold, 1, wxALIGN_CENTER, 3);
+	parentSizer->Add(createThresholdSIzer, 0, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
-void MainFrame::createSelectedFolderLocationTextField(wxBoxSizer* parentSizer) {
-	wxBoxSizer* selectedFolderLoactionSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticText* selectedFolderLocation = new wxStaticText(this, MainFrameIDs::FOLDER_LOCATION, "", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTER);
-	wxColour colour = selectedFolderLocation->GetBackgroundColour();
-	colour.SetRGB(0x00e0e0e0);
-	selectedFolderLocation->SetBackgroundColour(colour);
-
-	selectedFolderLoactionSizer->Add(selectedFolderLocation, 1, wxALIGN_CENTER, 3);
-	parentSizer->Add(selectedFolderLoactionSizer, 5, wxEXPAND | wxALIGN_CENTER, 3);
-}
-
-void MainFrame::createSelectFolder(wxBoxSizer* parentSizer) {
+void MainFrame::createSelectFolderLblPkr(wxBoxSizer* parentSizer) {
 	wxBoxSizer* selectFolderSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxDirPickerCtrl* selectFolder = new wxDirPickerCtrl(this, MainFrameIDs::DIR_PICKER, "/", "Select folder with pictures (subfolders supported)", wxDefaultPosition, wxDefaultSize, wxDIRP_DIR_MUST_EXIST);
 
+	// label
+	selected_folder_location = new wxTextCtrl(this, MainFrameIDs::GRAPH_LOCATION, "Odaberi direktorij sa slikama ->", wxDefaultPosition, wxSize(150, -1), wxTE_RIGHT | wxTE_READONLY | wxTE_NO_VSCROLL);
+	selected_folder_location->SetBackgroundColour(wxColor(*wxLIGHT_GREY));
+
+	// picker
+	wxDirPickerCtrl* selectFolder = new wxDirPickerCtrl(this, MainFrameIDs::DIR_PICKER, "/", "Odaberite direktorij sa slikama", wxDefaultPosition, wxDefaultSize, wxDIRP_DIR_MUST_EXIST);
+
+	selectFolderSizer->Add(selected_folder_location, 3, wxALIGN_CENTER, 3);
 	selectFolderSizer->Add(selectFolder, 1, wxALIGN_CENTER, 3);
-	parentSizer->Add(selectFolderSizer, 3, wxEXPAND | wxALIGN_CENTER, 3);
-}
-
-void MainFrame::createRunOn(wxBoxSizer* parentSizer) {
-	wxBoxSizer* runOnSizer = new wxBoxSizer(wxHORIZONTAL);
-
-	wxArrayString choices;
-	choices.Add("CPU");
-	choices.Add("CUDA");
-
-	wxRadioBox* choice = new wxRadioBox(this, wxID_ANY, "Run on", wxDefaultPosition, wxDefaultSize, choices, 1, wxRA_SPECIFY_COLS);
-	choice->Select(0);
-
-	runOnSizer->Add(choice, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(runOnSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(selectFolderSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void MainFrame::createRunButton(wxBoxSizer* parentSizer) {
 	wxBoxSizer* runButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxButton* choice = new wxButton(this, MainFrameIDs::RUN_BUTTON, "Start!", wxDefaultPosition, wxDefaultSize);
-	choice->Disable();
+	run_alg_button = new wxButton(this, MainFrameIDs::RUN_BUTTON, "Pokreni analizu", wxDefaultPosition, wxDefaultSize);
+	run_alg_button->Disable();
 
-	runButtonSizer->Add(choice, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	runButtonSizer->Add(run_alg_button, 1, wxEXPAND | wxALIGN_CENTER, 3);
 	parentSizer->Add(runButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void MainFrame::createLoadGraphLocationAndPicker(wxBoxSizer* parentSizer) {
-	wxBoxSizer* selectGraphAndPickerSizer = new wxBoxSizer(wxHORIZONTAL);
-
-	createSelectedGraphLocationTextField(selectGraphAndPickerSizer);
-	createLoadGraphPicker(selectGraphAndPickerSizer);
-
-	parentSizer->Add(selectGraphAndPickerSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
-}
-
-void MainFrame::createSelectedGraphLocationTextField(wxBoxSizer* parentSizer) {
-	wxBoxSizer* selectedGraphLocationSizer = new wxBoxSizer(wxHORIZONTAL);
-	load_graph_label = new wxStaticText(this, MainFrameIDs::GRAPH_LOCATION, "", wxDefaultPosition, wxSize(150, -1), wxALIGN_CENTER);
-	wxColour colour = load_graph_label->GetBackgroundColour();
-	colour.SetRGB(0x00e0e0e0);
-	load_graph_label->SetBackgroundColour(colour);
-
-	selectedGraphLocationSizer->Add(load_graph_label, 1, wxALIGN_CENTER, 3);
-	parentSizer->Add(selectedGraphLocationSizer, 5, wxEXPAND | wxALIGN_CENTER, 3);
-}
-
-void MainFrame::createLoadGraphPicker(wxBoxSizer* parentSizer) {
 	wxBoxSizer* selectGraphSizer = new wxBoxSizer(wxHORIZONTAL);
-	load_graph_picker = new wxFilePickerCtrl(this, MainFrameIDs::GRAPH_PICKER,
-		"/", "Select graph", "*.json", wxDefaultPosition, wxDefaultSize, wxFLP_OPEN | wxFLP_FILE_MUST_EXIST);
 
+	// label
+	load_graph_label = new wxTextCtrl(this, MainFrameIDs::GRAPH_LOCATION, "Odaberi graf ->", wxDefaultPosition, wxSize(150, -1), wxTE_RIGHT | wxTE_READONLY | wxTE_NO_VSCROLL);
+	load_graph_label->SetBackgroundColour(wxColor(*wxLIGHT_GREY));
+
+	// picker
+	load_graph_picker = new wxFilePickerCtrl(this, MainFrameIDs::GRAPH_PICKER,
+		"/", "", "*.json", wxDefaultPosition, wxDefaultSize, wxFLP_FILE_MUST_EXIST);
+
+	selectGraphSizer->Add(load_graph_label, 3, wxALIGN_CENTER, 3);
 	selectGraphSizer->Add(load_graph_picker, 1, wxALIGN_CENTER, 3);
-	parentSizer->Add(selectGraphSizer, 3, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(selectGraphSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void MainFrame::createLoadGraphButton(wxBoxSizer* parentSizer) {
 	wxBoxSizer* loadButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-	load_graph_button = new wxButton(this, MainFrameIDs::LOAD_BUTTON, "Load graph!", wxDefaultPosition, wxDefaultSize);
+	load_graph_button = new wxButton(this, MainFrameIDs::LOAD_BUTTON, "Uèitaj graf", wxDefaultPosition, wxDefaultSize);
 	load_graph_button->Disable();
 
 	loadButtonSizer->Add(load_graph_button, 1, wxEXPAND | wxALIGN_CENTER, 3);
 	parentSizer->Add(loadButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+}
+
+void MainFrame::emptyTextLine(wxBoxSizer* parentSizer, int proportion) {
+	wxBoxSizer* emptySizer = new wxBoxSizer(wxHORIZONTAL);
+	wxStaticText* emptyText = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
+
+	emptySizer->Add(emptyText, 1, wxALIGN_CENTER);
+	parentSizer->Add(emptySizer, 0, wxALIGN_CENTER);
 }
 
 #pragma endregion "GUI Setup"
@@ -160,38 +168,32 @@ void MainFrame::createLoadGraphButton(wxBoxSizer* parentSizer) {
 #pragma region "Events"
 
 void MainFrame::onDirSelect(wxFileDirPickerEvent& evt) {
-	wxButton* runButton = static_cast<wxButton*>(FindWindowById(MainFrameIDs::RUN_BUTTON));
-	runButton->Enable();
+	run_alg_button->Enable();
 	
 	wxStaticText* folderLocation = static_cast<wxStaticText*>(FindWindowById(MainFrameIDs::FOLDER_LOCATION));
-	folderLocation->SetLabelText(evt.GetPath());
+	selected_folder_location->Clear();
+	selected_folder_location->AppendText(evt.GetPath());
 }
 
 void MainFrame::onRunButtonClick(wxCommandEvent& evt) {
-	wxStaticText* folderLocation = static_cast<wxStaticText*>(FindWindowById(MainFrameIDs::FOLDER_LOCATION));
-	
-	/*ConsoleOutputWindow* console = new ConsoleOutputWindow("Console");
-	console->SetClientSize(400, 300);
-	console->Center();
-	console->Show(true);*/
-
-
-	this->Hide();
+	Utils::faceSimilarityThreshold = similarity_threshold->GetValue() / 100.;
 
 	wxCommandEvent* startWorking = new wxCommandEvent(myEVT_CREATE_PROGRESS_WINDOW, EventsIDs::CREATE_PROGRESS_WINDOW);
-	startWorking->SetString(folderLocation->GetLabelText());
+	startWorking->SetString(selected_folder_location->GetLineText(0));
 	wxTheApp->QueueEvent(startWorking);
+
+	this->Hide();
 }
 
 void MainFrame::onGraphFileSelect(wxFileDirPickerEvent& evt) {
-	load_graph_picker->Refresh();
 	load_graph_button->Enable();
-	load_graph_label->SetLabelText(evt.GetPath());
+	load_graph_label->Clear();
+	load_graph_label->AppendText(evt.GetPath());
 }
 
 void MainFrame::onLoadButtonClick(wxCommandEvent& evt) {
 	wxCommandEvent* startLoadingGraph = new wxCommandEvent(myEVT_LOAD_GRAPH_FROM_DISK);
-	startLoadingGraph->SetString(load_graph_label->GetLabelText());
+	startLoadingGraph->SetString(load_graph_label->GetLineText(0));
 	wxTheApp->QueueEvent(startLoadingGraph);
 }
 

@@ -6,7 +6,7 @@ wxDEFINE_EVENT(myEVT_UPDATE_PROGRESS_WINDOW, wxCommandEvent);
 wxDEFINE_EVENT(myEVT_LOAD_GRAPH_FROM_DISK, wxCommandEvent);
 
 #pragma region "Data"
-float Utils::faceSimilarityThreshold = 0.55f;
+double Utils::faceSimilarityThreshold = 0.55f;
 #pragma endregion "Data"
 
 #pragma region "Functions"
