@@ -15,10 +15,17 @@ protected:
 private:
 	ImagePanel* bigImage;
 	ImagePanel* faceImage;
+	wxTextCtrl* face_name_box;
+	wxTextCtrl* cluster_name_box;
+	wxTextCtrl* face_index_box;
+	wxTextCtrl* cluster_index_box;
+
+
 	FaceGraph* face_graph;
 
 	size_t i_face = 0;
 	size_t i_cluster = 0;
+
 
 	void createImagePanel(wxBoxSizer* parentSizer);
 	void createSidebar(wxBoxSizer* parentSizer);
@@ -29,6 +36,7 @@ private:
 	void createOpenImgLocationButton(wxBoxSizer* parentSizer);
 	void createPrevFaceClusterButton(wxBoxSizer* parentSizer);
 	void createNextFaceClusterButton(wxBoxSizer* parentSizer);
+	void createSaveGraphButton(wxBoxSizer* parentSizer);
 	void displayCurrentImage();
 
 
@@ -36,6 +44,8 @@ private:
 	void showNextFaceImage(wxCommandEvent& event);
 	void showPrevCluster(wxCommandEvent& event);
 	void showNextCluster(wxCommandEvent& event);
+
+	void saveName();
 
 	wxDECLARE_EVENT_TABLE();
 };

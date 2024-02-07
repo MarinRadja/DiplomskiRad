@@ -48,15 +48,19 @@ void FaceClusterWindow::createSidebar(wxBoxSizer* parentSizer) {
 	createPrevFaceClusterButton(sidebarSizer);
 	createNextFaceClusterButton(sidebarSizer);
 
-	parentSizer->Add(sidebarSizer, 1, wxALIGN_CENTER, 3);
+	parentSizer->Add(sidebarSizer, 0, wxALIGN_CENTER, 3);
 }
 
 void FaceClusterWindow::createFaceClusterTitle(wxBoxSizer* parentSizer) {
-	wxBoxSizer* infoSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticText* info = new wxStaticText(this, wxID_ANY, "Scroll through images of this face", wxDefaultPosition, wxSize(30, -1), wxALIGN_CENTER);
+	wxBoxSizer* faceNameBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxStaticText* face_name_lbl = new wxStaticText(this, wxID_ANY, "Name: ", wxDefaultPosition, wxSize(50, -1), wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT);
+	face_name_box = new wxTextCtrl(this, wxID_ANY, 
+		face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->face_name, wxDefaultPosition, 
+		wxSize(150, -1), wxTE_CENTER | wxTE_NO_VSCROLL);
 
-	infoSizer->Add(info, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(infoSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	faceNameBoxSizer->Add(face_name_lbl, 0, wxSHAPED | wxALIGN_BOTTOM | wxALIGN_RIGHT, 3);
+	faceNameBoxSizer->Add(face_name_box, 1, wxEXPAND | wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL, 3);
+	parentSizer->Add(faceNameBoxSizer, 0, wxEXPAND | wxALIGN_BOTTOM, 3);
 }
 
 void FaceClusterWindow::createMiniFace(wxBoxSizer* parentSizer) {
@@ -69,11 +73,15 @@ void FaceClusterWindow::createMiniFace(wxBoxSizer* parentSizer) {
 
 void FaceClusterWindow::createControlForCurrentCluster(wxBoxSizer* parentSizer) {
 	wxBoxSizer* prevNextImgButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxButton* prevImg = new wxButton(this, FaceClusterWindowIDs::PREV_IMG, "<", wxDefaultPosition, wxDefaultSize);
-	wxButton* nextImg = new wxButton(this, FaceClusterWindowIDs::NEXT_IMG, ">", wxDefaultPosition, wxDefaultSize);
+	wxButton* prevImg = new wxButton(this, FaceClusterWindowIDs::PREV_IMG, "<", wxDefaultPosition, wxSize(30, 20));
+	face_index_box = new wxTextCtrl(this, wxID_ANY,
+		std::to_string(i_face) + "/" + std::to_string(face_graph->getClusterPtr(i_cluster)->getNFaces()), wxDefaultPosition,
+		wxDefaultSize, wxTE_CENTER | wxTE_NO_VSCROLL | wxTE_READONLY | wxTE_MULTILINE);
+	wxButton* nextImg = new wxButton(this, FaceClusterWindowIDs::NEXT_IMG, ">", wxDefaultPosition, wxSize(30, 20));
 
-	prevNextImgButtonSizer->Add(prevImg, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	prevNextImgButtonSizer->Add(nextImg, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	prevNextImgButtonSizer->Add(prevImg, 0, wxEXPAND | wxALIGN_CENTER, 3);
+	prevNextImgButtonSizer->Add(face_index_box, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	prevNextImgButtonSizer->Add(nextImg, 0, wxEXPAND | wxALIGN_CENTER, 3);
 	parentSizer->Add(prevNextImgButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
@@ -115,30 +123,49 @@ void FaceClusterWindow::createNextFaceClusterButton(wxBoxSizer* parentSizer) {
 	parentSizer->Add(prevClusterButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
+void FaceClusterWindow::createSaveGraphButton(wxBoxSizer* parentSizer) {
+
+}
+
 void FaceClusterWindow::displayCurrentImage() {
-	bigImage->displayFace(face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->getImageLocation());
+	FaceCluster* current_cluster = face_graph->getClusterPtr(i_cluster);
+	Face* current_face = current_cluster->getFacePtr(i_face);
+
+	face_name_box->Clear();
+	face_name_box->AppendText(current_face->face_name);
+
+	face_index_box->Clear();
+	face_index_box->AppendText(std::to_string(i_face + 1) + "/" + std::to_string(current_cluster->getNFaces() + 1));
+
+	bigImage->displayFace(current_face->getImageLocation());
 	bigImage->Refresh();
 
-	faceImage->displayFace(face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->getFaceLocation());
+	faceImage->displayFace(current_face->getFaceLocation());
 	faceImage->Refresh();
 }
 
+void FaceClusterWindow::saveName() {
+	face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->face_name = face_name_box->GetLineText(0);
+}
 
 #pragma region "Events"
 
 void FaceClusterWindow::showPrevFaceImage(wxCommandEvent& event) {
+	saveName();
 	i_face = (i_face - 1) % face_graph->getNFacesFromClusterAt(i_cluster);
 
 	displayCurrentImage();
 }
 
 void FaceClusterWindow::showNextFaceImage(wxCommandEvent& event) {
+	saveName();
 	i_face = (i_face + 1) % face_graph->getNFacesFromClusterAt(i_cluster);
 
 	displayCurrentImage();
 }
 
 void FaceClusterWindow::showPrevCluster(wxCommandEvent& event) {
+	saveName();
 	i_face = 0;
 	i_cluster = (i_cluster - 1) % face_graph->getNumberOfClusters();
 
@@ -146,6 +173,7 @@ void FaceClusterWindow::showPrevCluster(wxCommandEvent& event) {
 }
 
 void FaceClusterWindow::showNextCluster(wxCommandEvent& event) {
+	saveName();
 	i_face = 0;
 	i_cluster = (i_cluster + 1) % face_graph->getNumberOfClusters();
 

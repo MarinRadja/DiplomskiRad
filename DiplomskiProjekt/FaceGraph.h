@@ -17,6 +17,7 @@ class FaceCluster {
 private:
 	std::vector<Face> faces;
 public:
+	std::string cluster_name;
 	void addFace(Face face);
 	void removeFace(int i);
 

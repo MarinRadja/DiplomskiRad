@@ -166,7 +166,7 @@ void MyApp::loadGraphFromDisk(wxCommandEvent& evt) {
 
 	face_graph.loadGraphFromJson(jsonLoc);
 
-	main_frame->Destroy();
+	main_frame->Hide();
 	createFaceClusterWindow(&face_graph);
 }
 #pragma endregion
