@@ -54,6 +54,8 @@ void FaceClusterWindow::createFaceSection(wxBoxSizer* parentSizer) {
 	parentSizer->AddSpacer(5);
 	createMiniFace(parentSizer);
 	parentSizer->AddSpacer(5);
+	createSelectedFaceBox(parentSizer);
+	parentSizer->AddSpacer(5);
 	createFaceControlButtons(parentSizer);
 }
 
@@ -61,6 +63,8 @@ void FaceClusterWindow::createClusterSection(wxBoxSizer* parentSizer) {
 	createClusterTitle(parentSizer);
 	parentSizer->AddSpacer(5);
 	createMiniClusters(parentSizer);
+	parentSizer->AddSpacer(5);
+	createSelectedClusterBox(parentSizer);
 	parentSizer->AddSpacer(5);
 	createClusterButtons(parentSizer);
 }
@@ -83,6 +87,11 @@ void FaceClusterWindow::createMiniFace(wxBoxSizer* parentSizer) {
 
 	imagePanelSizer->Add(faceImage, 3, wxSHAPED | wxALIGN_CENTER, 3);
 	parentSizer->Add(imagePanelSizer, 10, wxSHAPED | wxALIGN_CENTER, 3);
+}
+
+void FaceClusterWindow::createSelectedFaceBox(wxBoxSizer* parentSizer) {
+	face_selected_box = new wxCheckBox(this, wxID_ANY, "Slika odabrana: ", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE | wxALIGN_RIGHT);
+	parentSizer->Add(face_selected_box, 0, wxALIGN_CENTER);
 }
 
 void FaceClusterWindow::createFaceControlButtons(wxBoxSizer* parentSizer) {
@@ -112,6 +121,11 @@ void FaceClusterWindow::createClusterTitle(wxBoxSizer* parentSizer) {
 }
 
 void FaceClusterWindow::createMiniClusters(wxBoxSizer* parentSizer) {}
+
+void FaceClusterWindow::createSelectedClusterBox(wxBoxSizer* parentSizer) {
+	cluster_selected_box = new wxCheckBox(this, wxID_ANY, "Osoba odabrana: ", wxDefaultPosition, wxDefaultSize, wxCHK_2STATE | wxALIGN_RIGHT);
+	parentSizer->Add(cluster_selected_box, 0, wxALIGN_CENTER);
+}
 
 void FaceClusterWindow::createClusterButtons(wxBoxSizer* parentSizer) {
 	wxBoxSizer* clusterButtonSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -182,6 +196,9 @@ void FaceClusterWindow::displayCurrentImage() {
 	face_index_box->SetLabelText(std::to_string(i_face + 1) + "/" + std::to_string(current_cluster->getNFaces()));
 	cluster_index_box->SetLabelText(std::to_string(i_cluster + 1) + "/" + std::to_string(face_graph->getNumberOfClusters()));
 
+	face_selected_box->SetValue(current_face->selected);
+	cluster_selected_box->SetValue(current_cluster->selected);
+
 	bigImage->displayFace(current_face->getImageLocation());
 	bigImage->Refresh();
 
@@ -189,15 +206,20 @@ void FaceClusterWindow::displayCurrentImage() {
 	faceImage->Refresh();
 }
 
-void FaceClusterWindow::saveName() {
-	face_graph->getClusterPtr(i_cluster)->getFacePtr(i_face)->face_name = face_name_box->GetLineText(0);
-	face_graph->getClusterPtr(i_cluster)->cluster_name = cluster_name_box->GetLineText(0);
+void FaceClusterWindow::saveCurrent() {
+	FaceCluster* currentCluster = face_graph->getClusterPtr(i_cluster);
+	Face* currentFace = currentCluster->getFacePtr(i_face);
+
+	currentFace->face_name = face_name_box->GetLineText(0);
+	currentFace->selected = face_selected_box->GetValue();
+	currentCluster->cluster_name = cluster_name_box->GetLineText(0);
+	currentCluster->selected = cluster_selected_box->GetValue();
 }
 
 #pragma region "Events"
 
 void FaceClusterWindow::showPrevFaceImage(wxCommandEvent& event) {
-	saveName();
+	saveCurrent();
 
 	i_face = mod<int>(i_face - 1, face_graph->getNFacesFromClusterAt(i_cluster));
 
@@ -205,7 +227,7 @@ void FaceClusterWindow::showPrevFaceImage(wxCommandEvent& event) {
 }
 
 void FaceClusterWindow::showNextFaceImage(wxCommandEvent& event) {
-	saveName();
+	saveCurrent();
 
 	i_face = (i_face + 1) % face_graph->getNFacesFromClusterAt(i_cluster);
 
@@ -213,7 +235,7 @@ void FaceClusterWindow::showNextFaceImage(wxCommandEvent& event) {
 }
 
 void FaceClusterWindow::showPrevCluster(wxCommandEvent& event) {
-	saveName();
+	saveCurrent();
 
 	i_face = 0;
 
@@ -223,7 +245,7 @@ void FaceClusterWindow::showPrevCluster(wxCommandEvent& event) {
 }
 
 void FaceClusterWindow::showNextCluster(wxCommandEvent& event) {
-	saveName();
+	saveCurrent();
 
 	i_face = 0;
 	i_cluster = (i_cluster + 1) % face_graph->getNumberOfClusters();
@@ -232,7 +254,7 @@ void FaceClusterWindow::showNextCluster(wxCommandEvent& event) {
 }
 
 void FaceClusterWindow::saveGraphToDisk(wxFileDirPickerEvent& evt) {
-	saveName();
+	saveCurrent();
 
 	std::string p = save_graph->GetPath().ToStdString();
 	face_graph->saveGraphToJson(p);

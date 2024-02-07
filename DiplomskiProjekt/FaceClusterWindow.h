@@ -20,12 +20,17 @@ protected:
 private:
 	ImagePanel* bigImage;
 	ImagePanel* faceImage;
+
 	wxTextCtrl* face_name_box;
-	wxTextCtrl* cluster_name_box;
 	wxStaticText* face_index_box;
+
+	wxTextCtrl* cluster_name_box;
 	wxStaticText* cluster_index_box; 
+
 	wxFilePickerCtrl* save_graph;
 
+	wxCheckBox* face_selected_box;
+	wxCheckBox* cluster_selected_box;
 
 	FaceGraph* face_graph;
 
@@ -41,10 +46,12 @@ private:
 
 	void createFaceTitle(wxBoxSizer* parentSizer);
 	void createMiniFace(wxBoxSizer* parentSizer);
+	void createSelectedFaceBox(wxBoxSizer* parentSizer);
 	void createFaceControlButtons(wxBoxSizer* parentSizer);
 
 	void createClusterTitle(wxBoxSizer* parentSizer);
 	void createMiniClusters(wxBoxSizer* parentSizer);
+	void createSelectedClusterBox(wxBoxSizer* parentSizer);
 	void createClusterButtons(wxBoxSizer* parentSizer);
 
 	void createOpenImgLocationButton(wxBoxSizer* parentSizer);
@@ -62,6 +69,6 @@ private:
 
 	void saveGraphToDisk(wxFileDirPickerEvent& evt);
 
-	void saveName();
+	void saveCurrent();
 };
 

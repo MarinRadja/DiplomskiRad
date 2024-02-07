@@ -17,8 +17,11 @@ class FaceCluster {
 private:
 	std::vector<Face> faces;
 public:
+	bool selected;
+
 	FaceCluster();
 	FaceCluster(int _cluster_id, std::string _cluster_name);
+	FaceCluster(int _cluster_id, std::string _cluster_name, bool _selected);
 
 	size_t cluster_id;
 	std::string cluster_name;

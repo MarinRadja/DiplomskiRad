@@ -2,9 +2,13 @@
 
 FaceCluster::FaceCluster() {}
 
-FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name) {
+FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name) : FaceCluster(_cluster_id, _cluster_name, false) {
+}
+
+FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name, bool _selected) {
 	cluster_id = _cluster_id;
 	cluster_name = _cluster_name;
+	selected = _selected;
 }
 
 void FaceCluster::addFace(Face face) {
@@ -33,6 +37,7 @@ nlohmann::json FaceCluster::getJson() {
 	nlohmann::json clusterJson = {
 		{"cluster_id", cluster_id},
 		{"cluster_name", cluster_name},
+		{"selected", selected},
 		{"faces", faces_json}
 	};
 	return clusterJson;
@@ -43,7 +48,7 @@ void FaceGraph::addFace(Face face) {
 }
 
 void FaceGraph::addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name) {
-	Face face(_face, _image_location, _img_name);
+	Face face(_image_location, _img_name);
 	faces.push_back(face);
 }
 
@@ -110,11 +115,15 @@ void FaceGraph::loadGraphFromJson(string& json_name) {
 
 	for (auto& [clusterIndex, clusterJson] : graphJson.items()) {
 		FaceCluster faceCluster(clusterJson.at("cluster_id"),
-			clusterJson.at("cluster_name"));
+			clusterJson.at("cluster_name"), 
+			clusterJson.at("selected"));
 		for (auto& [faceIndex, faceJson] : clusterJson.at("faces").items()) {
+			bool sel = faceJson.at("selected");
 			Face face(faceJson.at("image_location"), 
 				faceJson.at("face_location"),
-				faceJson.at("face_name"));
+				faceJson.at("face_name"),
+				faceJson.at("face_id"),
+				sel);
 			faceCluster.addFace(face);
 		}
 		face_clusters.push_back(faceCluster);
