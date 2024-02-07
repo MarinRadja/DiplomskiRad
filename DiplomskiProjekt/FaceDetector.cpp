@@ -34,7 +34,7 @@ FaceDetector::FaceDetector(FaceGraph* _face_graph) {
     face_graph = _face_graph;
 }
 
-void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation) {
+void FaceDetector::detectFaces(Mat& cvImg, string imgName, string imageLocation) {
     // convert opencv img format to dlib img format
     Mat cvRGB;
     cvtColor(cvImg, cvRGB, COLOR_BGR2RGB);

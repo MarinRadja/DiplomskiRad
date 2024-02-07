@@ -38,7 +38,12 @@ private:
 	FaceGraph face_graph;
 public:
 	RunAlgorithm();
-	void runAlgorithm(std::string path, std::string device = "cpu", std::string framework = "caffe");
+	void runAlgorithm(std::string path);
 	FaceGraph* getFaceGraph();
+
+	void searchPeople(std::string img_path);
+	void removeNotFound(std::vector<matrix<float, 0, 1>> &searchTargets, std::vector<Face>& searchTargetsFaces);
+	int searchClusters(matrix<float, 0, 1>& targetDescriptor, std::vector<matrix<float, 0, 1>> &facesDescriptors);
+	matrix<rgb_pixel> load_face(int i, int j);
 };
 

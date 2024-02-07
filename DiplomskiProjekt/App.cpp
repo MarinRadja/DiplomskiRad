@@ -65,6 +65,8 @@ bool MyApp::OnInit() {
 		this,
 		wxID_ANY);
 
+	Bind(wxEVT_FILEPICKER_CHANGED, &MyApp::searchPeople, this, FaceClusterWindowIDs::SEARCH_PEOPLE);
+
 #pragma endregion "Bind Events"
 
 	run_algorithm = new RunAlgorithm();
@@ -108,59 +110,64 @@ void MyApp::createFaceClusterWindow() {
 
 #pragma region "Update Progress Window"
 void MyApp::updateProgressWindow_detectedImage(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->detectingImagesPlusOne();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_doneDetectingImages(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->finishedDetectingImages();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_detectedFace(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->detectingFacesPlusOne();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_doneDetectingFacesOnImage(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->detectingFacesGaugePlusOne();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->setComparingFacesRange(evt.GetInt());
 	progress_window->finishedDetectingFaces();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_NNDone(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->NNDone();
 	progress_window->Layout();
 }
 
 // not done
 void MyApp::updateProgressWindow_comparedFace(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->comparingFacesGougePlusOne();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_doneComparingFaces(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->finishedComparingFaces();
 	progress_window->Layout();
 }
 
 void MyApp::updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt) {
-	while (progress_window == nullptr);
+	if (progress_window == nullptr) return;
 	progress_window->Destroy();
 	createFaceClusterWindow();
+}
+
+
+void MyApp::searchPeople(wxFileDirPickerEvent& evt) {
+	run_algorithm->searchPeople(evt.GetPath().ToStdString());
 }
 
 void MyApp::loadGraphFromDisk(wxCommandEvent& evt) {

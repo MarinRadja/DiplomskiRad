@@ -69,7 +69,3 @@ void FaceComparator::clusterFaces() {
     //    }
     //}
 }
-
-FaceComparator::~FaceComparator() {
-    delete fd;
-}

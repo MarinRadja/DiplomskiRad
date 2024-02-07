@@ -44,7 +44,7 @@ RunAlgorithm::RunAlgorithm() : face_graph(), face_detector(&face_graph), face_co
 
 }
 
-void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::string framework) {
+void RunAlgorithm::runAlgorithm(std::string path) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     string imageSetDirectory = path;
@@ -64,7 +64,7 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
 
             string imageName = entry.stem().string();
             string imageLocation = entry.string();
-            face_detector.detectFaceOpenCVDNN(resized, framework, imageName, imageLocation);
+            face_detector.detectFaces(resized, imageName, imageLocation);
             wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE));
     }
 
@@ -78,4 +78,79 @@ void RunAlgorithm::runAlgorithm(std::string path, std::string device, std::strin
 FaceGraph* RunAlgorithm::getFaceGraph() {
     return &face_graph;
 }
-// add next button
+
+void RunAlgorithm::searchPeople(std::string img_path) {
+    FaceGraph searchTargets;
+    FaceDetector newDetector = FaceDetector(&searchTargets);
+    FaceComparator newComparator = FaceComparator(&searchTargets, &newDetector);
+    std::vector<matrix<float, 0, 1>> face_descriptors;
+
+    filesystem::path _img_path(img_path);
+
+    Mat cvImg1 = imread(img_path, IMREAD_COLOR);
+    Mat resized = resizeImage(cvImg1, 800);
+
+    string imageName = _img_path.stem().string();
+    string imageLocation = img_path;
+    newDetector.detectFaces(resized, imageName, imageLocation);
+
+
+    face_descriptors = newComparator.net(newDetector.faces);
+    
+    removeNotFound(face_descriptors, searchTargets.faces);
+}
+
+void RunAlgorithm::removeNotFound(std::vector<matrix<float, 0, 1>>& searchTargetsDescriptors, std::vector<Face> &searchTargetsFaces) {
+    std::vector<int> foundClusters(searchTargetsDescriptors.size());
+    std::vector<Face*> faces;
+    if (face_comparator.face_descriptors.size() == 0) {
+        std::vector<matrix<rgb_pixel>> facesMat;
+        for (int i = 0; i < face_graph.getNumberOfClusters(); i++) {
+            for (int j = 0; j < face_graph.getClusterPtr(i)->getNFaces(); j++) {
+                facesMat.push_back(load_face(i, j));
+                faces.push_back(face_graph.getClusterPtr(i)->getFacePtr(j));
+            }
+        }
+        face_comparator.face_descriptors = face_comparator.net(facesMat);
+    }
+    std::vector<matrix<float, 0, 1>> facesDescriptors = face_comparator.face_descriptors;
+
+    std::map<int, int> keepClusters;
+    FaceGraph reduced;
+    int count = 0;
+    for (size_t i = 0; i < searchTargetsDescriptors.size(); i++) {
+        int nClu = searchClusters(searchTargetsDescriptors[i], facesDescriptors);
+        foundClusters[i] = nClu;
+        if (nClu != -1) {
+            if (keepClusters.find(i) != keepClusters.end()) {
+                keepClusters.insert(make_pair(nClu, count++));
+                reduced.addCluster(face_graph.face_clusters[i]);
+            }
+            std::map<int, int>::iterator it = keepClusters.find(nClu);
+            reduced.face_clusters[it->second].addFace(searchTargetsFaces[i]);
+        }
+    }
+    ;
+}
+
+int RunAlgorithm::searchClusters(matrix<float, 0, 1>& targetDescriptor, std::vector<matrix<float, 0, 1>> &facesDescriptors) {
+    for (int i = 0; i < facesDescriptors.size(); i++) {
+        float dist = dlib::length(targetDescriptor
+            - facesDescriptors.at(i));
+        if (dist < Utils::faceSimilarityThreshold)
+            return i;
+    }
+    return -1;
+}
+
+matrix<rgb_pixel> RunAlgorithm::load_face(int i, int j) {
+    std::string img_path = face_graph.getClusterPtr(i)->getFacePtr(j)->getFaceLocation();
+    Mat cvImg1 = imread(img_path, IMREAD_COLOR);
+    Mat resized = resizeImage(cvImg1, 800);
+
+    cv_image<bgr_pixel> image(resized);
+    matrix<rgb_pixel> dlibImg;
+    assign_image(dlibImg, image);
+
+    return dlibImg;
+}

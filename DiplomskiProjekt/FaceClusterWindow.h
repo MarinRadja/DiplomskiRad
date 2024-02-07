@@ -29,6 +29,7 @@ private:
 	wxStaticText* cluster_index_box; 
 
 	wxFilePickerCtrl* save_graph;
+	wxFilePickerCtrl* search_people;
 
 	wxCheckBox* face_selected_box;
 	wxCheckBox* cluster_selected_box;
@@ -82,7 +83,6 @@ private:
 	void removeNonSelected(wxCommandEvent& evt);
 
 	void saveGraphToDisk(wxFileDirPickerEvent& evt);
-	void searchPeople(wxFileDirPickerEvent& evt);
 
 	void saveCurrent();
 };

@@ -175,3 +175,7 @@ bool FaceGraph::removeCluster(int iC) {
 	face_clusters.erase(face_clusters.begin() + iC);
 	return true;
 }
+
+void FaceGraph::addCluster(FaceCluster newCluster) {
+	face_clusters.push_back(newCluster);
+}

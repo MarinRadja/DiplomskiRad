@@ -42,6 +42,8 @@ public:
 	void updateProgressWindow_doneComparingFaces(wxCommandEvent& evt);
 	void updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt);
 
+	void searchPeople(wxFileDirPickerEvent& evt);
+
 	// events for loading exisitng graph
 	void loadGraphFromDisk(wxCommandEvent& evt);
 };

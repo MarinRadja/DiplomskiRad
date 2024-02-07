@@ -24,7 +24,8 @@ enum FaceClusterWindowIDs {
     REMOVE_NON_SELECTED,
     FACE_CHECKBOX,
     CLUSTER_CHECKBOX,
-    SEARCH_PEOPLE
+    SEARCH_PEOPLE,
+    DONE_SEARCHING_PEOPLE
 };
 
 enum ProgressWindowIDs {

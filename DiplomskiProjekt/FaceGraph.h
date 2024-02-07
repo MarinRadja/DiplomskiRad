@@ -51,9 +51,9 @@ private:
 	std::vector<sample_pair> edges;
 	std::vector<unsigned long> labels;
 
-	std::vector<Face> faces;
-	std::vector<FaceCluster> face_clusters;
 public:
+	std::vector<FaceCluster> face_clusters;
+	std::vector<Face> faces;
 	~FaceGraph() {};
 
 	void addFace(Face face);
@@ -80,4 +80,6 @@ public:
 	void removeIfSelectedMatches(bool isSelected);
 	bool removeFace(int iF, int iC);
 	bool removeCluster(int iC);
+
+	void addCluster(FaceCluster newCluster);
 };
