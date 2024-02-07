@@ -61,6 +61,7 @@ private:
 
 	void createSaveGraphSectionToggles(wxBoxSizer* parentSizer);
 	void createSaveGraphButton(wxBoxSizer* parentSizer);
+	void createSearchPeopleSection(wxBoxSizer* parentSizer);
 
 	void createHorizontalLine(wxBoxSizer* parentSizer, int y_size);
 
@@ -81,6 +82,7 @@ private:
 	void removeNonSelected(wxCommandEvent& evt);
 
 	void saveGraphToDisk(wxFileDirPickerEvent& evt);
+	void searchPeople(wxFileDirPickerEvent& evt);
 
 	void saveCurrent();
 };

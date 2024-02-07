@@ -14,7 +14,7 @@
 
 class MainFrame : public wxFrame {
 public:
-	MainFrame(const wxString& title);
+	MainFrame(const wxString& title, RunAlgorithm* _run_algorithm);
 
 	RunAlgorithm* getAlgorithmPtr();
 protected:

@@ -1,6 +1,6 @@
 #include "FaceGraph.h"
 
-FaceCluster::FaceCluster() {}
+FaceCluster::FaceCluster() : FaceCluster(0, "") {}
 
 FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name) : FaceCluster(_cluster_id, _cluster_name, false) {
 }
@@ -72,7 +72,7 @@ void FaceGraph::addFace(Face face) {
 }
 
 void FaceGraph::addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name) {
-	Face face(_image_location, _img_name);
+	Face face(_face, _image_location, _img_name);
 	faces.push_back(face);
 }
 

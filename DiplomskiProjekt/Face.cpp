@@ -6,8 +6,9 @@ std::string Face::saveFaceToDisk(matrix<rgb_pixel>& face, string& _img_name) {
 	Mat f;
 	Utils::convertMatRGBPixelToCVMat(face, f);
 
-	Utils::createDirectory("faces");
-	std::string fLoc = "./faces/" + _img_name + "_" + std::to_string(face_counter) + ".jpeg";
+	Utils::createDirectory("output");
+	Utils::createDirectory("output/faces");
+	std::string fLoc = "./output/faces/" + _img_name + "_" + std::to_string(face_counter) + ".jpeg";
 	imwrite(fLoc, f);
 	return fLoc;
 }

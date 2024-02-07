@@ -180,7 +180,8 @@ void ProgressWindow::finishedDetectingFaces() {
 
 void ProgressWindow::NNDone() {
 	NNTxt->SetLabelText("Neural network finished embedding faces.");
-	NNGauge->SetValue(1);
+	NNGauge->SetValue(10);
+	NNGauge->Refresh();
 }
 
 void ProgressWindow::setComparingFacesRange(int r) {

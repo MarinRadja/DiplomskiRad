@@ -67,6 +67,8 @@ bool MyApp::OnInit() {
 
 #pragma endregion "Bind Events"
 
+	run_algorithm = new RunAlgorithm();
+
 	createMainWindow();
 	return true;
 }
@@ -76,7 +78,7 @@ bool MyApp::OnInit() {
 void MyApp::createMainWindow() {
 	if (main_frame != nullptr) main_frame->Destroy();
 
-	main_frame = new MainFrame("Face recognition");
+	main_frame = new MainFrame("Face recognition", run_algorithm);
 	main_frame->SetClientSize(400, 300);
 	main_frame->Center();
 	main_frame->Show();
@@ -94,10 +96,10 @@ void MyApp::createProgressWindow(wxCommandEvent& evt) {
 	sw.detach();
 }
 
-void MyApp::createFaceClusterWindow(FaceGraph* faceGraph) {
+void MyApp::createFaceClusterWindow() {
 	if (face_cluster_window != nullptr) face_cluster_window->Destroy();
 
-	face_cluster_window = new FaceClusterWindow("Recognized faces", faceGraph);
+	face_cluster_window = new FaceClusterWindow("Recognized faces", run_algorithm->getFaceGraph());
 	face_cluster_window->SetClientSize(800, 600);
 	face_cluster_window->Center();
 	face_cluster_window->Show();
@@ -158,16 +160,16 @@ void MyApp::updateProgressWindow_doneComparingFaces(wxCommandEvent& evt) {
 void MyApp::updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt) {
 	while (progress_window == nullptr);
 	progress_window->Destroy();
-	createFaceClusterWindow(main_frame->getAlgorithmPtr()->getFaceGraph());
+	createFaceClusterWindow();
 }
 
 void MyApp::loadGraphFromDisk(wxCommandEvent& evt) {
 	std::string jsonLoc = evt.GetString().ToStdString();
 
-	face_graph.loadGraphFromJson(jsonLoc);
+	run_algorithm->getFaceGraph()->loadGraphFromJson(jsonLoc);
 
 	main_frame->Hide();
-	createFaceClusterWindow(&face_graph);
+	createFaceClusterWindow();
 }
 #pragma endregion
 
@@ -177,6 +179,6 @@ wxIMPLEMENT_APP(MyApp);
 
 #pragma region "Thread"
 void MyApp::startWorking(string folderLocation) {
-	main_frame->getAlgorithmPtr()->runAlgorithm(folderLocation);
+	run_algorithm->runAlgorithm(folderLocation);
 }
 #pragma endregion

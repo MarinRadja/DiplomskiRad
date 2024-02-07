@@ -20,6 +20,7 @@ FaceClusterWindow::FaceClusterWindow(const wxString& title, FaceGraph* _face_gra
 		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeNonSelected, this, FaceClusterWindowIDs::REMOVE_NON_SELECTED);
 
 		Bind(wxEVT_FILEPICKER_CHANGED, &FaceClusterWindow::saveGraphToDisk, this, FaceClusterWindowIDs::SAVE_GRAPH);
+		Bind(wxEVT_FILEPICKER_CHANGED, &FaceClusterWindow::searchPeople, this, FaceClusterWindowIDs::SEARCH_PEOPLE);
 
 		face_graph = _face_graph;
 		if (face_graph->getNumberOfClusters() < 1) return;
@@ -31,11 +32,11 @@ FaceClusterWindow::FaceClusterWindow(const wxString& title, FaceGraph* _face_gra
 
 		SetSizerAndFit(clientAreaSizer);
 		SetMinSize(wxSize(800, 600));
+		displayCurrentImage();
 		Layout();
 
 		::wxInitAllImageHandlers();
 
-		displayCurrentImage();
 }
 
 void FaceClusterWindow::createImagePanel(wxBoxSizer* parentSizer) {
@@ -205,6 +206,19 @@ void FaceClusterWindow::createSaveGraphButton(wxBoxSizer* parentSizer) {
 	parentSizer->Add(saveGraphSizer, 0, wxEXPAND | wxALIGN_BOTTOM, 5);
 }
 
+void FaceClusterWindow::createSearchPeopleSection(wxBoxSizer* parentSizer) {
+	wxBoxSizer* saveGraphSizer = new wxBoxSizer(wxHORIZONTAL);
+	save_graph = new wxFilePickerCtrl(this, FaceClusterWindowIDs::SAVE_GRAPH,
+		"/", "", "*.json", wxDefaultPosition, wxSize(-1, 30), wxFLP_SAVE | wxFLP_OVERWRITE_PROMPT);
+
+
+	saveGraphSizer->Add(new wxStaticText(this, wxID_ANY, "Spremi prikaz: ", wxDefaultPosition,
+		wxSize(100, -1), wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL),
+		0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+	saveGraphSizer->Add(save_graph, 1, wxEXPAND);
+	parentSizer->Add(saveGraphSizer, 0, wxEXPAND | wxALIGN_BOTTOM, 5);
+}
+
 
 // figure out adding static line to sizer
 void FaceClusterWindow::createHorizontalLine(wxBoxSizer* parentSizer, int y_size) {
@@ -357,5 +371,7 @@ void FaceClusterWindow::saveGraphToDisk(wxFileDirPickerEvent& evt) {
 	std::string p = save_graph->GetPath().ToStdString();
 	face_graph->saveGraphToJson(p);
 }
+
+void FaceClusterWindow::searchPeople(wxFileDirPickerEvent& evt) {}
 
 #pragma endregion "Events"

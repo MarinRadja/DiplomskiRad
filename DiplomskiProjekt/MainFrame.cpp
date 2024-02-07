@@ -2,7 +2,8 @@
 
 #pragma region "GUI Setup"
 
-MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
+MainFrame::MainFrame(const wxString& title, RunAlgorithm* _run_algorithm) : wxFrame(nullptr, wxID_ANY, title) {
+	runAlg = _run_algorithm;
 
 #pragma region "Bind Events"
 	Bind(wxEVT_DIRPICKER_CHANGED, &MainFrame::onDirSelect, this, wxID_ANY);
@@ -10,8 +11,6 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 	Bind(wxEVT_FILEPICKER_CHANGED, &MainFrame::onGraphFileSelect, this, wxID_ANY);
 	Bind(wxEVT_BUTTON, &MainFrame::onLoadButtonClick, this, MainFrameIDs::LOAD_BUTTON);
 #pragma endregion
-
-	runAlg = new RunAlgorithm();
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 

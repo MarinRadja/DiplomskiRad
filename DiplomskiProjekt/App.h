@@ -9,6 +9,7 @@
 #include "MainFrame.h"
 #include "ProgressWindow.h"
 #include "FaceClusterWindow.h"
+#include "RunAlgorithm.h"
 #include "FaceGraph.h"
 #include "Utils.h"
 #include "IDs.h"
@@ -20,6 +21,7 @@ private:
 	ProgressWindow* progress_window;
 	FaceClusterWindow* face_cluster_window;
 	FaceGraph face_graph;
+	RunAlgorithm* run_algorithm;
 	
 	void startWorking(string folderLocation);
 public:
@@ -27,7 +29,7 @@ public:
 
 	void createMainWindow();
 	void createProgressWindow(wxCommandEvent& evt);
-	void createFaceClusterWindow(FaceGraph* faceGraph);
+	void createFaceClusterWindow();
 
 	// events for updating progress window
 	void updateProgressWindow_detectedImage(wxCommandEvent& evt);

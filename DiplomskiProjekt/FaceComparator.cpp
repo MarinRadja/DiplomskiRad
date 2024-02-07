@@ -40,15 +40,10 @@ void FaceComparator::clusterFaces() {
     }
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_COMPARING_FACES));
 
-    chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr());
+    face_graph->setNumberOfClusters(chinese_whispers(*face_graph->getEdges(), *face_graph->getLabelsPtr()));
     face_graph->sortFacesIntoClusters();
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_CLUSTERING_FACES));
 
-
-
-    // add user input name
-    std::string json_name = "graph";
-    face_graph->saveGraphToJson(json_name);
 
     /*while (face_descriptors.size() > 0) {
         if (!faceEmbeddingExists(face_descriptors.size() - 1)) {
