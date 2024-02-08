@@ -34,7 +34,7 @@ FaceDetector::FaceDetector(FaceGraph* _face_graph) {
     face_graph = _face_graph;
 }
 
-void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgName, string imageLocation) {
+void FaceDetector::detectFaces(Mat& cvImg, string imgName, string imageLocation) {
     // convert opencv img format to dlib img format
     Mat cvRGB;
     cvtColor(cvImg, cvRGB, COLOR_BGR2RGB);
@@ -109,4 +109,23 @@ void FaceDetector::detectFaceOpenCVDNN(Mat& cvImg, string framework, string imgN
                 cv::Scalar((i == 0) ? 255 : 0, (i == 1) ? 255 : 0, (i == 2) ? 255 : 0), 2, 4);
         }
     }*/
+}
+
+void FaceDetector::detectFacesNoEvents(Mat& cvImg, string imgName, string imageLocation) {
+    // convert opencv img format to dlib img format
+    Mat cvRGB;
+    cvtColor(cvImg, cvRGB, COLOR_BGR2RGB);
+    cv_image<rgb_pixel> img1(cvRGB);
+
+    cout << imgName << endl;
+    int i = 1;
+    for (auto face : detector(img1)) {
+        auto shape = sp(img1, face);
+        matrix<rgb_pixel> face_chip;
+        // extract image from that shape, and scale it to 150x150px 
+        extract_image_chip(img1, get_face_chip_details(shape, 150, 0.25), face_chip);
+        // save face for further use
+        faces.push_back(move(face_chip));
+        face_graph->addFace(faces.back(), imageLocation, imgName);
+    }
 }

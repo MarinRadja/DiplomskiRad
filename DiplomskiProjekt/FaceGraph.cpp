@@ -1,6 +1,6 @@
 #include "FaceGraph.h"
 
-FaceCluster::FaceCluster() {}
+FaceCluster::FaceCluster() : FaceCluster(0, "") {}
 
 FaceCluster::FaceCluster(int _cluster_id, std::string _cluster_name) : FaceCluster(_cluster_id, _cluster_name, false) {
 }
@@ -72,7 +72,7 @@ void FaceGraph::addFace(Face face) {
 }
 
 void FaceGraph::addFace(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name) {
-	Face face(_image_location, _img_name);
+	Face face(_face, _image_location, _img_name);
 	faces.push_back(face);
 }
 
@@ -108,6 +108,9 @@ void FaceGraph::sortFacesIntoClusters() {
 	face_clusters.resize(numberOfClusters);
 
 	for (size_t cluster_id = 0; cluster_id < numberOfClusters; ++cluster_id) {
+		face_clusters[cluster_id].cluster_id = cluster_id;
+		face_clusters[cluster_id].cluster_name = "";
+		face_clusters[cluster_id].selected = false;
 		std::vector<Face> temp;
 		for (size_t j = 0; j < labels.size(); ++j) {
 			if (cluster_id == labels[j])
@@ -174,4 +177,8 @@ bool FaceGraph::removeFace(int iF, int iC) {
 bool FaceGraph::removeCluster(int iC) {
 	face_clusters.erase(face_clusters.begin() + iC);
 	return true;
+}
+
+void FaceGraph::addCluster(FaceCluster newCluster) {
+	face_clusters.push_back(newCluster);
 }

@@ -16,7 +16,8 @@ V mod(const V& a, const V& b) {
 
 class FaceClusterWindow : public wxFrame {
 public:
-	FaceClusterWindow(const wxString& title, FaceGraph* _face_graph);
+	FaceClusterWindow(const wxString& title, FaceGraph* _face_graph, bool canSearch);
+	void updateAfterSearch();
 protected:
 private:
 	ImagePanel* bigImage;
@@ -29,6 +30,7 @@ private:
 	wxStaticText* cluster_index_box; 
 
 	wxFilePickerCtrl* save_graph;
+	wxFilePickerCtrl* search_people;
 
 	wxCheckBox* face_selected_box;
 	wxCheckBox* cluster_selected_box;
@@ -37,6 +39,7 @@ private:
 
 	int i_face = 0;
 	int i_cluster = 0;
+	bool can_search = false;
 
 	int display_clusters = 3;
 
@@ -61,6 +64,7 @@ private:
 
 	void createSaveGraphSectionToggles(wxBoxSizer* parentSizer);
 	void createSaveGraphButton(wxBoxSizer* parentSizer);
+	void createSearchPeopleSection(wxBoxSizer* parentSizer);
 
 	void createHorizontalLine(wxBoxSizer* parentSizer, int y_size);
 

@@ -6,8 +6,9 @@ std::string Face::saveFaceToDisk(matrix<rgb_pixel>& face, string& _img_name) {
 	Mat f;
 	Utils::convertMatRGBPixelToCVMat(face, f);
 
-	Utils::createDirectory("faces");
-	std::string fLoc = "./faces/" + _img_name + "_" + std::to_string(face_counter) + ".jpeg";
+	Utils::createDirectory("output");
+	Utils::createDirectory("output/faces");
+	std::string fLoc = "./output/faces/" + _img_name + "_" + std::to_string(face_counter) + ".jpeg";
 	imwrite(fLoc, f);
 	return fLoc;
 }
@@ -19,7 +20,7 @@ Face::Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name)
 	image_location = _image_location;
 	face_location = saveFaceToDisk(_face, _img_name);
 	face_name = "";
-	face_id = -1;
+	face_id = face_counter++;
 	selected = false;
 }
 
@@ -28,7 +29,7 @@ Face::Face(string _image_location, string _face_location)
 }
 
 Face::Face(string _image_location, string _face_location, string _face_name) 
-	: Face(_image_location, _face_location, _face_name, -1) {
+	: Face(_image_location, _face_location, _face_name, face_counter++) {
 }
 
 Face::Face(string _image_location, string _face_location, string _face_name, size_t _face_id)

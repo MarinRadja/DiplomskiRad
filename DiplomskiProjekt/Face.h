@@ -30,13 +30,13 @@ private:
 	string image_location;
 	string face_location;
 
-	static std::atomic<unsigned int> face_counter;
 
 	std::string saveFaceToDisk(matrix<rgb_pixel>& face, string& _img_name);
 public:
 	size_t face_id;
 	std::string face_name;
 	bool selected;
+	static std::atomic<unsigned int> face_counter;
 
 	Face();
 	Face(matrix<rgb_pixel>& _face, string& _image_location, string& _img_name);
