@@ -3,38 +3,40 @@
 #pragma region "Event Table"
 #pragma endregion "Event Table"
 
-FaceClusterWindow::FaceClusterWindow(const wxString& title, FaceGraph* _face_graph)
+FaceClusterWindow::FaceClusterWindow(const wxString& title, FaceGraph* _face_graph, bool canSearch)
 	: wxFrame(nullptr, wxID_ANY, title) {
 
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::showPrevFaceImage, this, FaceClusterWindowIDs::PREV_IMG);
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::showNextFaceImage, this, FaceClusterWindowIDs::NEXT_IMG);
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::showPrevCluster, this, FaceClusterWindowIDs::PREV_CLUSTER);
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::showNextCluster, this, FaceClusterWindowIDs::NEXT_CLUSTER);
+	can_search = canSearch;
 
-		Bind(wxEVT_CHECKBOX, &FaceClusterWindow::selectedFace, this, FaceClusterWindowIDs::FACE_CHECKBOX);
-		Bind(wxEVT_CHECKBOX, &FaceClusterWindow::selectedCluster, this, FaceClusterWindowIDs::CLUSTER_CHECKBOX);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::showPrevFaceImage, this, FaceClusterWindowIDs::PREV_IMG);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::showNextFaceImage, this, FaceClusterWindowIDs::NEXT_IMG);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::showPrevCluster, this, FaceClusterWindowIDs::PREV_CLUSTER);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::showNextCluster, this, FaceClusterWindowIDs::NEXT_CLUSTER);
 
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeCurrentImage, this, FaceClusterWindowIDs::REMOVE_CURRENT_IMAGE);
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeCurrentPerson, this, FaceClusterWindowIDs::REMOVE_CURRENT_PERSON);
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeSelected, this, FaceClusterWindowIDs::REMOVE_SELECTED);
-		Bind(wxEVT_BUTTON, &FaceClusterWindow::removeNonSelected, this, FaceClusterWindowIDs::REMOVE_NON_SELECTED);
+	Bind(wxEVT_CHECKBOX, &FaceClusterWindow::selectedFace, this, FaceClusterWindowIDs::FACE_CHECKBOX);
+	Bind(wxEVT_CHECKBOX, &FaceClusterWindow::selectedCluster, this, FaceClusterWindowIDs::CLUSTER_CHECKBOX);
 
-		Bind(wxEVT_FILEPICKER_CHANGED, &FaceClusterWindow::saveGraphToDisk, this, FaceClusterWindowIDs::SAVE_GRAPH);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::removeCurrentImage, this, FaceClusterWindowIDs::REMOVE_CURRENT_IMAGE);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::removeCurrentPerson, this, FaceClusterWindowIDs::REMOVE_CURRENT_PERSON);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::removeSelected, this, FaceClusterWindowIDs::REMOVE_SELECTED);
+	Bind(wxEVT_BUTTON, &FaceClusterWindow::removeNonSelected, this, FaceClusterWindowIDs::REMOVE_NON_SELECTED);
 
-		face_graph = _face_graph;
-		if (face_graph->getNumberOfClusters() < 1) return;
+	Bind(wxEVT_FILEPICKER_CHANGED, &FaceClusterWindow::saveGraphToDisk, this, FaceClusterWindowIDs::SAVE_GRAPH);
 
-		wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxHORIZONTAL);
+	face_graph = _face_graph;
+	if (face_graph->getNumberOfClusters() < 1) return;
 
-		createImagePanel(clientAreaSizer);
-		createSidebar(clientAreaSizer);
+	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxHORIZONTAL);
 
-		SetSizerAndFit(clientAreaSizer);
-		SetMinSize(wxSize(800, 600));
-		displayCurrentImage();
-		Layout();
+	createImagePanel(clientAreaSizer);
+	createSidebar(clientAreaSizer);
 
-		::wxInitAllImageHandlers();
+	SetSizerAndFit(clientAreaSizer);
+	SetMinSize(wxSize(800, 600));
+	displayCurrentImage();
+	Layout();
+
+	::wxInitAllImageHandlers();
 
 }
 
@@ -212,6 +214,9 @@ void FaceClusterWindow::createSearchPeopleSection(wxBoxSizer* parentSizer) {
 	search_people = new wxFilePickerCtrl(this, FaceClusterWindowIDs::SEARCH_PEOPLE,
 		"/", "", "*.jpeg", wxDefaultPosition, wxSize(-1, 30), wxFLP_FILE_MUST_EXIST | wxFLP_OPEN);
 
+	if (!can_search)
+		search_people->Disable();
+
 	saveGraphSizer->Add(new wxStaticText(this, wxID_ANY, "Potraži u prikazu: ", wxDefaultPosition,
 		wxSize(100, -1), wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL),
 		0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
@@ -278,6 +283,12 @@ void FaceClusterWindow::removeIfMatches(bool isSelected) {
 
 	face_graph->removeIfSelectedMatches(isSelected);
 
+	displayCurrentImage();
+}
+
+void FaceClusterWindow::updateAfterSearch() {
+	i_face = 0;
+	i_cluster = 0;
 	displayCurrentImage();
 }
 

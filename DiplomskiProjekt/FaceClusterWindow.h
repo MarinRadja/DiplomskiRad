@@ -16,7 +16,8 @@ V mod(const V& a, const V& b) {
 
 class FaceClusterWindow : public wxFrame {
 public:
-	FaceClusterWindow(const wxString& title, FaceGraph* _face_graph);
+	FaceClusterWindow(const wxString& title, FaceGraph* _face_graph, bool canSearch);
+	void updateAfterSearch();
 protected:
 private:
 	ImagePanel* bigImage;
@@ -38,6 +39,7 @@ private:
 
 	int i_face = 0;
 	int i_cluster = 0;
+	bool can_search = false;
 
 	int display_clusters = 3;
 

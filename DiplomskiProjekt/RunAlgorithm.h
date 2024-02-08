@@ -45,5 +45,6 @@ public:
 	void removeNotFound(std::vector<matrix<float, 0, 1>> &searchTargets, std::vector<Face>& searchTargetsFaces);
 	int searchClusters(matrix<float, 0, 1>& targetDescriptor, std::vector<matrix<float, 0, 1>> &facesDescriptors);
 	matrix<rgb_pixel> load_face(int i, int j);
+	int getClustID(int nClust);
 };
 

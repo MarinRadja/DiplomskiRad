@@ -108,6 +108,9 @@ void FaceGraph::sortFacesIntoClusters() {
 	face_clusters.resize(numberOfClusters);
 
 	for (size_t cluster_id = 0; cluster_id < numberOfClusters; ++cluster_id) {
+		face_clusters[cluster_id].cluster_id = cluster_id;
+		face_clusters[cluster_id].cluster_name = "";
+		face_clusters[cluster_id].selected = false;
 		std::vector<Face> temp;
 		for (size_t j = 0; j < labels.size(); ++j) {
 			if (cluster_id == labels[j])

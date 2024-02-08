@@ -10,62 +10,22 @@
 
 bool MyApp::OnInit() {
 #pragma region "Bind Events"
-	Bind(myEVT_CREATE_PROGRESS_WINDOW,
-		&MyApp::createProgressWindow,
-		this,
-		EventsIDs::CREATE_PROGRESS_WINDOW);
+	Bind(myEVT_CREATE_PROGRESS_WINDOW,&MyApp::createProgressWindow, this, EventsIDs::CREATE_PROGRESS_WINDOW);
 
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_detectedImage,
-		this,
-		EventsIDs::DETECTED_IMAGE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_detectedImage, this, EventsIDs::DETECTED_IMAGE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneDetectingImages, this, EventsIDs::DONE_DETECTING_IMAGES);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_detectedFace, this, EventsIDs::DETECTED_FACE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneDetectingFacesOnImage, this, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneDetectingFaces, this, EventsIDs::DONE_DETECTING_FACES);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_NNDone, this, EventsIDs::NN_DONE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_comparedFace, this, EventsIDs::COMPARED_FACE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneComparingFaces, this, EventsIDs::DONE_COMPARING_FACES);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneClusteringFaces, this, EventsIDs::DONE_CLUSTERING_FACES);
 
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_doneDetectingImages,
-		this,
-		EventsIDs::DONE_DETECTING_IMAGES);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_detectedFace,
-		this,
-		EventsIDs::DETECTED_FACE);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_doneDetectingFacesOnImage,
-		this,
-		EventsIDs::DONE_DETECTING_FACES_ON_IMAGE);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_doneDetectingFaces,
-		this,
-		EventsIDs::DONE_DETECTING_FACES);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_NNDone,
-		this,
-		EventsIDs::NN_DONE);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_comparedFace,
-		this,
-		EventsIDs::COMPARED_FACE);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_doneComparingFaces,
-		this,
-		EventsIDs::DONE_COMPARING_FACES);
-
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW,
-		&MyApp::updateProgressWindow_doneClusteringFaces,
-		this,
-		EventsIDs::DONE_CLUSTERING_FACES);
-
-	Bind(myEVT_LOAD_GRAPH_FROM_DISK,
-		&MyApp::loadGraphFromDisk,
-		this,
-		wxID_ANY);
+	Bind(myEVT_LOAD_GRAPH_FROM_DISK, &MyApp::loadGraphFromDisk, this, wxID_ANY);
 
 	Bind(wxEVT_FILEPICKER_CHANGED, &MyApp::searchPeople, this, FaceClusterWindowIDs::SEARCH_PEOPLE);
+	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneSearchingPeople, this, FaceClusterWindowIDs::DONE_SEARCHING_PEOPLE);
 
 #pragma endregion "Bind Events"
 
@@ -98,10 +58,10 @@ void MyApp::createProgressWindow(wxCommandEvent& evt) {
 	sw.detach();
 }
 
-void MyApp::createFaceClusterWindow() {
+void MyApp::createFaceClusterWindow(bool canSearch) {
 	if (face_cluster_window != nullptr) face_cluster_window->Destroy();
 
-	face_cluster_window = new FaceClusterWindow("Recognized faces", run_algorithm->getFaceGraph());
+	face_cluster_window = new FaceClusterWindow("Recognized faces", run_algorithm->getFaceGraph(), canSearch);
 	face_cluster_window->SetClientSize(800, 600);
 	face_cluster_window->Center();
 	face_cluster_window->Show();
@@ -162,9 +122,14 @@ void MyApp::updateProgressWindow_doneComparingFaces(wxCommandEvent& evt) {
 void MyApp::updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt) {
 	if (progress_window == nullptr) return;
 	progress_window->Destroy();
-	createFaceClusterWindow();
+	createFaceClusterWindow(true);
 }
 
+void MyApp::updateProgressWindow_doneSearchingPeople(wxCommandEvent& evt) {
+	face_cluster_window->updateAfterSearch();
+	face_cluster_window->Update();
+	face_cluster_window->Refresh();
+}
 
 void MyApp::searchPeople(wxFileDirPickerEvent& evt) {
 	run_algorithm->searchPeople(evt.GetPath().ToStdString());
@@ -176,7 +141,7 @@ void MyApp::loadGraphFromDisk(wxCommandEvent& evt) {
 	run_algorithm->getFaceGraph()->loadGraphFromJson(jsonLoc);
 
 	main_frame->Hide();
-	createFaceClusterWindow();
+	createFaceClusterWindow(false);
 }
 #pragma endregion
 

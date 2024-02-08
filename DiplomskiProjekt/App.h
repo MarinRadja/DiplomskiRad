@@ -29,7 +29,7 @@ public:
 
 	void createMainWindow();
 	void createProgressWindow(wxCommandEvent& evt);
-	void createFaceClusterWindow();
+	void createFaceClusterWindow(bool canSearch);
 
 	// events for updating progress window
 	void updateProgressWindow_detectedImage(wxCommandEvent& evt);
@@ -41,6 +41,7 @@ public:
 	void updateProgressWindow_comparedFace(wxCommandEvent& evt);
 	void updateProgressWindow_doneComparingFaces(wxCommandEvent& evt);
 	void updateProgressWindow_doneClusteringFaces(wxCommandEvent& evt);
+	void updateProgressWindow_doneSearchingPeople(wxCommandEvent& evt);
 
 	void searchPeople(wxFileDirPickerEvent& evt);
 

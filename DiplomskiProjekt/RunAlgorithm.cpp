@@ -92,54 +92,54 @@ void RunAlgorithm::searchPeople(std::string img_path) {
 
     string imageName = _img_path.stem().string();
     string imageLocation = img_path;
-    newDetector.detectFaces(resized, imageName, imageLocation);
-
+    newDetector.detectFacesNoEvents(resized, imageName, imageLocation);
 
     face_descriptors = newComparator.net(newDetector.faces);
     
     removeNotFound(face_descriptors, searchTargets.faces);
+
+    wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, FaceClusterWindowIDs::DONE_SEARCHING_PEOPLE));
 }
 
 void RunAlgorithm::removeNotFound(std::vector<matrix<float, 0, 1>>& searchTargetsDescriptors, std::vector<Face> &searchTargetsFaces) {
-    std::vector<int> foundClusters(searchTargetsDescriptors.size());
-    std::vector<Face*> faces;
-    if (face_comparator.face_descriptors.size() == 0) {
-        std::vector<matrix<rgb_pixel>> facesMat;
-        for (int i = 0; i < face_graph.getNumberOfClusters(); i++) {
-            for (int j = 0; j < face_graph.getClusterPtr(i)->getNFaces(); j++) {
-                facesMat.push_back(load_face(i, j));
-                faces.push_back(face_graph.getClusterPtr(i)->getFacePtr(j));
-            }
-        }
-        face_comparator.face_descriptors = face_comparator.net(facesMat);
-    }
-    std::vector<matrix<float, 0, 1>> facesDescriptors = face_comparator.face_descriptors;
 
-    std::map<int, int> keepClusters;
-    FaceGraph reduced;
-    int count = 0;
+    std::set<int> keepClusters;
     for (size_t i = 0; i < searchTargetsDescriptors.size(); i++) {
-        int nClu = searchClusters(searchTargetsDescriptors[i], facesDescriptors);
-        foundClusters[i] = nClu;
-        if (nClu != -1) {
-            if (keepClusters.find(i) != keepClusters.end()) {
-                keepClusters.insert(make_pair(nClu, count++));
-                reduced.addCluster(face_graph.face_clusters[i]);
-            }
-            std::map<int, int>::iterator it = keepClusters.find(nClu);
-            reduced.face_clusters[it->second].addFace(searchTargetsFaces[i]);
+        int nClu = searchClusters(searchTargetsDescriptors[i], face_comparator.face_descriptors);
+        keepClusters.insert(getClustID(nClu));
+    }
+
+    for (auto it = face_graph.face_clusters.begin(); it != face_graph.face_clusters.end(); ) {
+        if (keepClusters.find(it->cluster_id) != keepClusters.end()) {
+            ++it;
+        } else {
+            it = face_graph.face_clusters.erase(it);
         }
     }
-    ;
+}
+
+int RunAlgorithm::getClustID(int nClust) {
+    int count = 0;
+    for (int i = 0; i < face_graph.getNumberOfClusters(); i++) {
+        if (nClust < count + face_graph.getClusterPtr(i)->faces.size())
+            return face_graph.getClusterPtr(i)->cluster_id;
+        count += face_graph.getClusterPtr(i)->faces.size();
+    }
+    return -1;
 }
 
 int RunAlgorithm::searchClusters(matrix<float, 0, 1>& targetDescriptor, std::vector<matrix<float, 0, 1>> &facesDescriptors) {
+    float smallest_dist = 1000.f;
+    int pos = -1;
     for (int i = 0; i < facesDescriptors.size(); i++) {
-        float dist = dlib::length(targetDescriptor
-            - facesDescriptors.at(i));
-        if (dist < Utils::faceSimilarityThreshold)
-            return i;
+        float dist = dlib::length(targetDescriptor - facesDescriptors.at(i));
+        if (dist < smallest_dist) {
+            smallest_dist = dist;
+            pos = i;
+        }
     }
+    if (smallest_dist < Utils::faceSimilarityThreshold)
+        return pos;
     return -1;
 }
 
