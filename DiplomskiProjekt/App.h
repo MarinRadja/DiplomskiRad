@@ -34,7 +34,6 @@ public:
 	// events for updating progress window
 	void updateProgressWindow_detectedImage(wxCommandEvent& evt);
 	void updateProgressWindow_doneDetectingImages(wxCommandEvent& evt);
-	void updateProgressWindow_detectedFace(wxCommandEvent& evt);
 	void updateProgressWindow_doneDetectingFacesOnImage(wxCommandEvent& evt);
 	void updateProgressWindow_doneDetectingFaces(wxCommandEvent& evt);
 	void updateProgressWindow_NNDone(wxCommandEvent& evt);

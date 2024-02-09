@@ -52,13 +52,13 @@ void FaceClusterWindow::createSidebar(wxBoxSizer* parentSizer) {
 	wxBoxSizer* sidebarSizer = new wxBoxSizer(wxVERTICAL);
 
 	createFaceSection(sidebarSizer);
-	parentSizer->AddSpacer(10);
+	sidebarSizer->AddSpacer(20);
 	createClusterSection(sidebarSizer);
-	parentSizer->AddSpacer(10);
+	sidebarSizer->AddSpacer(15);
 	createDropSection(sidebarSizer);
-	parentSizer->AddSpacer(10);
+	sidebarSizer->AddSpacer(15);
 	createSaveGraphSection(sidebarSizer);
-	parentSizer->AddSpacer(5);
+	sidebarSizer->AddSpacer(10);
 	createSearchPeopleSection(sidebarSizer);
 
 	parentSizer->Add(sidebarSizer, 0, wxALIGN_CENTER, 3);
@@ -66,8 +66,6 @@ void FaceClusterWindow::createSidebar(wxBoxSizer* parentSizer) {
 
 void FaceClusterWindow::createFaceSection(wxBoxSizer* parentSizer) {
 	createFaceTitle(parentSizer);
-	parentSizer->AddSpacer(5);
-	createMiniFace(parentSizer);
 	parentSizer->AddSpacer(5);
 	createSelectedFaceBox(parentSizer);
 	parentSizer->AddSpacer(5);
@@ -77,7 +75,7 @@ void FaceClusterWindow::createFaceSection(wxBoxSizer* parentSizer) {
 void FaceClusterWindow::createClusterSection(wxBoxSizer* parentSizer) {
 	createClusterTitle(parentSizer);
 	parentSizer->AddSpacer(5);
-	createMiniClusters(parentSizer);
+	createMiniFace(parentSizer);
 	parentSizer->AddSpacer(5);
 	createSelectedClusterBox(parentSizer);
 	parentSizer->AddSpacer(5);
@@ -118,7 +116,7 @@ void FaceClusterWindow::createFaceTitle(wxBoxSizer* parentSizer) {
 		wxSize(150, -1), wxTE_CENTER | wxTE_NO_VSCROLL);
 
 	faceNameBoxSizer->Add(face_name_lbl, 0, wxSHAPED | wxALIGN_BOTTOM | wxALIGN_RIGHT, 3);
-	faceNameBoxSizer->Add(face_name_box, 1, wxEXPAND | wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL, 3);
+	faceNameBoxSizer->Add(face_name_box, 1, wxSHAPED | wxALIGN_LEFT | wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL, 3);
 	parentSizer->Add(faceNameBoxSizer, 1, wxEXPAND | wxALIGN_BOTTOM, 3);
 }
 
@@ -143,9 +141,11 @@ void FaceClusterWindow::createFaceControlButtons(wxBoxSizer* parentSizer) {
 		wxSize(150, -1), wxALIGN_CENTER);
 	wxButton* nextImg = new wxButton(this, FaceClusterWindowIDs::NEXT_IMG, ">", wxDefaultPosition, wxSize(75, -1));
 
+	prevNextImgButtonSizer->AddSpacer(15);
 	prevNextImgButtonSizer->Add(prevImg, 0, wxEXPAND | wxALIGN_CENTER, 3);
 	prevNextImgButtonSizer->Add(face_index_box, 1, wxEXPAND | wxALIGN_CENTER, 3);
 	prevNextImgButtonSizer->Add(nextImg, 0, wxEXPAND | wxALIGN_CENTER, 3);
+	prevNextImgButtonSizer->AddSpacer(15);
 	parentSizer->Add(prevNextImgButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
@@ -154,10 +154,10 @@ void FaceClusterWindow::createClusterTitle(wxBoxSizer* parentSizer) {
 	wxStaticText* cluster_name_lbl = new wxStaticText(this, wxID_ANY, "Osoba: ", wxDefaultPosition, wxSize(100, -1), wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
 	cluster_name_box = new wxTextCtrl(this, wxID_ANY,
 		"", wxDefaultPosition,
-		wxDefaultSize, wxTE_CENTER | wxTE_NO_VSCROLL);
+		wxSize(150, -1), wxTE_CENTER | wxTE_NO_VSCROLL);
 
 	faceNameBoxSizer->Add(cluster_name_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 3);
-	faceNameBoxSizer->Add(cluster_name_box, 1, wxEXPAND | wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL, 3);
+	faceNameBoxSizer->Add(cluster_name_box, 1, wxSHAPED | wxALIGN_LEFT | wxALIGN_BOTTOM | wxALIGN_CENTER_HORIZONTAL, 3);
 	parentSizer->Add(faceNameBoxSizer, 1, wxEXPAND | wxALIGN_BOTTOM, 3);
 }
 
@@ -178,9 +178,11 @@ void FaceClusterWindow::createClusterButtons(wxBoxSizer* parentSizer) {
 	wxButton* nextClusterButton = new wxButton(this, FaceClusterWindowIDs::NEXT_CLUSTER,
 		">", wxDefaultPosition, wxSize(75, -1));
 
+	clusterButtonSizer->AddSpacer(15);
 	clusterButtonSizer->Add(prevClusterButton, 0, wxEXPAND | wxALIGN_CENTER, 3);
 	clusterButtonSizer->Add(cluster_index_box, 1, wxEXPAND | wxALIGN_CENTER, 3);
 	clusterButtonSizer->Add(nextClusterButton, 0, wxEXPAND | wxALIGN_CENTER, 3);
+	clusterButtonSizer->AddSpacer(15);
 	parentSizer->Add(clusterButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
@@ -199,29 +201,31 @@ void FaceClusterWindow::createSaveGraphSectionToggles(wxBoxSizer* parentSizer) {
 void FaceClusterWindow::createSaveGraphButton(wxBoxSizer* parentSizer) {
 	wxBoxSizer* saveGraphSizer = new wxBoxSizer(wxHORIZONTAL);
 	save_graph = new wxFilePickerCtrl(this, FaceClusterWindowIDs::SAVE_GRAPH,
-		"/", "", "*.json", wxDefaultPosition, wxSize(-1, 30), wxFLP_SAVE | wxFLP_OVERWRITE_PROMPT);
+		"/", "", "*.json", wxDefaultPosition, wxSize(150, 30), wxFLP_SAVE | wxFLP_OVERWRITE_PROMPT);
 
 
+	saveGraphSizer->AddSpacer(15);
 	saveGraphSizer->Add(new wxStaticText(this, wxID_ANY, "Spremi prikaz: ", wxDefaultPosition, 
 		wxSize(100, -1), wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL),
 			0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-	saveGraphSizer->Add(save_graph, 1, wxEXPAND);
+	saveGraphSizer->Add(save_graph, 1, wxSHAPED | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 	parentSizer->Add(saveGraphSizer, 0, wxEXPAND | wxALIGN_BOTTOM, 5);
 }
 
 void FaceClusterWindow::createSearchPeopleSection(wxBoxSizer* parentSizer) {
-	wxBoxSizer* saveGraphSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* searchPeopleSizer = new wxBoxSizer(wxHORIZONTAL);
 	search_people = new wxFilePickerCtrl(this, FaceClusterWindowIDs::SEARCH_PEOPLE,
-		"/", "", "*.jpeg", wxDefaultPosition, wxSize(-1, 30), wxFLP_FILE_MUST_EXIST | wxFLP_OPEN);
+		"/", "", "*.jpeg", wxDefaultPosition, wxSize(150, 30), wxFLP_FILE_MUST_EXIST | wxFLP_OPEN);
 
 	if (!can_search)
 		search_people->Disable();
 
-	saveGraphSizer->Add(new wxStaticText(this, wxID_ANY, "Potraži u prikazu: ", wxDefaultPosition,
+	searchPeopleSizer->AddSpacer(15);
+	searchPeopleSizer->Add(new wxStaticText(this, wxID_ANY, "Potraži u prikazu: ", wxDefaultPosition,
 		wxSize(100, -1), wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL),
 		0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-	saveGraphSizer->Add(search_people, 1, wxEXPAND);
-	parentSizer->Add(saveGraphSizer, 0, wxEXPAND | wxALIGN_BOTTOM, 5);
+	searchPeopleSizer->Add(search_people, 1, wxSHAPED | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+	parentSizer->Add(searchPeopleSizer, 0, wxEXPAND | wxALIGN_BOTTOM, 5);
 }
 
 

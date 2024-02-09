@@ -17,14 +17,14 @@ public:
 	void setFacesFound(int x);
 	void setFacesAnalyzed(int x);
 
-	void detectingImagesPlusOne();
+	void detectingImagesPlusX(int x);
 	void finishedDetectingImages();
 	void detectingFacesPlusOne();
-	void detectingFacesGaugePlusOne();
+	void detectingFacesGaugePlusX(int x);
 	void finishedDetectingFaces();
 	void NNDone();
 	void setComparingFacesRange(int r);
-	void comparingFacesGougePlusOne(); 
+	void comparingFacesGougeSetX(int x); 
 	void finishedComparingFaces();
 
 protected:

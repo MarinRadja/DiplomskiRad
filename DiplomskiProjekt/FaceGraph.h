@@ -7,7 +7,6 @@
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 
-
 #include "Face.h"
 #include "FaceGraph.h"
 
@@ -52,6 +51,11 @@ private:
 	std::vector<unsigned long> labels;
 
 public:
+	long long detectingFacesTime;
+	long long nnFacesTime;
+	long long comparingFacesTime;
+	long long cwTime;
+
 	std::vector<FaceCluster> face_clusters;
 	std::vector<Face> faces;
 	~FaceGraph() {};

@@ -43,7 +43,7 @@ public:
 
 	FaceDetector();
 	FaceDetector(FaceGraph *_face_graph);
-	void detectFaces(Mat& cvImg, string imgName, string imageLocation);
+	int detectFaces(Mat& cvImg, string imgName, string imageLocation);
 	void detectFacesNoEvents(Mat& cvImg, string imgName, string imageLocation);
 
 private:

@@ -1,16 +1,28 @@
 #include "RunAlgorithm.h"
 
 void RunAlgorithm::getAll(fs::path dir, string ext) {
+    
+
+    int count = 0;
     if (fs::exists(dir) && fs::is_directory(dir)) {
         for (auto& entry : fs::recursive_directory_iterator(dir)) {
             if (fs::is_regular_file(entry) && entry.path().extension() == ext) {
                 fs::path p = entry.path();
                 allImages.emplace_back(p.make_preferred());
+                count++;
 
-                 wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DETECTED_IMAGE));
+                if (count == 1000) {
+                    wxCommandEvent* detectedImages = new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DETECTED_IMAGE);
+                    detectedImages->SetInt(count);
+                    wxTheApp->QueueEvent(detectedImages);
+                    count = 0;
+                }
             }
         }
     }
+    wxCommandEvent* detectedImages = new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DETECTED_IMAGE);
+    detectedImages->SetInt(count);
+    wxTheApp->QueueEvent(detectedImages);
 }
 
 Mat RunAlgorithm::resizeImage(Mat& image, int width, int height, int inter) {
@@ -45,6 +57,11 @@ RunAlgorithm::RunAlgorithm() : face_graph(), face_detector(&face_graph), face_co
 }
 
 void RunAlgorithm::runAlgorithm(std::string path) {
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     string imageSetDirectory = path;
@@ -57,16 +74,21 @@ void RunAlgorithm::runAlgorithm(std::string path) {
     }       
     wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_IMAGES));
 
+    auto start = std::chrono::steady_clock::now();
     for (fs::path entry : allImages) {
-            cout << "Proccesing image: " << entry.string() << endl;
             Mat cvImg1 = imread(entry.string(), IMREAD_COLOR);
             Mat resized = resizeImage(cvImg1, 800);
 
             string imageName = entry.stem().string();
             string imageLocation = entry.string();
-            face_detector.detectFaces(resized, imageName, imageLocation);
-            wxTheApp->QueueEvent(new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE));
+
+            int foundFaces = face_detector.detectFaces(resized, imageName, imageLocation);
+
+            wxCommandEvent* foundFacesOnImage = new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE);
+            foundFacesOnImage->SetInt(foundFaces);
+            wxTheApp->QueueEvent(foundFacesOnImage);
     }
+    face_graph.detectingFacesTime = since(start).count();
 
     wxCommandEvent* doneDetectingFaces = new wxCommandEvent(myEVT_UPDATE_PROGRESS_WINDOW, EventsIDs::DONE_DETECTING_FACES);
     doneDetectingFaces->SetInt(face_detector.faces.size());

@@ -14,7 +14,6 @@ bool MyApp::OnInit() {
 
 	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_detectedImage, this, EventsIDs::DETECTED_IMAGE);
 	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneDetectingImages, this, EventsIDs::DONE_DETECTING_IMAGES);
-	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_detectedFace, this, EventsIDs::DETECTED_FACE);
 	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneDetectingFacesOnImage, this, EventsIDs::DONE_DETECTING_FACES_ON_IMAGE);
 	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_doneDetectingFaces, this, EventsIDs::DONE_DETECTING_FACES);
 	Bind(myEVT_UPDATE_PROGRESS_WINDOW, &MyApp::updateProgressWindow_NNDone, this, EventsIDs::NN_DONE);
@@ -29,6 +28,7 @@ bool MyApp::OnInit() {
 
 #pragma endregion "Bind Events"
 
+	
 	run_algorithm = new RunAlgorithm();
 
 	createMainWindow();
@@ -44,15 +44,14 @@ void MyApp::createMainWindow() {
 	main_frame->SetClientSize(400, 300);
 	main_frame->Center();
 	main_frame->Show();
+
 }
+
 
 void MyApp::createProgressWindow(wxCommandEvent& evt) {
 	if (progress_window != nullptr) progress_window->Destroy();
-
-	progress_window = new ProgressWindow("Progress");
-	progress_window->SetClientSize(400, 300);
-	progress_window->Center();
-	progress_window->Show();
+	main_frame->Destroy();
+	progress_window = new ProgressWindow("Priprema prikaza");	
 
 	std::thread sw(&MyApp::startWorking, this, evt.GetString().ToStdString());
 	sw.detach();
@@ -61,7 +60,7 @@ void MyApp::createProgressWindow(wxCommandEvent& evt) {
 void MyApp::createFaceClusterWindow(bool canSearch) {
 	if (face_cluster_window != nullptr) face_cluster_window->Destroy();
 
-	face_cluster_window = new FaceClusterWindow("Recognized faces", run_algorithm->getFaceGraph(), canSearch);
+	face_cluster_window = new FaceClusterWindow("Prikaz osoba", run_algorithm->getFaceGraph(), canSearch);
 	face_cluster_window->SetClientSize(800, 600);
 	face_cluster_window->Center();
 	face_cluster_window->Show();
@@ -71,7 +70,7 @@ void MyApp::createFaceClusterWindow(bool canSearch) {
 #pragma region "Update Progress Window"
 void MyApp::updateProgressWindow_detectedImage(wxCommandEvent& evt) {
 	if (progress_window == nullptr) return;
-	progress_window->detectingImagesPlusOne();
+	progress_window->detectingImagesPlusX(evt.GetInt());
 	progress_window->Layout();
 }
 
@@ -81,15 +80,9 @@ void MyApp::updateProgressWindow_doneDetectingImages(wxCommandEvent& evt) {
 	progress_window->Layout();
 }
 
-void MyApp::updateProgressWindow_detectedFace(wxCommandEvent& evt) {
-	if (progress_window == nullptr) return;
-	progress_window->detectingFacesPlusOne();
-	progress_window->Layout();
-}
-
 void MyApp::updateProgressWindow_doneDetectingFacesOnImage(wxCommandEvent& evt) {
 	if (progress_window == nullptr) return;
-	progress_window->detectingFacesGaugePlusOne();
+	progress_window->detectingFacesGaugePlusX(evt.GetInt());
 	progress_window->Layout();
 }
 
@@ -109,7 +102,7 @@ void MyApp::updateProgressWindow_NNDone(wxCommandEvent& evt) {
 // not done
 void MyApp::updateProgressWindow_comparedFace(wxCommandEvent& evt) {
 	if (progress_window == nullptr) return;
-	progress_window->comparingFacesGougePlusOne();
+	progress_window->comparingFacesGougeSetX(evt.GetInt());
 	progress_window->Layout();
 }
 

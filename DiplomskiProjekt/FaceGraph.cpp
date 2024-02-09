@@ -133,14 +133,27 @@ void FaceGraph::saveGraphToJson(string& json_name) {
 		graph_json.push_back(faCl.getJson());
 	}
 
-	Utils::saveToDisk(graph_json, json_name);
+	nlohmann::json view_json = {
+		{"detecting_time", detectingFacesTime},
+		{"nn_time", nnFacesTime},
+		{"comparing_time", comparingFacesTime},
+		{"cw_time", cwTime},
+		{"n_people", face_clusters.size()},
+		{"n_faces", faces.size()},
+		{"clusters", graph_json}
+	};
+	Utils::saveToDisk(view_json, json_name);
 }
 
 void FaceGraph::loadGraphFromJson(string& json_name) {
 	nlohmann::json graphJson;
 	Utils::loadFromDisk(graphJson, json_name);
 
-	for (auto& [clusterIndex, clusterJson] : graphJson.items()) {
+	comparingFacesTime = (unsigned long) graphJson.at("comparing_time");
+	detectingFacesTime = graphJson.at("detecting_time");
+	nnFacesTime = graphJson.at("nn_time");
+
+	for (auto& [clusterIndex, clusterJson] : graphJson.at("clusters").items()) {
 		FaceCluster faceCluster(clusterJson.at("cluster_id"),
 			clusterJson.at("cluster_name"), 
 			clusterJson.at("selected"));

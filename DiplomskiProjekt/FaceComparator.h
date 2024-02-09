@@ -48,6 +48,7 @@ using anet_type = loss_metric<fc_no_bias<128, avg_pool_everything<
 	input_rgb_image_sized<150>
 	>>>>>>>>>>>>;
 
+
 class FaceComparator {
 public:
 	FaceComparator(FaceGraph* _face_graph, FaceDetector* faceDetector);
@@ -68,5 +69,7 @@ private:
 	std::string resnetModelLocation = "./models/dlib/dlib_face_recognition_resnet_model_v1.dat";
 	std::vector<std::vector<matrix<float, 0, 1>>> face_groups;
 	std::vector<std::vector<Face>> new_face_groups;
+
+	void groupFacesIntoClusters();
 };
 

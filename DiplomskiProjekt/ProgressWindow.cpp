@@ -1,18 +1,23 @@
 #include "ProgressWindow.h"
 
 ProgressWindow::ProgressWindow(const wxString& title) 
-	: wxFrame(nullptr, wxID_ANY, title), images_found(0), faces_found(0), faces_analyzed(0), images_analyzed(0), faces_compared(0), total_comparisons(0) {
+	: wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(500, 500), 
+		wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)), 
+	images_found(0), faces_found(0), faces_analyzed(0), images_analyzed(0), faces_compared(0), total_comparisons(0) {
 
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
+	clientAreaSizer->AddSpacer(10);
 	createImagesFoundProgress(clientAreaSizer);
 	createFindingFacesOnImagesProgress(clientAreaSizer);
 	createNNProgress(clientAreaSizer);
 	createClusteringFacesProgress(clientAreaSizer);
+	clientAreaSizer->AddSpacer(5);
 
 	SetSizerAndFit(clientAreaSizer);
-	SetMinSize(wxSize(500, 300));
+	Center();
 	Layout();
+	Show();
 
 	::wxInitAllImageHandlers();
 }
@@ -38,68 +43,59 @@ void ProgressWindow::createClusteringFacesProgress(wxBoxSizer* parentSizer) {
 }
 
 void ProgressWindow::createImagesFoundText(wxBoxSizer* parentSizer) {
-	wxBoxSizer* imagesFoundSizer = new wxBoxSizer(wxHORIZONTAL);
-	imagesFoundTxt = new wxStaticText(this, ProgressWindowIDs::DETECTING_IMAGE_TXT, detectingImages(), wxDefaultPosition, wxSize(150, 40), wxALIGN_CENTER);
+	imagesFoundTxt = new wxStaticText(this, ProgressWindowIDs::DETECTING_IMAGE_TXT, detectingImages(), wxDefaultPosition, wxSize(500, -1), wxALIGN_CENTER);
 
-	imagesFoundSizer->Add(imagesFoundTxt, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(imagesFoundSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(imagesFoundTxt, 0, wxSHAPED | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(5);
 }
 
 void ProgressWindow::createImagesFoundGauge(wxBoxSizer* parentSizer) {
-	wxBoxSizer* detectingImagesGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
 	detectingImagesGauge = new wxGauge(this, ProgressWindowIDs::DETECTING_FACE_GAUGE, 1);
 	detectingImagesGauge->Pulse();
 
-	detectingImagesGaugeSizer->Add(detectingImagesGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(detectingImagesGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(detectingImagesGauge, 1, wxEXPAND | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(10);
 }
 
 void ProgressWindow::createDetectingFacesText(wxBoxSizer* parentSizer) {
-	wxBoxSizer* detectingFacesTxtSizer = new wxBoxSizer(wxHORIZONTAL); 
-	detectingFacesTxt = new wxStaticText(this, ProgressWindowIDs::DETECTING_FACE_TXT, detectingFaces(), wxDefaultPosition, wxSize(150, 40), wxALIGN_CENTER);
+	detectingFacesTxt = new wxStaticText(this, ProgressWindowIDs::DETECTING_FACE_TXT, detectingFaces(), wxDefaultPosition, wxSize(500, -1), wxALIGN_CENTER);
 
-	detectingFacesTxtSizer->Add(detectingFacesTxt, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(detectingFacesTxtSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(detectingFacesTxt, 0, wxSHAPED | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(5);
 }
 
 void ProgressWindow::createDetectingFacesGauge(wxBoxSizer* parentSizer) {
-	wxBoxSizer* detectingFacesGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
 	detectingFacesGauge = new wxGauge(this, ProgressWindowIDs::DETECTING_FACE_GAUGE, images_found);
 
-	detectingFacesGaugeSizer->Add(detectingFacesGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(detectingFacesGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(detectingFacesGauge, 1, wxEXPAND | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(10);
 }
 
 void ProgressWindow::createNNText(wxBoxSizer* parentSizer) {
-	wxBoxSizer* NNTxtSizer = new wxBoxSizer(wxHORIZONTAL);
-	NNTxt = new wxStaticText(this, wxID_ANY, "Waiting for faces to be detected.", wxDefaultPosition, wxSize(150, 40), wxALIGN_CENTER);
+	NNTxt = new wxStaticText(this, wxID_ANY, "Waiting for faces to be detected.", wxDefaultPosition, wxSize(500, -1), wxALIGN_CENTER);
 
-	NNTxtSizer->Add(NNTxt, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(NNTxtSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(NNTxt, 0, wxSHAPED | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(5);
 }
 
 void ProgressWindow::createNNGauge(wxBoxSizer* parentSizer) {
-	wxBoxSizer* NNGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
 	NNGauge = new wxGauge(this, wxID_ANY, 1);
 
-	NNGaugeSizer->Add(NNGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(NNGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(NNGauge, 1, wxEXPAND | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(10);
 }
 
 void ProgressWindow::createComparingFacesText(wxBoxSizer* parentSizer) {
-	wxBoxSizer* clusteringFacesTxtSizer = new wxBoxSizer(wxHORIZONTAL);
-	comparingFacesTxt = new wxStaticText(this, ProgressWindowIDs::COMPARING_FACE_TXT, comparingFaces(), wxDefaultPosition, wxSize(150, 40), wxALIGN_CENTER);
+	comparingFacesTxt = new wxStaticText(this, ProgressWindowIDs::COMPARING_FACE_TXT, comparingFaces(), wxDefaultPosition, wxSize(500, -1), wxALIGN_CENTER);
 
-	clusteringFacesTxtSizer->Add(comparingFacesTxt, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(clusteringFacesTxtSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(comparingFacesTxt, 0, wxSHAPED | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM);
+	parentSizer->AddSpacer(5);
 }
 
 void ProgressWindow::createComparingFacesGauge(wxBoxSizer* parentSizer) {
-	wxBoxSizer* comparingFacesGaugeSizer = new wxBoxSizer(wxHORIZONTAL);
 	comparingFacesGauge = new wxGauge(this, ProgressWindowIDs::COMPARING_FACE_GAUGE, total_comparisons);
 
-	comparingFacesGaugeSizer->Add(comparingFacesGauge, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(comparingFacesGaugeSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(comparingFacesGauge, 1, wxEXPAND | wxALIGN_BOTTOM);
 }
 
 std::string ProgressWindow::detectingImages() {
@@ -152,9 +148,10 @@ void ProgressWindow::setFacesAnalyzed(int x) {
 	detectingFacesGauge->SetValue(faces_analyzed);
 }
 
-void ProgressWindow::detectingImagesPlusOne() {
-	images_found++;
+void ProgressWindow::detectingImagesPlusX(int x) {
+	images_found += x;
 	imagesFoundTxt->SetLabelText(detectingImages());
+	detectingImagesGauge->Pulse();
 }
 
 void ProgressWindow::finishedDetectingImages() {
@@ -168,7 +165,9 @@ void ProgressWindow::detectingFacesPlusOne() {
 	detectingFacesTxt->SetLabelText(detectingFaces());
 }
 
-void ProgressWindow::detectingFacesGaugePlusOne() {
+void ProgressWindow::detectingFacesGaugePlusX(int x) {
+	faces_found += x;
+	detectingFacesTxt->SetLabelText(detectingFaces());
 	detectingFacesGauge->SetValue(++images_analyzed);
 }
 
@@ -190,8 +189,8 @@ void ProgressWindow::setComparingFacesRange(int r) {
 	comparingFacesGauge->SetRange(total_comparisons);
 }
 
-void ProgressWindow::comparingFacesGougePlusOne() {
-	faces_compared++;
+void ProgressWindow::comparingFacesGougeSetX(int x) {
+	faces_compared = x;
 	comparingFacesTxt->SetLabelText(comparingFaces());
 	comparingFacesGauge->SetValue(faces_compared);
 }

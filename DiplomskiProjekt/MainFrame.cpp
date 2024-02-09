@@ -2,7 +2,9 @@
 
 #pragma region "GUI Setup"
 
-MainFrame::MainFrame(const wxString& title, RunAlgorithm* _run_algorithm) : wxFrame(nullptr, wxID_ANY, title) {
+MainFrame::MainFrame(const wxString& title, RunAlgorithm* _run_algorithm) 
+	: wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(500, 500),
+		wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)) {
 	runAlg = _run_algorithm;
 
 #pragma region "Bind Events"
@@ -15,14 +17,11 @@ MainFrame::MainFrame(const wxString& title, RunAlgorithm* _run_algorithm) : wxFr
 	wxBoxSizer* clientAreaSizer = new wxBoxSizer(wxVERTICAL);
 
 	createTitle(clientAreaSizer);
-	emptyTextLine(clientAreaSizer, 1);
-
+	clientAreaSizer->AddSpacer(5);
 	createInfo(clientAreaSizer);
-	emptyTextLine(clientAreaSizer, 1);
-
+	clientAreaSizer->AddSpacer(10);
 	createRunAlgSection(clientAreaSizer);
-	emptyTextLine(clientAreaSizer, 1);
-
+	clientAreaSizer->AddSpacer(10);
 	createLoadGraphSection(clientAreaSizer);
 
 	SetSizerAndFit(clientAreaSizer);
@@ -35,6 +34,7 @@ MainFrame::MainFrame(const wxString& title, RunAlgorithm* _run_algorithm) : wxFr
 
 RunAlgorithm* MainFrame::getAlgorithmPtr() {
 	return runAlg;
+
 }
 
 void MainFrame::createTitle(wxBoxSizer* parentSizer) {
@@ -61,7 +61,7 @@ void MainFrame::createInfo(wxBoxSizer* parentSizer) {
 	info->AppendText("Proèitajte readme.txt za detalnje upute!\n");
 	info->AppendText("\n");
 	info->AppendText("Prag sliènosti\n");
-	info->AppendText("   - valjane vrijednosti: 1 - 1000\n");
+	info->AppendText("   - valjane vrijednosti: 1 - 100\n");
 	info->AppendText("   - zadano: 55, preporuèeno: 30 - 90\n");
 	info->AppendText("\n");
 	info->AppendText("Organiziraj slike:\n");
@@ -73,21 +73,23 @@ void MainFrame::createInfo(wxBoxSizer* parentSizer) {
 
 	wxBoxSizer* emptyCol = new wxBoxSizer(wxVERTICAL);
 
-	emptyCol->Add(new wxStaticText());
-	infoSizer->Add(emptyCol, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	infoSizer->Add(info, 0, wxALIGN_CENTER, 3);
-	infoSizer->Add(emptyCol, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	infoSizer->AddSpacer(70);
+	infoSizer->Add(info, 1, wxALIGN_CENTER, 3);
+	infoSizer->AddSpacer(70);
 	parentSizer->Add(infoSizer, 3, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void MainFrame::createRunAlgSection(wxBoxSizer* parentSizer) {
 	createThreshold(parentSizer);
+	parentSizer->AddSpacer(3);
 	createSelectFolderLblPkr(parentSizer);
+	parentSizer->AddSpacer(3);
 	createRunButton(parentSizer);
 }
 
 void MainFrame::createLoadGraphSection(wxBoxSizer* parentSizer) {
 	createLoadGraphLocationAndPicker(parentSizer);
+	parentSizer->AddSpacer(3);
 	createLoadGraphButton(parentSizer);
 }
 
@@ -95,13 +97,14 @@ void MainFrame::createThreshold(wxBoxSizer* parentSizer) {
 	wxBoxSizer* createThresholdSIzer = new wxBoxSizer(wxHORIZONTAL);
 
 	// label
-	wxStaticText* thresholdText = new wxStaticText(this, wxID_ANY, "Prag sliènosti:\t", wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
+	wxStaticText* thresholdText = new wxStaticText(this, wxID_ANY, "Prag sliènosti:\t", wxDefaultPosition, wxSize(85, -1), wxALIGN_CENTRE_VERTICAL | wxALIGN_RIGHT);
 
 	// input
-	similarity_threshold = new wxSpinCtrl(this, MainFrameIDs::SIMILARITY_THRESHOLD, wxEmptyString, wxDefaultPosition, wxSize(50, -1), wxSP_ARROW_KEYS|wxALIGN_RIGHT, 1, 1000, 55);
+	similarity_threshold = new wxSpinCtrl(this, MainFrameIDs::SIMILARITY_THRESHOLD, wxEmptyString, wxDefaultPosition, wxSize(45, 17), wxSP_ARROW_KEYS | wxALIGN_RIGHT, 1, 100, 55);
 
-	createThresholdSIzer->Add(thresholdText, 1, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 3);
-	createThresholdSIzer->Add(similarity_threshold, 1, wxALIGN_CENTER, 3);
+	createThresholdSIzer->Add(thresholdText, 1, wxSHAPED | wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+	createThresholdSIzer->AddSpacer(5);
+	createThresholdSIzer->Add(similarity_threshold, 1, wxSHAPED | wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
 	parentSizer->Add(createThresholdSIzer, 0, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
@@ -116,17 +119,16 @@ void MainFrame::createSelectFolderLblPkr(wxBoxSizer* parentSizer) {
 	wxDirPickerCtrl* selectFolder = new wxDirPickerCtrl(this, MainFrameIDs::DIR_PICKER, "/", "Odaberite direktorij sa slikama", wxDefaultPosition, wxDefaultSize, wxDIRP_DIR_MUST_EXIST);
 
 	selectFolderSizer->Add(selected_folder_location, 3, wxALIGN_CENTER, 3);
+	selectFolderSizer->AddSpacer(5);
 	selectFolderSizer->Add(selectFolder, 1, wxALIGN_CENTER, 3);
 	parentSizer->Add(selectFolderSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
 }
 
 void MainFrame::createRunButton(wxBoxSizer* parentSizer) {
-	wxBoxSizer* runButtonSizer = new wxBoxSizer(wxHORIZONTAL);
 	run_alg_button = new wxButton(this, MainFrameIDs::RUN_BUTTON, "Pokreni analizu", wxDefaultPosition, wxDefaultSize);
 	run_alg_button->Disable();
 
-	runButtonSizer->Add(run_alg_button, 1, wxEXPAND | wxALIGN_CENTER, 3);
-	parentSizer->Add(runButtonSizer, 1, wxEXPAND | wxALIGN_CENTER, 3);
+	parentSizer->Add(run_alg_button, 1, wxEXPAND | wxALIGN_CENTER);
 }
 
 void MainFrame::createLoadGraphLocationAndPicker(wxBoxSizer* parentSizer) {
@@ -141,6 +143,7 @@ void MainFrame::createLoadGraphLocationAndPicker(wxBoxSizer* parentSizer) {
 		"/", "", "*.json", wxDefaultPosition, wxDefaultSize, wxFLP_FILE_MUST_EXIST);
 
 	selectGraphSizer->Add(load_graph_label, 3, wxALIGN_CENTER, 3);
+	selectGraphSizer->AddSpacer(5);
 	selectGraphSizer->Add(load_graph_picker, 1, wxALIGN_CENTER, 3);
 	parentSizer->Add(selectGraphSizer, 0, wxEXPAND | wxALIGN_CENTER, 3);
 }
